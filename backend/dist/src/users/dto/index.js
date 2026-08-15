@@ -19,24 +19,24 @@ class CreateUserDto {
 exports.CreateUserDto = CreateUserDto;
 __decorate([
     (0, swagger_1.ApiProperty)({ example: 'john.doe@example.com' }),
-    (0, class_validator_1.IsEmail)(),
+    (0, class_validator_1.IsEmail)({}, { message: 'Invalid email address' }),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "email", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: 'John' }),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNotEmpty)({ message: 'First name is required' }),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "firstName", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: 'Doe' }),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNotEmpty)({ message: 'Last name is required' }),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "lastName", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ enum: ['PROJECT_MANAGER', 'TEAM_MEMBER', 'ADMIN'] }),
-    (0, class_validator_1.IsEnum)(enums_1.Role),
+    (0, class_validator_1.IsEnum)(enums_1.Role, { message: 'Invalid role' }),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "role", void 0);
 __decorate([
@@ -49,8 +49,9 @@ __decorate([
     (0, swagger_1.ApiPropertyOptional)({ description: 'Initial password (min 8 chars). If omitted, a temporary one is generated.' }),
     (0, class_transformer_1.Transform)(({ value }) => (typeof value === 'string' && value.trim() === '' ? undefined : value)),
     (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.ValidateIf)((o) => o.password !== undefined && o.password !== null && o.password !== ''),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.MinLength)(8),
+    (0, class_validator_1.MinLength)(8, { message: 'Password must be at least 8 characters' }),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "password", void 0);
 class UpdateUserDto {

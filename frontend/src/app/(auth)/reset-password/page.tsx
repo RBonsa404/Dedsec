@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuthStore } from "@/stores/authStore";
+import api from "@/lib/api";
 
 function ResetPasswordForm() {
   const [newPassword, setNewPassword] = useState("");
@@ -34,21 +35,8 @@ function ResetPasswordForm() {
     setIsLoading(true);
 
     try {
-      // First try change-password endpoint with tempToken Bearer
-      const res = await fetch("http://localhost:4000/api/auth/change-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ newPassword }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to update password");
-      }
+      const res = await api.post("/auth/change-password", { newPassword, tempToken: token });
+      const data = res.data;
 
       setAuth(data.user, data.accessToken);
 
@@ -58,7 +46,7 @@ function ResetPasswordForm() {
         router.push("/projects");
       }
     } catch (err: any) {
-      setError(err.message);
+      setError(err.response?.data?.message || err.message || "Failed to update password");
     } finally {
       setIsLoading(false);
     }

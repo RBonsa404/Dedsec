@@ -19,7 +19,7 @@ exports.CreateProjectDto = CreateProjectDto;
 __decorate([
     (0, swagger_1.ApiProperty)({ example: 'Project Alpha' }),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNotEmpty)({ message: 'Project name is required' }),
     __metadata("design:type", String)
 ], CreateProjectDto.prototype, "name", void 0);
 __decorate([
@@ -32,8 +32,8 @@ __decorate([
     (0, swagger_1.ApiPropertyOptional)({ example: 500 }),
     (0, class_validator_1.IsOptional)(),
     (0, class_transformer_1.Type)(() => Number),
-    (0, class_validator_1.IsInt)(),
-    (0, class_validator_1.Min)(50),
+    (0, class_validator_1.IsInt)({ message: 'Storage quota must be an integer' }),
+    (0, class_validator_1.Min)(50, { message: 'Storage quota must be at least 50MB' }),
     __metadata("design:type", Number)
 ], CreateProjectDto.prototype, "storageQuotaMb", void 0);
 class UpdateProjectDto {

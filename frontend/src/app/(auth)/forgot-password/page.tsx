@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft } from "lucide-react";
+import api from "@/lib/api";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -21,21 +22,10 @@ export default function ForgotPasswordPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch("http://localhost:4000/api/auth/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to process request");
-      }
-
+      const res = await api.post("/auth/forgot-password", { email });
       setMessage("If the account exists, a recovery token has been generated / simulated in server logs.");
     } catch (err: any) {
-      setError(err.message);
+      setError(err.response?.data?.message || err.message || "Failed to process request");
     } finally {
       setIsLoading(false);
     }

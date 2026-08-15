@@ -5,7 +5,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class CreateProjectDto {
   @ApiProperty({ example: 'Project Alpha' })
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Project name is required' })
   name: string;
 
   @ApiPropertyOptional({ example: 'A top-secret project' })
@@ -16,8 +16,8 @@ export class CreateProjectDto {
   @ApiPropertyOptional({ example: 500 })
   @IsOptional()
   @Type(() => Number)
-  @IsInt()
-  @Min(50)
+  @IsInt({ message: 'Storage quota must be an integer' })
+  @Min(50, { message: 'Storage quota must be at least 50MB' })
   storageQuotaMb?: number;
 }
 

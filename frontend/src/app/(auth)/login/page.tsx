@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuthStore } from "@/stores/authStore";
 import { ShieldCheck, Lock, Mail, ArrowRight, Loader2 } from "lucide-react";
+import api from "@/lib/api";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -22,17 +23,8 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch("http://localhost:4000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Identifiants invalides. Veuillez vérifier votre email et mot de passe.");
-      }
+      const res = await api.post("/auth/login", { email, password });
+      const data = res.data;
 
       if (data.mustChangePassword) {
         router.push(`/reset-password?token=${data.tempToken}`);
@@ -47,7 +39,7 @@ export default function LoginPage() {
         router.push("/projects");
       }
     } catch (err: any) {
-      setError(err.message);
+      setError(err.response?.data?.message || err.message || "Identifiants invalides. Veuillez vérifier votre email et mot de passe.");
     } finally {
       setIsLoading(false);
     }

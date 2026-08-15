@@ -5,21 +5,21 @@ import { Role } from '../../common/enums';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'john.doe@example.com' })
-  @IsEmail()
+  @IsEmail({}, { message: 'Invalid email address' })
   email: string;
 
   @ApiProperty({ example: 'John' })
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'First name is required' })
   firstName: string;
 
   @ApiProperty({ example: 'Doe' })
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Last name is required' })
   lastName: string;
 
   @ApiProperty({ enum: ['PROJECT_MANAGER', 'TEAM_MEMBER', 'ADMIN'] })
-  @IsEnum(Role)
+  @IsEnum(Role, { message: 'Invalid role' })
   role: Role;
 
   @ApiPropertyOptional({ example: '+33 6 12 34 56 78' })
@@ -30,8 +30,9 @@ export class CreateUserDto {
   @ApiPropertyOptional({ description: 'Initial password (min 8 chars). If omitted, a temporary one is generated.' })
   @Transform(({ value }) => (typeof value === 'string' && value.trim() === '' ? undefined : value))
   @IsOptional()
+  @ValidateIf((o) => o.password !== undefined && o.password !== null && o.password !== '')
   @IsString()
-  @MinLength(8)
+  @MinLength(8, { message: 'Password must be at least 8 characters' })
   password?: string;
 }
 
