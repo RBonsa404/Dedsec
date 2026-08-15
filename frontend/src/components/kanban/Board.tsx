@@ -191,7 +191,7 @@ export function KanbanBoard({ initialColumns, onTaskMove, onColumnMove, onTaskCl
       onDragOver={onDragOver}
       onDragEnd={onDragEnd}
     >
-      <div className="flex h-full gap-6 overflow-x-auto p-6 custom-scrollbar items-start select-none">
+      <div className="flex h-full gap-2 sm:gap-4 md:gap-6 overflow-x-auto p-2 sm:p-4 md:p-6 custom-scrollbar items-start select-none">
         <SortableContext items={columnIds} strategy={horizontalListSortingStrategy}>
           {columns.map((col) => (
             <Column 

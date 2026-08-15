@@ -4,7 +4,7 @@ import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { cn } from '@/lib/utils';
-import { Calendar, MessageSquare, CheckSquare, AlertCircle, Clock } from 'lucide-react';
+import { MessageSquare, CheckSquare, AlertCircle, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { useLangStore } from '@/stores/langStore';
@@ -93,17 +93,17 @@ export function TaskCard({ task, onClick }: TaskCardProps) {
       {...listeners}
       onClick={onClick}
       className={cn(
-        "group relative flex cursor-grab flex-col gap-3 rounded-xl border border-[#232e42] bg-[#151c2c] p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#384c6c] hover:bg-[#1a2336] hover:shadow-lg active:cursor-grabbing select-none",
+        "group relative flex cursor-grab flex-col gap-1.5 sm:gap-2 md:gap-3 rounded-lg sm:rounded-xl border border-[#232e42] bg-[#151c2c] p-2 sm:p-3 md:p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#384c6c] hover:bg-[#1a2336] hover:shadow-lg active:cursor-grabbing select-none",
         isDragging && "opacity-40 ring-2 ring-emerald-500 shadow-2xl scale-[1.02]"
       )}
     >
       {/* Top Labels Row */}
       {task.labels && task.labels.length > 0 && (
-        <div className="flex flex-wrap gap-1.5">
-          {task.labels.map((label) => (
+        <div className="flex flex-wrap gap-1 sm:gap-1.5">
+          {task.labels.slice(0, 2).map((label) => (
             <span
               key={label.id}
-              className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-semibold uppercase tracking-wider"
+              className="inline-flex items-center px-1.5 sm:px-2 md:px-2.5 py-0.5 rounded-md text-[8px] sm:text-[9px] md:text-[11px] font-semibold uppercase tracking-wider"
               style={{
                 backgroundColor: `${label.color}25`,
                 color: label.color,
@@ -113,22 +113,27 @@ export function TaskCard({ task, onClick }: TaskCardProps) {
               {label.name}
             </span>
           ))}
+          {task.labels.length > 2 && (
+            <span className="text-[8px] sm:text-[9px] md:text-[11px] text-slate-400">
+              +{task.labels.length - 2}
+            </span>
+          )}
         </div>
       )}
 
       {/* Card Title */}
-      <h4 className="text-sm font-semibold text-slate-100 leading-snug group-hover:text-emerald-400 transition-colors">
+      <h4 className="text-[11px] sm:text-xs md:text-sm font-semibold text-slate-100 leading-snug group-hover:text-emerald-400 transition-colors line-clamp-2">
         {task.title}
       </h4>
 
       {/* Meta Indicators Row */}
-      <div className="flex items-center justify-between pt-1 border-t border-[#1f2a3e] text-xs">
+      <div className="flex items-center justify-between pt-1 border-t border-[#1f2a3e] text-[9px] sm:text-[10px] md:text-xs">
         {/* Left indicators: Priority + Due date + Checklist / Comments */}
-        <div className="flex items-center gap-2.5 flex-wrap">
+        <div className="flex items-center gap-1 sm:gap-2 md:gap-2.5 flex-wrap">
           {/* Priority Pill */}
           <span
             className={cn(
-              "px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border",
+              "px-1.5 sm:px-2 py-0.5 rounded-md text-[8px] sm:text-[9px] md:text-[10px] font-bold uppercase tracking-wider border",
               currentPriority.bg,
               currentPriority.text,
               currentPriority.border
@@ -141,7 +146,7 @@ export function TaskCard({ task, onClick }: TaskCardProps) {
           {task.dueDate && (
             <span
               className={cn(
-                "inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-md border",
+                "inline-flex items-center gap-0.5 sm:gap-1 text-[8px] sm:text-[9px] md:text-[11px] font-medium px-1 sm:px-2 py-0.5 rounded-md border",
                 isOverdue
                   ? "bg-rose-950/60 text-rose-400 border-rose-800 font-bold"
                   : isToday
@@ -149,8 +154,9 @@ export function TaskCard({ task, onClick }: TaskCardProps) {
                   : "bg-slate-800/80 text-slate-400 border-slate-700"
               )}
             >
-              {isOverdue ? <AlertCircle className="w-3 h-3 text-rose-400" /> : <Clock className="w-3 h-3 text-slate-400" />}
-              <span>{format(new Date(task.dueDate), 'd MMM', { locale: lang === 'fr' ? fr : undefined })}</span>
+              {isOverdue ? <AlertCircle className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 text-rose-400" /> : <Clock className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 text-slate-400" />}
+              <span className="hidden sm:inline">{format(new Date(task.dueDate), 'd MMM', { locale: lang === 'fr' ? fr : undefined })}</span>
+              <span className="sm:hidden">{format(new Date(task.dueDate), 'd/M')}</span>
             </span>
           )}
 
@@ -158,21 +164,22 @@ export function TaskCard({ task, onClick }: TaskCardProps) {
           {totalChecklistItems > 0 && (
             <span
               className={cn(
-                "inline-flex items-center gap-1 text-[11px] font-medium px-1.5 py-0.5 rounded",
+                "inline-flex items-center gap-0.5 sm:gap-1 text-[8px] sm:text-[9px] md:text-[11px] font-medium px-1 sm:px-1.5 py-0.5 rounded",
                 completedChecklistItems === totalChecklistItems
                   ? "bg-emerald-950/50 text-emerald-400 font-bold"
                   : "text-slate-400"
               )}
             >
-              <CheckSquare className="w-3.5 h-3.5" />
-              <span>{completedChecklistItems}/{totalChecklistItems}</span>
+              <CheckSquare className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-3.5 md:h-3.5" />
+              <span className="hidden sm:inline">{completedChecklistItems}/{totalChecklistItems}</span>
+              <span className="sm:hidden">{completedChecklistItems}/{totalChecklistItems}</span>
             </span>
           )}
 
           {/* Comments count */}
           {(task._count?.comments ?? 0) > 0 && (
-            <span className="inline-flex items-center gap-1 text-[11px] text-slate-400">
-              <MessageSquare className="w-3.5 h-3.5" />
+            <span className="inline-flex items-center gap-0.5 sm:gap-1 text-[8px] sm:text-[9px] md:text-[11px] text-slate-400">
+              <MessageSquare className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-3.5 md:h-3.5" />
               <span>{task._count?.comments}</span>
             </span>
           )}
@@ -181,14 +188,14 @@ export function TaskCard({ task, onClick }: TaskCardProps) {
         {/* Right: Assignee Avatar */}
         {task.assignee ? (
           <div
-            className="h-7 w-7 rounded-full bg-gradient-to-br from-emerald-500/30 to-cyan-500/30 flex items-center justify-center border border-emerald-500/40 text-[11px] font-bold text-emerald-300 shadow-sm shrink-0"
+            className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 rounded-full bg-gradient-to-br from-emerald-500/30 to-cyan-500/30 flex items-center justify-center border border-emerald-500/40 text-[8px] sm:text-[9px] md:text-[11px] font-bold text-emerald-300 shadow-sm shrink-0"
             title={`${task.assignee.firstName} ${task.assignee.lastName}`}
           >
             {task.assignee.firstName[0]}{task.assignee.lastName[0]}
           </div>
         ) : (
           <div
-            className="h-6 w-6 rounded-full border border-dashed border-slate-700 flex items-center justify-center text-[10px] text-slate-500 shrink-0"
+            className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 rounded-full border border-dashed border-slate-700 flex items-center justify-center text-[8px] sm:text-[9px] md:text-[10px] text-slate-500 shrink-0"
             title={t.unassigned}
           >
             •
