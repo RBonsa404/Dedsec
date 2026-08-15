@@ -54,6 +54,6 @@ import { AppController } from './app.controller';
       useClass: GlobalExceptionFilter,
     },
   ],
-  exports: [PasswordChangeGuard],
+  exports: [PasswordChangeGuard, CustomThrottlerModule],
 })
 export class AppModule {}
