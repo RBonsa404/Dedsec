@@ -10,7 +10,8 @@ node_modules/
 .next/
 out/
 build/
-dist/
+frontend/dist/
+frontend/.next/
 
 # Environment variables
 .env
