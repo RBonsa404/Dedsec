@@ -19,13 +19,13 @@ services:
       - key: JWT_EXPIRES_IN
         value: 15m
       - key: SMTP_HOST
-        value: "smtp.gmail.com"
+        value: "smtp.sendgrid.net"
       - key: SMTP_PORT
         value: "587"
       - key: SMTP_SECURE
         value: "false"
       - key: SMTP_USER
-        value: "rachidbonsa.ai@gmail.com"
+        value: "apikey"
       - key: SMTP_PASS
         sync: false
       - key: EMAIL_FROM

@@ -1,62 +1,58 @@
-# Configuration des Emails en Production - Gmail
+# Configuration des Emails en Production - SendGrid
 
-## Configuration actuelle
-Le système est configuré pour utiliser Gmail avec le compte `rachidbonsa.ai@gmail.com`.
+## Problème avec Gmail
+Gmail bloque les connexions depuis Render (timeout de connexion). C'est une mesure de sécurité de Gmail.
 
-## ÉTAPES OBLIGATOIRES POUR GMAIL
+## Solution : SendGrid (Recommandé)
 
-### 1. Activer la vérification en 2 étapes sur Google
-1. Allez sur https://myaccount.google.com/security
-2. Connectez-vous avec `rachidbonsa.ai@gmail.com`
-3. Activez "Vérification en 2 étapes"
+SendGrid est plus fiable pour les services cloud et offre 100 emails/jour gratuits.
 
-### 2. Générer un mot de passe d'application
-1. Sur la même page de sécurité Google
-2. Allez dans "Mots de passe d'application"
-3. Cliquez sur "Créer"
-4. Sélectionnez "Mail" comme application
-5. Sélectionnez "Autre" comme appareil
-6. Nommez-le "DEDSEC Platform"
-7. Cliquez sur "Générer"
-8. **COPIEZ LE MOT DE PASSE GÉNÉRÉ** (il s'affiche une seule fois)
+### Étapes de configuration SendGrid
 
-### 3. Configurer Render
-1. Allez dans votre dashboard Render
-2. Sélectionnez le service "dedsec-api"
-3. Cliquez sur "Environment"
-4. Trouvez la variable `SMTP_PASS`
-5. Collez le mot de passe d'application généré (pas votre mot de passe Gmail normal)
-6. Cliquez sur "Save Changes"
-7. Cliquez sur "Manual Deploy" → "Deploy latest commit"
+1. **Créer un compte SendGrid**
+   - Allez sur https://sendgrid.com/
+   - Créez un compte gratuit
+   - Vérifiez votre email
 
-## Configuration SMTP (déjà configurée dans render.yaml)
+2. **Créer un Sender**
+   - Allez dans Settings → Sender Authentication
+   - Cliquez on "Create New Sender"
+   - Entrez vos informations (nom, email `rachidbonsa.ai@gmail.com`)
+   - Vérifiez votre email via le lien reçu
+
+3. **Générer une API Key**
+   - Allez dans Settings → API Keys
+   - Cliquez sur "Create API Key"
+   - Nommez-la "DEDSEC Platform"
+   - Sélectionnez les permissions "Mail Send"
+   - Copiez la clé (elle s'affiche une seule fois)
+
+4. **Configurer Render**
+   - Allez dans votre dashboard Render
+   - Service "dedsec-api" → "Environment"
+   - Configurez les variables :
+
 ```
-SMTP_HOST=smtp.gmail.com
+SMTP_HOST=smtp.sendgrid.net
 SMTP_PORT=587
 SMTP_SECURE=false
-SMTP_USER=rachidbonsa.ai@gmail.com
-SMTP_PASS=[VOTRE MOT DE PASSE D'APPLICATION]
+SMTP_USER=apikey
+SMTP_PASS=votre_clé_api_sendgrid
 EMAIL_FROM=rachidbonsa.ai@gmail.com
 ```
 
+5. **Redéployer**
+   - Cliquez sur "Manual Deploy" → "Deploy latest commit"
+
 ## Vérification
-Après déploiement, vérifiez les logs Render :
+Après déploiement, vous devriez voir dans les logs :
 ```
 ✅ Email transporter configured and verified with SMTP
 ✅ Real emails will be sent
 ```
 
-Si vous voyez :
-```
-❌ Failed to configure SMTP transporter
-```
-Vérifiez que :
-- La vérification en 2 étapes est activée
-- Vous utilisez un mot de passe d'application (pas le mot de passe normal)
-- Le mot de passe est correctement copié
-
 ## Test
-Utilisez l'endpoint de test : `GET /auth/test-email` pour vérifier que les emails partent.
+Créez un nouvel utilisateur pour tester l'envoi d'email de bienvenue.
 
 ## Solution rapide : Utiliser un service SMTP gratuit
 
