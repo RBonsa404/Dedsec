@@ -41,5 +41,10 @@ yarn-error.log*
 *.swp
 *.swo
 
+# Keep init scripts for production setup
+!backend/prisma/init-admin.ts
+!backend/prisma/init-admin-script.sh
+!backend/prisma/init-admin-script.bat
+
 # Turbopack & Next.js cache
 .turbo
