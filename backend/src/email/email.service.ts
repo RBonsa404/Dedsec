@@ -17,19 +17,37 @@ export class EmailService {
   }
 
   private async initTransporter() {
-    if (process.env.SMTP_HOST && process.env.SMTP_USER) {
-      this.transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: parseInt(process.env.SMTP_PORT || '587'),
-        secure: process.env.SMTP_SECURE === 'true',
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
-        },
-      });
-      this.logger.log('Email transporter configured with SMTP');
+    // Check if SMTP is properly configured
+    const smtpHost = process.env.SMTP_HOST?.trim();
+    const smtpUser = process.env.SMTP_USER?.trim();
+    const smtpPass = process.env.SMTP_PASS?.trim();
+
+    this.logger.log(`Email configuration check - SMTP_HOST: "${smtpHost}", SMTP_USER: "${smtpUser}"`);
+
+    if (smtpHost && smtpUser && smtpPass) {
+      try {
+        this.transporter = nodemailer.createTransport({
+          host: smtpHost,
+          port: parseInt(process.env.SMTP_PORT || '587'),
+          secure: process.env.SMTP_SECURE === 'true',
+          auth: {
+            user: smtpUser,
+            pass: smtpPass,
+          },
+        });
+        
+        // Verify the connection
+        await this.transporter.verify();
+        this.logger.log('Email transporter configured and verified with SMTP');
+      } catch (error) {
+        this.logger.error('Failed to configure SMTP transporter, falling back to log mode', error);
+        this.transporter = null;
+      }
     } else {
-      // Dev mode: create ethereal test account
+      this.logger.warn('SMTP not properly configured (missing SMTP_HOST, SMTP_USER, or SMTP_PASS).');
+      this.logger.warn('Falling back to Ethereal test email service for development.');
+      
+      // Fallback to Ethereal for development
       try {
         const testAccount = await nodemailer.createTestAccount();
         this.transporter = nodemailer.createTransport({
@@ -42,8 +60,10 @@ export class EmailService {
           },
         });
         this.logger.log(`Email dev mode: using Ethereal (${testAccount.user})`);
-      } catch {
-        this.logger.warn('Email: Could not create Ethereal account, emails will be logged only');
+        this.logger.log(`Ethereal credentials - User: ${testAccount.user}, Pass: ${testAccount.pass}`);
+      } catch (error) {
+        this.logger.error('Could not create Ethereal account, emails will be logged only', error);
+        this.transporter = null;
       }
     }
   }
@@ -53,6 +73,7 @@ export class EmailService {
 
     if (this.transporter) {
       try {
+        this.logger.log(`Attempting to send email to ${options.to}...`);
         const info = await this.transporter.sendMail({
           from: `"DEDSEC Platform" <${from}>`,
           to: options.to,
@@ -63,12 +84,15 @@ export class EmailService {
         if (previewUrl) {
           this.logger.log(`📧 Preview URL: ${previewUrl}`);
         }
-        this.logger.log(`Email sent to ${options.to}: ${options.subject}`);
+        this.logger.log(`✅ Email successfully sent to ${options.to}: ${options.subject}`);
+        this.logger.log(`Message ID: ${info.messageId}`);
       } catch (error) {
-        this.logger.error(`Failed to send email to ${options.to}`, error);
+        this.logger.error(`❌ Failed to send email to ${options.to}`, error);
+        this.logger.error(`Error details: ${JSON.stringify(error, null, 2)}`);
       }
     } else {
       // Fallback: log the email
+      this.logger.warn(`⚠️ Email transporter not available. Email would be sent to: ${options.to}`);
       this.logger.log(`═══ EMAIL (simulated) ═══`);
       this.logger.log(`To: ${options.to}`);
       this.logger.log(`Subject: ${options.subject}`);
