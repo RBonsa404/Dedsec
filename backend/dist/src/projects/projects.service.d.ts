@@ -66,8 +66,8 @@ export declare class ProjectsService {
                         };
                     } & {
                         id: string;
-                        labelId: string;
                         taskId: string;
+                        labelId: string;
                     })[];
                     assignee: {
                         id: string;
@@ -261,9 +261,9 @@ export declare class ProjectsService {
         id: string;
         createdAt: Date;
         userId: string;
+        projectId: string;
         action: string;
         details: string | null;
-        projectId: string;
     })[]>;
     getDeliverables(projectId: string): Promise<{
         storageQuotaMb: number;

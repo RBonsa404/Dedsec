@@ -17,7 +17,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   lastName: string;
 
-  @ApiProperty({ enum: ['PROJECT_MANAGER', 'TEAM_MEMBER'] })
+  @ApiProperty({ enum: ['PROJECT_MANAGER', 'TEAM_MEMBER', 'ADMIN'] })
   @IsEnum(Role)
   role: Role;
 
@@ -25,6 +25,12 @@ export class CreateUserDto {
   @IsOptional()
   @IsString()
   phone?: string;
+
+  @ApiPropertyOptional({ description: 'Initial password (min 8 chars). If omitted, a temporary one is generated.' })
+  @IsOptional()
+  @IsString()
+  @MinLength(8)
+  password?: string;
 }
 
 export class UpdateUserDto {

@@ -43,7 +43,7 @@ export declare class UsersService {
         lastLoginAt: Date | null;
     }>;
     create(dto: CreateUserDto, creatorId: string, creatorRole: Role): Promise<{
-        tempPassword: string;
+        tempPassword: string | undefined;
         id: string;
         email: string;
         firstName: string;

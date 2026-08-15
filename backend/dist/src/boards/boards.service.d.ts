@@ -19,8 +19,8 @@ export declare class BoardsService {
                     };
                 } & {
                     id: string;
-                    labelId: string;
                     taskId: string;
+                    labelId: string;
                 })[];
                 assignee: {
                     id: string;
@@ -93,8 +93,8 @@ export declare class BoardsService {
                     };
                 } & {
                     id: string;
-                    labelId: string;
                     taskId: string;
+                    labelId: string;
                 })[];
                 assignee: {
                     id: string;

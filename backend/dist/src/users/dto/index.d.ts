@@ -5,6 +5,7 @@ export declare class CreateUserDto {
     lastName: string;
     role: Role;
     phone?: string;
+    password?: string;
 }
 export declare class UpdateUserDto {
     firstName?: string;

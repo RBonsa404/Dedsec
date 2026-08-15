@@ -130,9 +130,9 @@ export class UsersService {
       throw new ForbiddenException('Les chefs de projet ne peuvent provisionner que des membres opérateurs');
     }
 
-    // Nobody can create ADMIN through API
-    if (dto.role === 'ADMIN') {
-      throw new BadRequestException('Impossible de créer un compte administrateur via l\'interface');
+    // Only ADMINs can create ADMIN accounts
+    if (dto.role === 'ADMIN' && creatorRole !== 'ADMIN') {
+      throw new ForbiddenException('Seul un administrateur peut créer un autre compte administrateur');
     }
 
     // Check if email exists
@@ -141,9 +141,12 @@ export class UsersService {
       throw new BadRequestException('Cette adresse email est déjà utilisée');
     }
 
-    // Generate temporary password
-    const tempPassword = this.generateTempPassword();
-    const passwordHash = await bcrypt.hash(tempPassword, 12);
+    // Use provided password if given, otherwise generate a temporary one
+    const passwordToUse = dto.password || this.generateTempPassword();
+    const passwordHash = await bcrypt.hash(passwordToUse, 12);
+
+    // If a password was explicitly set, account is ACTIVE immediately; otherwise force change
+    const status = dto.password ? 'ACTIVE' : 'PENDING_PASSWORD_CHANGE';
 
     const user = await this.prisma.user.create({
       data: {
@@ -153,7 +156,7 @@ export class UsersService {
         role: dto.role,
         phone: dto.phone,
         passwordHash,
-        status: 'PENDING_PASSWORD_CHANGE',
+        status,
         createdById: creatorId,
       },
       select: {
@@ -167,8 +170,12 @@ export class UsersService {
       },
     });
 
-    // Send welcome email
-    await this.emailService.sendWelcomeEmail(dto.email, dto.firstName, tempPassword);
+    // Send welcome email (non-blocking: don't fail if mail config is missing)
+    try {
+      await this.emailService.sendWelcomeEmail(dto.email, dto.firstName, passwordToUse);
+    } catch (_) {
+      // Email not configured — silently continue
+    }
 
     // Log to audit
     await this.prisma.auditLog.create({
@@ -179,8 +186,9 @@ export class UsersService {
       },
     });
 
-    return { ...user, tempPassword };
+    return { ...user, tempPassword: dto.password ? undefined : passwordToUse };
   }
+
 
   async update(id: string, dto: UpdateUserDto) {
     await this.ensureExists(id);

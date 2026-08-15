@@ -34,7 +34,7 @@ __decorate([
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "lastName", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ enum: ['PROJECT_MANAGER', 'TEAM_MEMBER'] }),
+    (0, swagger_1.ApiProperty)({ enum: ['PROJECT_MANAGER', 'TEAM_MEMBER', 'ADMIN'] }),
     (0, class_validator_1.IsEnum)(enums_1.Role),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "role", void 0);
@@ -44,6 +44,13 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "phone", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: 'Initial password (min 8 chars). If omitted, a temporary one is generated.' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MinLength)(8),
+    __metadata("design:type", String)
+], CreateUserDto.prototype, "password", void 0);
 class UpdateUserDto {
 }
 exports.UpdateUserDto = UpdateUserDto;

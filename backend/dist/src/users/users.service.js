@@ -118,15 +118,16 @@ let UsersService = class UsersService {
         if (creatorRole === 'PROJECT_MANAGER' && dto.role !== 'TEAM_MEMBER') {
             throw new common_1.ForbiddenException('Les chefs de projet ne peuvent provisionner que des membres opérateurs');
         }
-        if (dto.role === 'ADMIN') {
-            throw new common_1.BadRequestException('Impossible de créer un compte administrateur via l\'interface');
+        if (dto.role === 'ADMIN' && creatorRole !== 'ADMIN') {
+            throw new common_1.ForbiddenException('Seul un administrateur peut créer un autre compte administrateur');
         }
         const existing = await this.prisma.user.findUnique({ where: { email: dto.email } });
         if (existing) {
             throw new common_1.BadRequestException('Cette adresse email est déjà utilisée');
         }
-        const tempPassword = this.generateTempPassword();
-        const passwordHash = await bcrypt.hash(tempPassword, 12);
+        const passwordToUse = dto.password || this.generateTempPassword();
+        const passwordHash = await bcrypt.hash(passwordToUse, 12);
+        const status = dto.password ? 'ACTIVE' : 'PENDING_PASSWORD_CHANGE';
         const user = await this.prisma.user.create({
             data: {
                 email: dto.email,
@@ -135,7 +136,7 @@ let UsersService = class UsersService {
                 role: dto.role,
                 phone: dto.phone,
                 passwordHash,
-                status: 'PENDING_PASSWORD_CHANGE',
+                status,
                 createdById: creatorId,
             },
             select: {
@@ -148,7 +149,11 @@ let UsersService = class UsersService {
                 createdAt: true,
             },
         });
-        await this.emailService.sendWelcomeEmail(dto.email, dto.firstName, tempPassword);
+        try {
+            await this.emailService.sendWelcomeEmail(dto.email, dto.firstName, passwordToUse);
+        }
+        catch (_) {
+        }
         await this.prisma.auditLog.create({
             data: {
                 action: 'USER_CREATED',
@@ -156,7 +161,7 @@ let UsersService = class UsersService {
                 details: JSON.stringify({ userId: user.id, role: dto.role }),
             },
         });
-        return { ...user, tempPassword };
+        return { ...user, tempPassword: dto.password ? undefined : passwordToUse };
     }
     async update(id, dto) {
         await this.ensureExists(id);

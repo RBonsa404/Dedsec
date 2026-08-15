@@ -5,34 +5,34 @@ export declare class UsersController {
     private usersService;
     constructor(usersService: UsersService);
     findAll(user: any, role?: Role, status?: string, search?: string): Promise<{
-        role: string;
-        status: string;
         id: string;
         email: string;
         firstName: string;
         lastName: string;
+        role: string;
+        status: string;
         avatarUrl: string | null;
         phone: string | null;
         createdAt: Date;
         lastLoginAt: Date | null;
     }[]>;
     create(dto: CreateUserDto, user: any): Promise<{
-        tempPassword: string;
-        role: string;
-        status: string;
+        tempPassword: string | undefined;
         id: string;
         email: string;
         firstName: string;
         lastName: string;
+        role: string;
+        status: string;
         createdAt: Date;
     }>;
     getProfile(user: any): Promise<{
-        role: string;
-        status: string;
         id: string;
         email: string;
         firstName: string;
         lastName: string;
+        role: string;
+        status: string;
         avatarUrl: string | null;
         bio: string | null;
         phone: string | null;
@@ -64,12 +64,12 @@ export declare class UsersController {
         notifyMentions: boolean;
     }>;
     findById(id: string): Promise<{
-        role: string;
-        status: string;
         id: string;
         email: string;
         firstName: string;
         lastName: string;
+        role: string;
+        status: string;
         avatarUrl: string | null;
         bio: string | null;
         phone: string | null;

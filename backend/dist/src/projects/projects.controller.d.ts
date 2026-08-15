@@ -108,8 +108,8 @@ export declare class ProjectsController {
                         };
                     } & {
                         id: string;
-                        labelId: string;
                         taskId: string;
+                        labelId: string;
                     })[];
                     assignee: {
                         id: string;
