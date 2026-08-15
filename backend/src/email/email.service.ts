@@ -21,7 +21,7 @@ export class EmailService {
       this.transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: parseInt(process.env.SMTP_PORT || '587'),
-        secure: false,
+        secure: process.env.SMTP_SECURE === 'true',
         auth: {
           user: process.env.SMTP_USER,
           pass: process.env.SMTP_PASS,
@@ -116,6 +116,152 @@ export class EmailService {
             Réinitialiser mon mot de passe
           </a>
           <p style="margin-top: 20px; color: #8888a0;">Ce lien expire dans 1 heure. Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
+          <hr style="border-color: #2a2a3e; margin: 30px 0;" />
+          <p style="color: #555566; font-size: 12px;">DEDSEC — Plateforme de gestion de projet collaborative</p>
+        </div>
+      `,
+    });
+  }
+
+  async sendTaskAssignedEmail(email: string, firstName: string, taskTitle: string, projectName: string, assignerName: string): Promise<void> {
+    const taskUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/my-tasks`;
+    await this.sendMail({
+      to: email,
+      subject: '📋 DEDSEC — Nouvelle tâche assignée',
+      html: `
+        <div style="font-family: 'Segoe UI', sans-serif; background: #0a0a0f; color: #e0e0e0; padding: 40px; border: 1px solid #2a2a3e; border-radius: 8px;">
+          <h1 style="color: #00ff88; font-family: monospace;">[ DEDSEC ]</h1>
+          <p>Bonjour <strong>${firstName}</strong>,</p>
+          <p><strong>${assignerName}</strong> vous a assigné une nouvelle tâche dans le projet <strong>${projectName}</strong>.</p>
+          <div style="background: #12121a; padding: 20px; border-radius: 6px; border-left: 3px solid #00d4ff; margin: 20px 0;">
+            <p style="margin: 5px 0;"><strong>Tâche :</strong> ${taskTitle}</p>
+            <p style="margin: 5px 0;"><strong>Projet :</strong> ${projectName}</p>
+          </div>
+          <a href="${taskUrl}" style="display: inline-block; background: #00d4ff; color: #0a0a0f; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 16px;">
+            Voir mes tâches
+          </a>
+          <hr style="border-color: #2a2a3e; margin: 30px 0;" />
+          <p style="color: #555566; font-size: 12px;">DEDSEC — Plateforme de gestion de projet collaborative</p>
+        </div>
+      `,
+    });
+  }
+
+  async sendTaskUpdatedEmail(email: string, firstName: string, taskTitle: string, updateType: string, updaterName: string): Promise<void> {
+    const taskUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/my-tasks`;
+    await this.sendMail({
+      to: email,
+      subject: '📝 DEDSEC — Mise à jour de tâche',
+      html: `
+        <div style="font-family: 'Segoe UI', sans-serif; background: #0a0a0f; color: #e0e0e0; padding: 40px; border: 1px solid #2a2a3e; border-radius: 8px;">
+          <h1 style="color: #00ff88; font-family: monospace;">[ DEDSEC ]</h1>
+          <p>Bonjour <strong>${firstName}</strong>,</p>
+          <p><strong>${updaterName}</strong> a mis à jour la tâche <strong>${taskTitle}</strong>.</p>
+          <div style="background: #12121a; padding: 20px; border-radius: 6px; border-left: 3px solid #ffaa00; margin: 20px 0;">
+            <p style="margin: 5px 0;"><strong>Type de mise à jour :</strong> ${updateType}</p>
+            <p style="margin: 5px 0;"><strong>Tâche :</strong> ${taskTitle}</p>
+          </div>
+          <a href="${taskUrl}" style="display: inline-block; background: #ffaa00; color: #0a0a0f; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 16px;">
+            Voir les détails
+          </a>
+          <hr style="border-color: #2a2a3e; margin: 30px 0;" />
+          <p style="color: #555566; font-size: 12px;">DEDSEC — Plateforme de gestion de projet collaborative</p>
+        </div>
+      `,
+    });
+  }
+
+  async sendProjectInvitedEmail(email: string, firstName: string, projectName: string, inviterName: string): Promise<void> {
+    const projectUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/projects`;
+    await this.sendMail({
+      to: email,
+      subject: '🚀 DEDSEC — Invitation à un projet',
+      html: `
+        <div style="font-family: 'Segoe UI', sans-serif; background: #0a0a0f; color: #e0e0e0; padding: 40px; border: 1px solid #2a2a3e; border-radius: 8px;">
+          <h1 style="color: #00ff88; font-family: monospace;">[ DEDSEC ]</h1>
+          <p>Bonjour <strong>${firstName}</strong>,</p>
+          <p><strong>${inviterName}</strong> vous a invité à rejoindre le projet <strong>${projectName}</strong>.</p>
+          <div style="background: #12121a; padding: 20px; border-radius: 6px; border-left: 3px solid #00ff88; margin: 20px 0;">
+            <p style="margin: 5px 0;"><strong>Projet :</strong> ${projectName}</p>
+            <p style="margin: 5px 0;"><strong>Invité par :</strong> ${inviterName}</p>
+          </div>
+          <a href="${projectUrl}" style="display: inline-block; background: #00ff88; color: #0a0a0f; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 16px;">
+            Voir le projet
+          </a>
+          <hr style="border-color: #2a2a3e; margin: 30px 0;" />
+          <p style="color: #555566; font-size: 12px;">DEDSEC — Plateforme de gestion de projet collaborative</p>
+        </div>
+      `,
+    });
+  }
+
+  async sendAbsenceRequestEmail(email: string, firstName: string, requesterName: string, startDate: string, endDate: string, reason: string): Promise<void> {
+    const absencesUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/absences`;
+    await this.sendMail({
+      to: email,
+      subject: '📅 DEDSEC — Demande de congé',
+      html: `
+        <div style="font-family: 'Segoe UI', sans-serif; background: #0a0a0f; color: #e0e0e0; padding: 40px; border: 1px solid #2a2a3e; border-radius: 8px;">
+          <h1 style="color: #00ff88; font-family: monospace;">[ DEDSEC ]</h1>
+          <p>Bonjour <strong>${firstName}</strong>,</p>
+          <p><strong>${requesterName}</strong> a soumis une demande de congé qui nécessite votre approbation.</p>
+          <div style="background: #12121a; padding: 20px; border-radius: 6px; border-left: 3px solid #ffaa00; margin: 20px 0;">
+            <p style="margin: 5px 0;"><strong>Demandeur :</strong> ${requesterName}</p>
+            <p style="margin: 5px 0;"><strong>Du :</strong> ${startDate}</p>
+            <p style="margin: 5px 0;"><strong>Au :</strong> ${endDate}</p>
+            <p style="margin: 5px 0;"><strong>Raison :</strong> ${reason}</p>
+          </div>
+          <a href="${absencesUrl}" style="display: inline-block; background: #ffaa00; color: #0a0a0f; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 16px;">
+            Gérer les demandes
+          </a>
+          <hr style="border-color: #2a2a3e; margin: 30px 0;" />
+          <p style="color: #555566; font-size: 12px;">DEDSEC — Plateforme de gestion de projet collaborative</p>
+        </div>
+      `,
+    });
+  }
+
+  async sendAbsenceApprovedEmail(email: string, firstName: string, startDate: string, endDate: string): Promise<void> {
+    const absencesUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/absences`;
+    await this.sendMail({
+      to: email,
+      subject: '✅ DEDSEC — Congé approuvé',
+      html: `
+        <div style="font-family: 'Segoe UI', sans-serif; background: #0a0a0f; color: #e0e0e0; padding: 40px; border: 1px solid #2a2a3e; border-radius: 8px;">
+          <h1 style="color: #00ff88; font-family: monospace;">[ DEDSEC ]</h1>
+          <p>Bonjour <strong>${firstName}</strong>,</p>
+          <p>Votre demande de congé a été approuvée.</p>
+          <div style="background: #12121a; padding: 20px; border-radius: 6px; border-left: 3px solid #00ff88; margin: 20px 0;">
+            <p style="margin: 5px 0;"><strong>Du :</strong> ${startDate}</p>
+            <p style="margin: 5px 0;"><strong>Au :</strong> ${endDate}</p>
+          </div>
+          <a href="${absencesUrl}" style="display: inline-block; background: #00ff88; color: #0a0a0f; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 16px;">
+            Voir mes congés
+          </a>
+          <hr style="border-color: #2a2a3e; margin: 30px 0;" />
+          <p style="color: #555566; font-size: 12px;">DEDSEC — Plateforme de gestion de projet collaborative</p>
+        </div>
+      `,
+    });
+  }
+
+  async sendAnnouncementEmail(email: string, firstName: string, title: string, content: string, authorName: string): Promise<void> {
+    const announcementsUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/announcements`;
+    await this.sendMail({
+      to: email,
+      subject: `📢 DEDSEC — ${title}`,
+      html: `
+        <div style="font-family: 'Segoe UI', sans-serif; background: #0a0a0f; color: #e0e0e0; padding: 40px; border: 1px solid #2a2a3e; border-radius: 8px;">
+          <h1 style="color: #00ff88; font-family: monospace;">[ DEDSEC ]</h1>
+          <p>Bonjour <strong>${firstName}</strong>,</p>
+          <p><strong>${authorName}</strong> a publié une nouvelle annonce.</p>
+          <div style="background: #12121a; padding: 20px; border-radius: 6px; border-left: 3px solid #ff00ff; margin: 20px 0;">
+            <h3 style="margin: 0 0 10px 0; color: #ff00ff;">${title}</h3>
+            <p style="margin: 0;">${content}</p>
+          </div>
+          <a href="${announcementsUrl}" style="display: inline-block; background: #ff00ff; color: #0a0a0f; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 16px;">
+            Voir toutes les annonces
+          </a>
           <hr style="border-color: #2a2a3e; margin: 30px 0;" />
           <p style="color: #555566; font-size: 12px;">DEDSEC — Plateforme de gestion de projet collaborative</p>
         </div>

@@ -4,10 +4,14 @@ import * as fs from 'fs';
 import { PrismaService } from '../prisma-client';
 import { CreateProjectDto, UpdateProjectDto, AddMemberDto } from './dto';
 import { Role } from '../common/enums';
+import { NotificationAutomationService } from '../notifications/notification-automation.service';
 
 @Injectable()
 export class ProjectsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private notificationAutomation: NotificationAutomationService,
+  ) {}
 
   async findAll(userId: string, userRole: Role) {
     if (userRole === 'ADMIN') {
@@ -195,6 +199,9 @@ export class ProjectsService {
         userId,
       },
     });
+
+    // Send project invitation notification
+    await this.notificationAutomation.handleProjectInvited(projectId, dto.userId, userId);
 
     return { message: 'Member added' };
   }

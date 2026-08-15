@@ -12,6 +12,7 @@ import { AuditLogModule } from './audit-log/audit-log.module';
 import { AbsencesModule } from './absences/absences.module';
 import { AnnouncementsModule } from './announcements/announcements.module';
 import { WebsocketsModule } from './websockets/websockets.module';
+import { SchedulerModule } from './common/scheduler.module';
 import { GlobalExceptionFilter } from './common/filters';
 
 import { AppController } from './app.controller';
@@ -30,6 +31,7 @@ import { AppController } from './app.controller';
     AbsencesModule,
     AnnouncementsModule,
     WebsocketsModule,
+    SchedulerModule,
   ],
   controllers: [AppController],
   providers: [

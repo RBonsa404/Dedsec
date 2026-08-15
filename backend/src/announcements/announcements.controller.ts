@@ -5,6 +5,7 @@ import { AnnouncementsService } from './announcements.service';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
+import { CurrentUser } from '../common/decorators/current-user.decorator';
 
 @ApiTags('Announcements')
 @ApiBearerAuth()
@@ -31,8 +32,8 @@ export class AnnouncementsController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Create announcement (Admin only)' })
-  async create(@Body() body: { title: string; content: string }) {
-    return this.announcementsService.create(body.title, body.content);
+  async create(@Body() body: { title: string; content: string }, @CurrentUser() user: any) {
+    return this.announcementsService.create(body.title, body.content, user.id);
   }
 
   @Patch(':id')

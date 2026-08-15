@@ -2,10 +2,14 @@ import { Injectable, NotFoundException, ForbiddenException, BadRequestException 
 import { PrismaService } from '../prisma-client';
 import { CreateTaskDto, UpdateTaskDto, MoveTaskDto } from './dto';
 import { Role } from '../common/enums';
+import { NotificationAutomationService } from '../notifications/notification-automation.service';
 
 @Injectable()
 export class TasksService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private notificationAutomation: NotificationAutomationService,
+  ) {}
 
   async create(dto: CreateTaskDto, userId: string) {
     const column = await this.prisma.column.findUnique({
@@ -46,15 +50,7 @@ export class TasksService {
 
     // Notify assignee if assigned
     if (dto.assigneeId && dto.assigneeId !== userId) {
-      await this.prisma.notification.create({
-        data: {
-          type: 'TASK_ASSIGNED',
-          title: 'Nouvelle tâche assignée',
-          message: `Vous avez été assigné à la tâche : "${task.title}"`,
-          userId: dto.assigneeId,
-          link: `/projects/${column.board.projectId}/board`,
-        },
-      });
+      await this.notificationAutomation.handleTaskAssigned(task.id, dto.assigneeId, userId);
     }
 
     return task;

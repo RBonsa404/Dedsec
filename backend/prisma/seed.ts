@@ -382,6 +382,7 @@ async function main() {
     data: {
       title: '🚀 Bienvenue sur DEDSEC',
       content: 'La plateforme de gestion de projet est maintenant en ligne. N\'hésitez pas à explorer les fonctionnalités et à remonter vos retours.',
+      authorId: admin.id,
     },
   });
   console.log(`✅ Announcement created`);

@@ -1,13 +1,17 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../prisma-client';
 import { CreateAbsenceDto, ReviewAbsenceDto } from './dto';
+import { NotificationAutomationService } from '../notifications/notification-automation.service';
 
 @Injectable()
 export class AbsencesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private notificationAutomation: NotificationAutomationService,
+  ) {}
 
   async create(dto: CreateAbsenceDto, userId: string) {
-    return this.prisma.absenceRequest.create({
+    const absence = await this.prisma.absenceRequest.create({
       data: {
         reason: dto.reason,
         startDate: new Date(dto.startDate),
@@ -16,6 +20,11 @@ export class AbsencesService {
         requesterId: userId,
       },
     });
+
+    // Send absence request notification
+    await this.notificationAutomation.handleAbsenceRequested(absence.id, userId);
+
+    return absence;
   }
 
   async findByRequester(userId: string) {
@@ -63,7 +72,7 @@ export class AbsencesService {
     const absence = await this.prisma.absenceRequest.findUnique({ where: { id } });
     if (!absence) throw new NotFoundException('Absence request not found');
 
-    return this.prisma.absenceRequest.update({
+    const updatedAbsence = await this.prisma.absenceRequest.update({
       where: { id },
       data: {
         status: dto.status,
@@ -72,5 +81,12 @@ export class AbsencesService {
         reviewedAt: new Date(),
       },
     });
+
+    // Send notification if approved
+    if (dto.status === 'APPROVED') {
+      await this.notificationAutomation.handleAbsenceApproved(id, reviewerId);
+    }
+
+    return updatedAbsence;
   }
 }

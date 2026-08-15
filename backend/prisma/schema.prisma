@@ -66,6 +66,7 @@ model User {
   uploadedAttachments Attachment[]
   deliverables        Deliverable[]
   activityLogs        ActivityLog[]
+  announcements       Announcement[]    @relation("AnnouncementAuthor")
 
   @@index([email])
   @@index([role])
@@ -444,7 +445,11 @@ model Announcement {
   title     String
   content   String
   isActive  Boolean  @default(true)
+  authorId  String
+  author    User     @relation("AnnouncementAuthor", fields: [authorId], references: [id], onDelete: SetNull)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([authorId])
 }
