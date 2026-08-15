@@ -19,12 +19,12 @@ export declare class ProjectsService {
             isManager: boolean;
         }[];
     } & {
+        description: string | null;
         name: string;
         id: string;
         status: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         storageQuotaMb: number;
         storageUsedMb: number;
         archivedAt: Date | null;
@@ -90,11 +90,11 @@ export declare class ProjectsService {
                         taskId: string;
                     })[];
                 } & {
+                    description: string | null;
                     priority: string;
                     id: string;
                     createdAt: Date;
                     updatedAt: Date;
-                    description: string | null;
                     title: string;
                     position: number;
                     isArchived: boolean;
@@ -125,11 +125,11 @@ export declare class ProjectsService {
             projectId: string;
         })[];
         milestones: {
+            description: string | null;
             name: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
-            description: string | null;
             projectId: string;
             dueDate: Date | null;
             isCompleted: boolean;
@@ -141,12 +141,12 @@ export declare class ProjectsService {
             color: string;
         }[];
     } & {
+        description: string | null;
         name: string;
         id: string;
         status: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         storageQuotaMb: number;
         storageUsedMb: number;
         archivedAt: Date | null;
@@ -183,34 +183,34 @@ export declare class ProjectsService {
             color: string;
         }[];
     } & {
+        description: string | null;
         name: string;
         id: string;
         status: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         storageQuotaMb: number;
         storageUsedMb: number;
         archivedAt: Date | null;
     }>;
     update(id: string, dto: UpdateProjectDto, userId: string): Promise<{
+        description: string | null;
         name: string;
         id: string;
         status: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         storageQuotaMb: number;
         storageUsedMb: number;
         archivedAt: Date | null;
     }>;
     archive(id: string, userId: string): Promise<{
+        description: string | null;
         name: string;
         id: string;
         status: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         storageQuotaMb: number;
         storageUsedMb: number;
         archivedAt: Date | null;

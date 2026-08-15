@@ -28,11 +28,11 @@ export declare class TasksService {
             avatarUrl: string | null;
         } | null;
     } & {
+        description: string | null;
         priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         title: string;
         position: number;
         isArchived: boolean;
@@ -61,11 +61,11 @@ export declare class TasksService {
             boardId: string;
         };
         milestone: {
+            description: string | null;
             name: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
-            description: string | null;
             projectId: string;
             dueDate: Date | null;
             isCompleted: boolean;
@@ -160,11 +160,11 @@ export declare class TasksService {
             dependsOnId: string;
         })[];
     } & {
+        description: string | null;
         priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         title: string;
         position: number;
         isArchived: boolean;
@@ -216,11 +216,11 @@ export declare class TasksService {
             taskId: string;
         })[];
     } & {
+        description: string | null;
         priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         title: string;
         position: number;
         isArchived: boolean;
@@ -258,11 +258,11 @@ export declare class TasksService {
             avatarUrl: string | null;
         } | null;
     } & {
+        description: string | null;
         priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         title: string;
         position: number;
         isArchived: boolean;
@@ -277,11 +277,11 @@ export declare class TasksService {
         completedAt: Date | null;
     }>;
     archive(id: string): Promise<{
+        description: string | null;
         priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         title: string;
         position: number;
         isArchived: boolean;
@@ -343,11 +343,11 @@ export declare class TasksService {
             labelId: string;
         })[];
     } & {
+        description: string | null;
         priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         title: string;
         position: number;
         isArchived: boolean;
@@ -389,11 +389,11 @@ export declare class TasksService {
             taskId: string;
         })[];
     } & {
+        description: string | null;
         priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         title: string;
         position: number;
         isArchived: boolean;
@@ -422,11 +422,11 @@ export declare class TasksService {
             boardId: string;
         };
         milestone: {
+            description: string | null;
             name: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
-            description: string | null;
             projectId: string;
             dueDate: Date | null;
             isCompleted: boolean;
@@ -521,11 +521,11 @@ export declare class TasksService {
             dependsOnId: string;
         })[];
     } & {
+        description: string | null;
         priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         title: string;
         position: number;
         isArchived: boolean;

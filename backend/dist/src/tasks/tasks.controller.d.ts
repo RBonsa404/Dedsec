@@ -27,11 +27,11 @@ export declare class TasksController {
             avatarUrl: string | null;
         } | null;
     } & {
+        description: string | null;
         priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         title: string;
         position: number;
         isArchived: boolean;
@@ -86,11 +86,11 @@ export declare class TasksController {
             labelId: string;
         })[];
     } & {
+        description: string | null;
         priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         title: string;
         position: number;
         isArchived: boolean;
@@ -132,11 +132,11 @@ export declare class TasksController {
             taskId: string;
         })[];
     } & {
+        description: string | null;
         priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         title: string;
         position: number;
         isArchived: boolean;
@@ -165,11 +165,11 @@ export declare class TasksController {
             boardId: string;
         };
         milestone: {
+            description: string | null;
             name: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
-            description: string | null;
             projectId: string;
             dueDate: Date | null;
             isCompleted: boolean;
@@ -264,11 +264,11 @@ export declare class TasksController {
             dependsOnId: string;
         })[];
     } & {
+        description: string | null;
         priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         title: string;
         position: number;
         isArchived: boolean;
@@ -297,11 +297,11 @@ export declare class TasksController {
             boardId: string;
         };
         milestone: {
+            description: string | null;
             name: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
-            description: string | null;
             projectId: string;
             dueDate: Date | null;
             isCompleted: boolean;
@@ -396,11 +396,11 @@ export declare class TasksController {
             dependsOnId: string;
         })[];
     } & {
+        description: string | null;
         priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         title: string;
         position: number;
         isArchived: boolean;
@@ -452,11 +452,11 @@ export declare class TasksController {
             taskId: string;
         })[];
     } & {
+        description: string | null;
         priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         title: string;
         position: number;
         isArchived: boolean;
@@ -494,11 +494,11 @@ export declare class TasksController {
             avatarUrl: string | null;
         } | null;
     } & {
+        description: string | null;
         priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         title: string;
         position: number;
         isArchived: boolean;
@@ -513,11 +513,11 @@ export declare class TasksController {
         completedAt: Date | null;
     }>;
     archive(id: string): Promise<{
+        description: string | null;
         priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         title: string;
         position: number;
         isArchived: boolean;

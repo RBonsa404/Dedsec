@@ -43,11 +43,11 @@ export declare class BoardsService {
                     taskId: string;
                 })[];
             } & {
+                description: string | null;
                 priority: string;
                 id: string;
                 createdAt: Date;
                 updatedAt: Date;
-                description: string | null;
                 title: string;
                 position: number;
                 isArchived: boolean;
@@ -117,11 +117,11 @@ export declare class BoardsService {
                     taskId: string;
                 })[];
             } & {
+                description: string | null;
                 priority: string;
                 id: string;
                 createdAt: Date;
                 updatedAt: Date;
-                description: string | null;
                 title: string;
                 position: number;
                 isArchived: boolean;
@@ -153,11 +153,11 @@ export declare class BoardsService {
     }>;
     addColumn(boardId: string, dto: CreateColumnDto): Promise<{
         tasks: {
+            description: string | null;
             priority: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
-            description: string | null;
             title: string;
             position: number;
             isArchived: boolean;

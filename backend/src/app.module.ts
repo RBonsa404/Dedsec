@@ -14,6 +14,8 @@ import { AnnouncementsModule } from './announcements/announcements.module';
 import { WebsocketsModule } from './websockets/websockets.module';
 import { GlobalExceptionFilter } from './common/filters';
 
+import { AppController } from './app.controller';
+
 @Module({
   imports: [
     PrismaModule,
@@ -29,6 +31,7 @@ import { GlobalExceptionFilter } from './common/filters';
     AnnouncementsModule,
     WebsocketsModule,
   ],
+  controllers: [AppController],
   providers: [
     {
       provide: APP_FILTER,

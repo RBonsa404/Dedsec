@@ -22,6 +22,7 @@ const absences_module_1 = require("./absences/absences.module");
 const announcements_module_1 = require("./announcements/announcements.module");
 const websockets_module_1 = require("./websockets/websockets.module");
 const filters_1 = require("./common/filters");
+const app_controller_1 = require("./app.controller");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -41,6 +42,7 @@ exports.AppModule = AppModule = __decorate([
             announcements_module_1.AnnouncementsModule,
             websockets_module_1.WebsocketsModule,
         ],
+        controllers: [app_controller_1.AppController],
         providers: [
             {
                 provide: core_1.APP_FILTER,
