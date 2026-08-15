@@ -57,6 +57,7 @@ export default function UsersManagementPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [modalError, setModalError] = useState("");
   const [modalSuccess, setModalSuccess] = useState("");
+  const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
 
   // Action feedback
   const [actionMessage, setActionMessage] = useState("");
@@ -86,11 +87,6 @@ export default function UsersManagementPage() {
       return;
     }
 
-    if (password.length < 8) {
-      setModalError(lang === "fr" ? "Le mot de passe doit contenir au moins 8 caractères." : "Password must be at least 8 characters.");
-      return;
-    }
-
     setIsSubmitting(true);
     try {
       const res = await api.post("/users", {
@@ -111,10 +107,18 @@ export default function UsersManagementPage() {
         setPassword("");
         setRole("TEAM_MEMBER");
         setModalSuccess("");
+        setPasswordErrors([]);
       }, 1200);
     } catch (error: any) {
       const msg = error.response?.data?.message;
       setModalError(Array.isArray(msg) ? msg.join(", ") : (msg || (lang === "fr" ? "Échec de création du collaborateur" : "Failed to create operator")));
+      
+      // Extract detailed password errors if available
+      if (error.response?.data?.errors && Array.isArray(error.response.data.errors)) {
+        setPasswordErrors(error.response.data.errors);
+      } else {
+        setPasswordErrors([]);
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -146,14 +150,10 @@ export default function UsersManagementPage() {
 
   const handleResetPassword = async (userId: string) => {
     const tempPass = prompt(
-      lang === "fr" ? "Entrez le nouveau mot de passe temporaire (min 8 car.) :" : "Enter new temporary passphrase (min 8 chars):",
+      lang === "fr" ? "Entrez le nouveau mot de passe temporaire :" : "Enter new temporary passphrase:",
       "Temporary@2026"
     );
     if (!tempPass) return;
-    if (tempPass.length < 8) {
-      alert(lang === "fr" ? "Le mot de passe doit faire au moins 8 caractères." : "Password must be at least 8 characters.");
-      return;
-    }
 
     try {
       await api.patch(`/users/${userId}/reset-password`, { newPassword: tempPass });
@@ -583,17 +583,33 @@ export default function UsersManagementPage() {
                 <Input
                   id="password"
                   type="password"
-                  placeholder={lang === "fr" ? "Min 8 caractères" : "Min 8 characters"}
+                  placeholder={role === 'ADMIN' ? (lang === "fr" ? "Min 8 caractères" : "Min 8 characters") : (lang === "fr" ? "Min 12 caractères, majuscule, minuscule, chiffre, spécial" : "Min 12 chars, uppercase, lowercase, number, special")}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   className="bg-[#162032] border-[#2b3a55] text-slate-100 rounded-xl"
                 />
+                <div className="text-[10px] text-slate-400 mt-1">
+                  {role === 'ADMIN' ? (
+                    lang === "fr" ? "Admin : minimum 8 caractères (exigences relaxées)" : "Admin: minimum 8 characters (relaxed requirements)"
+                  ) : (
+                    lang === "fr" ? "Standard : minimum 12 caractères, majuscule, minuscule, chiffre, caractère spécial" : "Standard: minimum 12 characters, uppercase, lowercase, number, special character"
+                  )}
+                </div>
               </div>
 
               {modalError && (
-                <div className="rounded-xl border border-rose-800/60 bg-rose-950/40 p-3 text-rose-400 flex items-center gap-2 font-medium">
-                  <AlertCircle className="w-4 h-4 shrink-0" /> {modalError}
+                <div className="rounded-xl border border-rose-800/60 bg-rose-950/40 p-3 text-rose-400">
+                  <div className="flex items-center gap-2 font-medium mb-2">
+                    <AlertCircle className="w-4 h-4 shrink-0" /> {modalError}
+                  </div>
+                  {passwordErrors.length > 0 && (
+                    <ul className="ml-6 list-disc text-xs space-y-1">
+                      {passwordErrors.map((err, index) => (
+                        <li key={index}>{err}</li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               )}
 

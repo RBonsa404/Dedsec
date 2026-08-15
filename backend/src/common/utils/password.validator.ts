@@ -9,6 +9,13 @@ export class PasswordValidator {
   private static readonly REQUIRE_SPECIAL_CHARS = true;
   private static readonly SPECIAL_CHARS = '!@#$%^&*()_+-=[]{}|;:,.<>?';
 
+  // Admin relaxed requirements
+  private static readonly ADMIN_MIN_LENGTH = 8;
+  private static readonly ADMIN_REQUIRE_UPPERCASE = false;
+  private static readonly ADMIN_REQUIRE_LOWERCASE = false;
+  private static readonly ADMIN_REQUIRE_NUMBERS = false;
+  private static readonly ADMIN_REQUIRE_SPECIAL_CHARS = false;
+
   static validate(password: string): { valid: boolean; errors: string[] } {
     const errors: string[] = [];
 
@@ -77,8 +84,69 @@ export class PasswordValidator {
     };
   }
 
+  static validateForAdmin(password: string): { valid: boolean; errors: string[] } {
+    const errors: string[] = [];
+
+    if (!password) {
+      errors.push('Le mot de passe est requis');
+      return { valid: false, errors };
+    }
+
+    // Length validation (relaxed for admin)
+    if (password.length < this.ADMIN_MIN_LENGTH) {
+      errors.push(`Le mot de passe doit contenir au moins ${this.ADMIN_MIN_LENGTH} caractères`);
+    }
+    if (password.length > this.MAX_LENGTH) {
+      errors.push(`Le mot de passe ne peut pas dépasser ${this.MAX_LENGTH} caractères`);
+    }
+
+    // Uppercase validation (optional for admin)
+    if (this.ADMIN_REQUIRE_UPPERCASE && !/[A-Z]/.test(password)) {
+      errors.push('Le mot de passe doit contenir au moins une majuscule');
+    }
+
+    // Lowercase validation (optional for admin)
+    if (this.ADMIN_REQUIRE_LOWERCASE && !/[a-z]/.test(password)) {
+      errors.push('Le mot de passe doit contenir au moins une minuscule');
+    }
+
+    // Numbers validation (optional for admin)
+    if (this.ADMIN_REQUIRE_NUMBERS && !/\d/.test(password)) {
+      errors.push('Le mot de passe doit contenir au moins un chiffre');
+    }
+
+    // Special characters validation (optional for admin)
+    if (this.ADMIN_REQUIRE_SPECIAL_CHARS) {
+      const hasSpecialChar = this.SPECIAL_CHARS.split('').some(char => password.includes(char));
+      if (!hasSpecialChar) {
+        errors.push(`Le mot de passe doit contenir au moins un caractère spécial (${this.SPECIAL_CHARS})`);
+      }
+    }
+
+    // Only check for extremely common weak passwords for admin
+    const extremelyCommonPasswords = ['password', '123456', '12345678'];
+    if (extremelyCommonPasswords.some(common => password.toLowerCase() === common)) {
+      errors.push('Ce mot de passe est trop courant');
+    }
+
+    return {
+      valid: errors.length === 0,
+      errors
+    };
+  }
+
   static validateOrThrow(password: string): void {
     const validation = this.validate(password);
+    if (!validation.valid) {
+      throw new BadRequestException({
+        message: 'Mot de passe invalide',
+        errors: validation.errors
+      });
+    }
+  }
+
+  static validateOrThrowForAdmin(password: string): void {
+    const validation = this.validateForAdmin(password);
     if (!validation.valid) {
       throw new BadRequestException({
         message: 'Mot de passe invalide',
@@ -128,6 +196,13 @@ export class PasswordValidator {
       'Pas de mots de passe communs',
       'Pas de séquences de caractères consécutifs',
       'Pas de caractères répétés plus de 3 fois'
+    ];
+  }
+
+  static getAdminPasswordRequirements(): string[] {
+    return [
+      `Au moins ${this.ADMIN_MIN_LENGTH} caractères`,
+      'Éviter les mots de passe extrêmement courants (password, 123456, etc.)'
     ];
   }
 }

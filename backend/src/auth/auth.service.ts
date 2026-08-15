@@ -94,7 +94,6 @@ export class AuthService {
     if (!newPassword) {
       throw new BadRequestException('New password is required');
     }
-    PasswordValidator.validateOrThrow(newPassword);
 
     let targetUserId = userId;
 
@@ -113,6 +112,13 @@ export class AuthService {
 
     const user = await this.prisma.user.findUnique({ where: { id: targetUserId } });
     if (!user) throw new UnauthorizedException('User not found');
+
+    // Use relaxed validation for admin users
+    if (user.role === 'ADMIN') {
+      PasswordValidator.validateOrThrowForAdmin(newPassword);
+    } else {
+      PasswordValidator.validateOrThrow(newPassword);
+    }
 
     // If oldPassword provided, verify it (unless authenticated via tempToken with mustChangePassword)
     if (oldPassword) {
@@ -181,8 +187,11 @@ export class AuthService {
       throw new BadRequestException('Invalid or expired reset token');
     }
 
-    if (newPassword.length < 8) {
-      throw new BadRequestException('Password must be at least 8 characters');
+    // Use relaxed validation for admin users
+    if (user.role === 'ADMIN') {
+      PasswordValidator.validateOrThrowForAdmin(newPassword);
+    } else {
+      PasswordValidator.validateOrThrow(newPassword);
     }
 
     const passwordHash = await bcrypt.hash(newPassword, 12);

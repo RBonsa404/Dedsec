@@ -12,6 +12,7 @@ function ResetPasswordForm() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -24,11 +25,6 @@ function ResetPasswordForm() {
 
     if (newPassword !== confirmPassword) {
       setError("Passwords do not match");
-      return;
-    }
-
-    if (newPassword.length < 8) {
-      setError("Password must be at least 8 characters");
       return;
     }
 
@@ -46,7 +42,15 @@ function ResetPasswordForm() {
         router.push("/projects");
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || err.message || "Failed to update password");
+      const errorMessage = err.response?.data?.message || err.message || "Failed to update password";
+      setError(errorMessage);
+      
+      // Extract detailed password errors if available
+      if (err.response?.data?.errors && Array.isArray(err.response.data.errors)) {
+        setPasswordErrors(err.response.data.errors);
+      } else {
+        setPasswordErrors([]);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -70,12 +74,15 @@ function ResetPasswordForm() {
             <Input
               id="newPassword"
               type="password"
-              placeholder="Min 8 chars, mixed case, symbols"
+              placeholder="Min 8 chars (12 recommended for standard users)"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
               className="bg-bg-primary"
             />
+            <div className="text-[10px] text-text-secondary mt-1">
+              Password requirements depend on your account role. Admin accounts have relaxed requirements.
+            </div>
           </div>
 
           <div className="space-y-2">
@@ -93,6 +100,13 @@ function ResetPasswordForm() {
           {error && (
             <div className="rounded-md border border-danger/50 bg-danger/10 p-3 text-sm text-danger font-mono">
               &gt; ERROR: {error}
+              {passwordErrors.length > 0 && (
+                <ul className="mt-2 ml-4 list-disc text-xs">
+                  {passwordErrors.map((err, index) => (
+                    <li key={index}>{err}</li>
+                  ))}
+                </ul>
+              )}
             </div>
           )}
 

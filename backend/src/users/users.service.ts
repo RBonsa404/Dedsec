@@ -148,7 +148,12 @@ export class UsersService {
 
     if (dto.password) {
       // Validate password strength if provided
-      PasswordValidator.validateOrThrow(dto.password);
+      // Use relaxed validation for admin accounts
+      if (dto.role === 'ADMIN') {
+        PasswordValidator.validateOrThrowForAdmin(dto.password);
+      } else {
+        PasswordValidator.validateOrThrow(dto.password);
+      }
       passwordToUse = dto.password;
       status = 'ACTIVE';
     } else {
