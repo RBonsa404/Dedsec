@@ -37,6 +37,7 @@ export class EmailService {
         smtpUser !== "your-mailtrap-user" &&
         smtpPass !== "your-mailtrap-pass") {
       try {
+        this.logger.log(`🔄 Attempting to configure SMTP transporter...`);
         this.transporter = nodemailer.createTransport({
           host: smtpHost,
           port: parseInt(process.env.SMTP_PORT || '587'),
@@ -47,13 +48,17 @@ export class EmailService {
           },
         });
         
+        this.logger.log(`🔄 Verifying SMTP connection...`);
         // Verify the connection
         await this.transporter.verify();
         this.logger.log('✅ Email transporter configured and verified with SMTP');
         this.logger.log('✅ Real emails will be sent');
       } catch (error) {
-        this.logger.error('❌ Failed to configure SMTP transporter, falling back to log mode', error);
+        this.logger.error('❌ SMTP CONNECTION FAILED');
+        this.logger.error(`❌ Error: ${error.message}`);
+        this.logger.error(`❌ Error code: ${error.code}`);
         this.logger.error('❌ Common Gmail issues: wrong app password, 2FA not enabled, or less secure apps blocked');
+        this.logger.error('❌ Falling back to LOG ONLY mode');
         this.transporter = null;
       }
     } else {
