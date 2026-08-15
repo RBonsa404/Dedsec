@@ -35,9 +35,23 @@ async function bootstrap() {
   // Global prefix
   app.setGlobalPrefix('api');
 
-  // CORS
+  // CORS — accept frontend URL + all Vercel preview deployments
+  const allowedOrigins = [
+    process.env.FRONTEND_URL,
+    'http://localhost:3000',
+    'http://localhost:3001',
+  ].filter(Boolean) as string[];
+
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: (origin, callback) => {
+      // Allow requests with no origin (mobile apps, curl, Swagger)
+      if (!origin) return callback(null, true);
+      // Allow exact matches
+      if (allowedOrigins.some((o) => origin === o)) return callback(null, true);
+      // Allow all Vercel preview/production deployments
+      if (origin.endsWith('.vercel.app')) return callback(null, true);
+      callback(new Error(`CORS: origin ${origin} not allowed`));
+    },
     credentials: true,
   });
 
@@ -66,9 +80,11 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
-  const port = process.env.BACKEND_PORT || 4000;
+  // Render uses PORT, fallback to BACKEND_PORT then 4000
+  const port = process.env.PORT || process.env.BACKEND_PORT || 4000;
   await app.listen(port);
-  console.log(`\n🔒 DEDSEC API running on http://localhost:${port}`);
+  console.log(`\n🔒 DEDSEC API running on port ${port}`);
   console.log(`📚 Swagger docs: http://localhost:${port}/api/docs\n`);
 }
 bootstrap();
+
