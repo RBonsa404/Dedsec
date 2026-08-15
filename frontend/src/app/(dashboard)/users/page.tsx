@@ -215,55 +215,55 @@ export default function UsersManagementPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <div className="space-y-4 sm:space-y-6 w-full px-2 sm:px-4 md:px-6 lg:px-8">
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-100 flex items-center gap-2.5">
-            <Users className="w-6 h-6 text-emerald-400" />
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+        <div className="flex-1 min-w-0">
+          <h1 className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-slate-100 flex items-center gap-2 sm:gap-2.5">
+            <Users className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-emerald-400" />
             <span>{t.users_title}</span>
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-[10px] sm:text-xs md:text-sm text-slate-400 mt-1">
             {t.users_subtitle}
           </p>
         </div>
 
         <Button 
           onClick={() => setIsCreateModalOpen(true)} 
-          className="rounded-xl text-xs gap-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold shadow-md shadow-emerald-500/20"
+          className="rounded-xl text-[10px] sm:text-xs gap-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold shadow-md shadow-emerald-500/20"
         >
-          <Plus className="w-4 h-4" /> {t.provision_operator}
+          <Plus className="w-3 h-3 sm:w-4 sm:h-4" /> {t.provision_operator}
         </Button>
       </div>
 
       {actionMessage && (
-        <div className="rounded-2xl border border-emerald-500/60 bg-emerald-950/40 p-3.5 text-xs text-emerald-400 font-semibold flex items-center gap-2.5">
-          <CheckCircle2 className="w-4 h-4 shrink-0" /> {actionMessage}
+        <div className="rounded-xl sm:rounded-2xl border border-emerald-500/60 bg-emerald-950/40 p-2.5 sm:p-3.5 text-[10px] sm:text-xs text-emerald-400 font-semibold flex items-center gap-2 sm:gap-2.5">
+          <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4 shrink-0" /> {actionMessage}
         </div>
       )}
 
       {/* Filter Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#232f44] bg-[#111827] p-4 text-xs">
-        <div className="flex items-center gap-2 flex-1 min-w-[260px]">
-          <div className="relative w-full max-w-md">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4 rounded-xl sm:rounded-2xl border border-[#232f44] bg-[#111827] p-3 sm:p-4 text-[10px] sm:text-xs">
+        <div className="flex items-center gap-2 flex-1 min-w-[200px] sm:min-w-[260px] w-full">
+          <div className="relative w-full max-w-full sm:max-w-md">
+            <Search className="w-3 h-3 sm:w-4 sm:h-4 text-slate-400 absolute left-2.5 sm:left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder={lang === "fr" ? "Rechercher par nom ou email..." : "Search by name or email..."}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#162032] border border-[#26334a] text-slate-100 placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none"
+              className="w-full pl-8 sm:pl-10 pr-2 sm:pr-4 py-2 rounded-xl bg-[#162032] border border-[#26334a] text-slate-100 placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none text-[10px] sm:text-xs"
             />
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-[#162032] px-3 py-1.5 rounded-xl border border-[#26334a]">
-            <span className="text-slate-400 font-semibold">{t.role} :</span>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
+          <div className="flex items-center gap-2 bg-[#162032] px-2 sm:px-3 py-1.5 rounded-xl border border-[#26334a] w-full sm:w-auto">
+            <span className="text-slate-400 font-semibold text-[9px] sm:text-xs">{t.role} :</span>
             <select
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value)}
-              className="bg-transparent text-slate-200 font-medium focus:outline-none cursor-pointer"
+              className="bg-transparent text-slate-200 font-medium focus:outline-none cursor-pointer text-[10px] sm:text-xs flex-1"
             >
               <option value="ALL" className="bg-[#162032] text-slate-200">{t.all}</option>
               <option value="ADMIN" className="bg-[#162032] text-rose-400">ADMIN</option>
@@ -272,12 +272,12 @@ export default function UsersManagementPage() {
             </select>
           </div>
 
-          <div className="flex items-center gap-2 bg-[#162032] px-3 py-1.5 rounded-xl border border-[#26334a]">
-            <span className="text-slate-400 font-semibold">{t.status} :</span>
+          <div className="flex items-center gap-2 bg-[#162032] px-2 sm:px-3 py-1.5 rounded-xl border border-[#26334a] w-full sm:w-auto">
+            <span className="text-slate-400 font-semibold text-[9px] sm:text-xs">{t.status} :</span>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="bg-transparent text-slate-200 font-medium focus:outline-none cursor-pointer"
+              className="bg-transparent text-slate-200 font-medium focus:outline-none cursor-pointer text-[10px] sm:text-xs flex-1"
             >
               <option value="ALL" className="bg-[#162032] text-slate-200">{t.all}</option>
               <option value="ACTIVE" className="bg-[#162032] text-emerald-400">ACTIVE</option>
@@ -289,130 +289,226 @@ export default function UsersManagementPage() {
       </div>
 
       {/* Operators Table */}
-      <div className="rounded-2xl border border-[#232f44] bg-[#111827] overflow-hidden shadow-sm">
-        <table className="w-full text-left text-xs">
-          <thead className="text-[11px] text-slate-400 uppercase bg-[#162032] border-b border-[#232f44]">
-            <tr>
-              <th className="px-6 py-4">{lang === "fr" ? "Opérateur" : "Operator"}</th>
-              <th className="px-6 py-4">{t.role}</th>
-              <th className="px-6 py-4">{t.security_status}</th>
-              <th className="px-6 py-4">{t.provisioned_on}</th>
-              <th className="px-6 py-4">{t.last_activity}</th>
-              <th className="px-6 py-4 text-right">{t.actions}</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#1e2a3e]">
-            {filteredUsers.length === 0 ? (
+      <div className="rounded-xl sm:rounded-2xl border border-[#232f44] bg-[#111827] overflow-hidden shadow-sm">
+        {/* Desktop Table */}
+        <div className="hidden sm:block">
+          <table className="w-full text-left text-xs">
+            <thead className="text-[11px] text-slate-400 uppercase bg-[#162032] border-b border-[#232f44]">
               <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-slate-500">
-                  {lang === "fr" ? "Aucun opérateur ne correspond aux filtres de recherche." : "No operators matching the current filters."}
-                </td>
+                <th className="px-4 sm:px-6 py-3 sm:py-4">{lang === "fr" ? "Opérateur" : "Operator"}</th>
+                <th className="px-4 sm:px-6 py-3 sm:py-4">{t.role}</th>
+                <th className="px-4 sm:px-6 py-3 sm:py-4">{t.security_status}</th>
+                <th className="px-4 sm:px-6 py-3 sm:py-4">{t.provisioned_on}</th>
+                <th className="px-4 sm:px-6 py-3 sm:py-4">{t.last_activity}</th>
+                <th className="px-4 sm:px-6 py-3 sm:py-4 text-right">{t.actions}</th>
               </tr>
-            ) : (
-              filteredUsers.map((u) => {
-                const rStyle = roleStyles[u.role] || roleStyles.TEAM_MEMBER;
-                const sStyle = statusStyles[u.status] || statusStyles.ACTIVE;
+            </thead>
+            <tbody className="divide-y divide-[#1e2a3e]">
+              {filteredUsers.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-4 sm:px-6 py-8 sm:py-12 text-center text-slate-500">
+                    {lang === "fr" ? "Aucun opérateur ne correspond aux filtres de recherche." : "No operators matching the current filters."}
+                  </td>
+                </tr>
+              ) : (
+                filteredUsers.map((u) => {
+                  const rStyle = roleStyles[u.role] || roleStyles.TEAM_MEMBER;
+                  const sStyle = statusStyles[u.status] || statusStyles.ACTIVE;
 
-                return (
-                  <tr key={u.id} className="hover:bg-[#162032]/60 transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="h-9 w-9 rounded-full bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 flex items-center justify-center font-bold text-emerald-300 text-xs">
-                          {u.firstName[0]}{u.lastName[0]}
-                        </div>
-                        <div>
-                          <div className="font-bold text-slate-100">
-                            {u.firstName} {u.lastName}
+                  return (
+                    <tr key={u.id} className="hover:bg-[#162032]/60 transition-colors">
+                      <td className="px-4 sm:px-6 py-3 sm:py-4">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <div className="h-7 w-7 sm:h-9 sm:w-9 rounded-full bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 flex items-center justify-center font-bold text-emerald-300 text-[10px] sm:text-xs">
+                            {u.firstName[0]}{u.lastName[0]}
                           </div>
-                          <div className="text-slate-400 flex items-center gap-1 mt-0.5">
-                            <Mail className="w-3 h-3" /> {u.email}
+                          <div className="min-w-0">
+                            <div className="font-bold text-slate-100 text-[10px] sm:text-xs truncate">
+                              {u.firstName} {u.lastName}
+                            </div>
+                            <div className="text-slate-400 flex items-center gap-1 mt-0.5 text-[9px] sm:text-xs">
+                              <Mail className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> <span className="truncate">{u.email}</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </td>
+                      </td>
 
-                    <td className="px-6 py-4">
-                      <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase border ${rStyle.bg} ${rStyle.text} ${rStyle.border}`}>
-                        {u.role}
-                      </span>
-                    </td>
+                      <td className="px-4 sm:px-6 py-3 sm:py-4">
+                        <span className={`px-2 sm:px-2.5 py-1 rounded-md text-[9px] sm:text-[10px] font-bold uppercase border ${rStyle.bg} ${rStyle.text} ${rStyle.border}`}>
+                          {u.role}
+                        </span>
+                      </td>
 
-                    <td className="px-6 py-4">
-                      <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase border ${sStyle.bg} ${sStyle.text} ${sStyle.border}`}>
-                        {u.status}
-                      </span>
-                    </td>
+                      <td className="px-4 sm:px-6 py-3 sm:py-4">
+                        <span className={`px-2 sm:px-2.5 py-1 rounded-md text-[9px] sm:text-[10px] font-bold uppercase border ${sStyle.bg} ${sStyle.text} ${sStyle.border}`}>
+                          {u.status}
+                        </span>
+                      </td>
 
-                    <td className="px-6 py-4 text-slate-400">
-                      {new Date(u.createdAt).toLocaleDateString()}
-                    </td>
+                      <td className="px-4 sm:px-6 py-3 sm:py-4 text-slate-400 text-[10px] sm:text-xs">
+                        {new Date(u.createdAt).toLocaleDateString()}
+                      </td>
 
-                    <td className="px-6 py-4 text-slate-400">
-                      {u.lastLoginAt ? new Date(u.lastLoginAt).toLocaleString() : (lang === "fr" ? "Jamais" : "Never")}
-                    </td>
+                      <td className="px-4 sm:px-6 py-3 sm:py-4 text-slate-400 text-[10px] sm:text-xs">
+                        {u.lastLoginAt ? new Date(u.lastLoginAt).toLocaleString() : (lang === "fr" ? "Jamais" : "Never")}
+                      </td>
 
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        {/* Reset Passphrase */}
-                        {(currentUser?.role === 'ADMIN' || (currentUser?.role === 'PROJECT_MANAGER' && u.role === 'TEAM_MEMBER')) && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleResetPassword(u.id)}
-                            className="h-8 w-8 p-0 rounded-lg border-[#2b3a55] bg-[#141b2b] hover:bg-[#1e293b] text-amber-400"
-                            title={lang === "fr" ? "Réinitialiser le mot de passe" : "Reset Passphrase"}
-                          >
-                            <Key className="w-3.5 h-3.5" />
-                          </Button>
-                        )}
-
-                        {/* Suspend / Reactivate */}
-                        {u.role !== 'ADMIN' && (currentUser?.role === 'ADMIN' || (currentUser?.role === 'PROJECT_MANAGER' && u.role === 'TEAM_MEMBER')) && (
-                          u.status === "SUSPENDED" ? (
+                      <td className="px-4 sm:px-6 py-3 sm:py-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          {(currentUser?.role === 'ADMIN' || (currentUser?.role === 'PROJECT_MANAGER' && u.role === 'TEAM_MEMBER')) && (
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => handleReactivate(u.id)}
-                              className="h-8 w-8 p-0 rounded-lg border-[#2b3a55] bg-[#141b2b] hover:bg-emerald-950/50 text-emerald-400"
-                              title={lang === "fr" ? "Réactiver l'opérateur" : "Reactivate"}
+                              onClick={() => handleResetPassword(u.id)}
+                              className="h-7 sm:h-8 w-7 sm:w-8 p-0 rounded-lg border-[#2b3a55] bg-[#141b2b] hover:bg-[#1e293b] text-amber-400"
+                              title={lang === "fr" ? "Réinitialiser le mot de passe" : "Reset Passphrase"}
                             >
-                              <UserCheck className="w-3.5 h-3.5" />
+                              <Key className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                             </Button>
-                          ) : (
+                          )}
+
+                          {u.role !== 'ADMIN' && (currentUser?.role === 'ADMIN' || (currentUser?.role === 'PROJECT_MANAGER' && u.role === 'TEAM_MEMBER')) && (
+                            u.status === "SUSPENDED" ? (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleReactivate(u.id)}
+                                className="h-7 sm:h-8 w-7 sm:w-8 p-0 rounded-lg border-[#2b3a55] bg-[#141b2b] hover:bg-emerald-950/50 text-emerald-400"
+                                title={lang === "fr" ? "Réactiver l'opérateur" : "Reactivate"}
+                              >
+                                <UserCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                              </Button>
+                            ) : (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleSuspend(u.id)}
+                                disabled={u.id === currentUser?.id}
+                                className="h-7 sm:h-8 w-7 sm:w-8 p-0 rounded-lg border-[#2b3a55] bg-[#141b2b] hover:bg-rose-950/50 text-rose-400"
+                                title={lang === "fr" ? "Suspendre l'opérateur" : "Suspend"}
+                              >
+                                <UserX className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                              </Button>
+                            )
+                          )}
+
+                          {u.role !== 'ADMIN' && (currentUser?.role === 'ADMIN' || (currentUser?.role === 'PROJECT_MANAGER' && u.role === 'TEAM_MEMBER')) && (
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => handleSuspend(u.id)}
+                              onClick={() => handleDeleteUser(u.id)}
                               disabled={u.id === currentUser?.id}
-                              className="h-8 w-8 p-0 rounded-lg border-[#2b3a55] bg-[#141b2b] hover:bg-rose-950/50 text-rose-400"
-                              title={lang === "fr" ? "Suspendre l'opérateur" : "Suspend"}
+                              className="h-7 sm:h-8 w-7 sm:w-8 p-0 rounded-lg border-[#2b3a55] bg-[#141b2b] hover:bg-rose-950/50 text-slate-400 hover:text-rose-400"
+                              title={t.delete}
                             >
-                              <UserX className="w-3.5 h-3.5" />
+                              <Trash2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                             </Button>
-                          )
-                        )}
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
 
-                        {/* Delete User */}
-                        {u.role !== 'ADMIN' && (currentUser?.role === 'ADMIN' || (currentUser?.role === 'PROJECT_MANAGER' && u.role === 'TEAM_MEMBER')) && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleDeleteUser(u.id)}
-                            disabled={u.id === currentUser?.id}
-                            className="h-8 w-8 p-0 rounded-lg border-[#2b3a55] bg-[#141b2b] hover:bg-rose-950/50 text-slate-400 hover:text-rose-400"
-                            title={t.delete}
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </Button>
-                        )}
+        {/* Mobile Card View */}
+        <div className="sm:hidden space-y-2 p-2">
+          {filteredUsers.length === 0 ? (
+            <div className="text-center py-6 text-slate-500 text-[10px]">
+              {lang === "fr" ? "Aucun opérateur ne correspond aux filtres de recherche." : "No operators matching the current filters."}
+            </div>
+          ) : (
+            filteredUsers.map((u) => {
+              const rStyle = roleStyles[u.role] || roleStyles.TEAM_MEMBER;
+              const sStyle = statusStyles[u.status] || statusStyles.ACTIVE;
+
+              return (
+                <div key={u.id} className="rounded-xl border border-[#232f44] bg-[#162032] p-3">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 flex items-center justify-center font-bold text-emerald-300 text-[10px] shrink-0">
+                      {u.firstName[0]}{u.lastName[0]}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-bold text-slate-100 text-[11px] truncate">
+                        {u.firstName} {u.lastName}
                       </div>
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
+                      <div className="text-slate-400 text-[9px] truncate">{u.email}</div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold uppercase border ${rStyle.bg} ${rStyle.text} ${rStyle.border}`}>
+                      {u.role}
+                    </span>
+                    <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold uppercase border ${sStyle.bg} ${sStyle.text} ${sStyle.border}`}>
+                      {u.status}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between text-[9px] text-slate-400 mb-3">
+                    <span>{new Date(u.createdAt).toLocaleDateString()}</span>
+                    <span>{u.lastLoginAt ? new Date(u.lastLoginAt).toLocaleDateString() : (lang === "fr" ? "Jamais" : "Never")}</span>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-2">
+                    {(currentUser?.role === 'ADMIN' || (currentUser?.role === 'PROJECT_MANAGER' && u.role === 'TEAM_MEMBER')) && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleResetPassword(u.id)}
+                        className="h-7 w-7 p-0 rounded-lg border-[#2b3a55] bg-[#141b2b] hover:bg-[#1e293b] text-amber-400"
+                        title={lang === "fr" ? "Réinitialiser le mot de passe" : "Reset Passphrase"}
+                      >
+                        <Key className="w-3 h-3" />
+                      </Button>
+                    )}
+
+                    {u.role !== 'ADMIN' && (currentUser?.role === 'ADMIN' || (currentUser?.role === 'PROJECT_MANAGER' && u.role === 'TEAM_MEMBER')) && (
+                      u.status === "SUSPENDED" ? (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleReactivate(u.id)}
+                          className="h-7 w-7 p-0 rounded-lg border-[#2b3a55] bg-[#141b2b] hover:bg-emerald-950/50 text-emerald-400"
+                          title={lang === "fr" ? "Réactiver l'opérateur" : "Reactivate"}
+                        >
+                          <UserCheck className="w-3 h-3" />
+                        </Button>
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleSuspend(u.id)}
+                          disabled={u.id === currentUser?.id}
+                          className="h-7 w-7 p-0 rounded-lg border-[#2b3a55] bg-[#141b2b] hover:bg-rose-950/50 text-rose-400"
+                          title={lang === "fr" ? "Suspendre l'opérateur" : "Suspend"}
+                        >
+                          <UserX className="w-3 h-3" />
+                        </Button>
+                      )
+                    )}
+
+                    {u.role !== 'ADMIN' && (currentUser?.role === 'ADMIN' || (currentUser?.role === 'PROJECT_MANAGER' && u.role === 'TEAM_MEMBER')) && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleDeleteUser(u.id)}
+                        disabled={u.id === currentUser?.id}
+                        className="h-7 w-7 p-0 rounded-lg border-[#2b3a55] bg-[#141b2b] hover:bg-rose-950/50 text-slate-400 hover:text-rose-400"
+                        title={t.delete}
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
       </div>
 
       {/* Provision Operator Modal */}
