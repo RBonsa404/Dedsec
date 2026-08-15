@@ -12,7 +12,16 @@ export class AuthController {
   @Get('test-email')
   @ApiOperation({ summary: 'Test email sending (DEBUG)' })
   async testEmail() {
-    return this.authService.testEmail();
+    try {
+      const result = await this.authService.testEmail();
+      return result;
+    } catch (error) {
+      return {
+        success: false,
+        message: 'Test email failed',
+        error: error.message
+      };
+    }
   }
 
   @Post('login')
