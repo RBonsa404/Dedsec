@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdatePreferencesDto = exports.UpdateUserDto = exports.CreateUserDto = void 0;
 const class_validator_1 = require("class-validator");
+const class_transformer_1 = require("class-transformer");
 const swagger_1 = require("@nestjs/swagger");
 const enums_1 = require("../../common/enums");
 class CreateUserDto {
@@ -46,6 +47,7 @@ __decorate([
 ], CreateUserDto.prototype, "phone", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({ description: 'Initial password (min 8 chars). If omitted, a temporary one is generated.' }),
+    (0, class_transformer_1.Transform)(({ value }) => (typeof value === 'string' && value.trim() === '' ? undefined : value)),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.MinLength)(8),

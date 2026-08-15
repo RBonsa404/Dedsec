@@ -35,24 +35,12 @@ async function bootstrap() {
   // Global prefix
   app.setGlobalPrefix('api');
 
-  // CORS — accept frontend URL + all Vercel preview deployments
-  const allowedOrigins = [
-    process.env.FRONTEND_URL,
-    'http://localhost:3000',
-    'http://localhost:3001',
-  ].filter(Boolean) as string[];
-
+  // CORS — accept all origins with credentials and standard headers
   app.enableCors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (mobile apps, curl, Swagger)
-      if (!origin) return callback(null, true);
-      // Allow exact matches
-      if (allowedOrigins.some((o) => origin === o)) return callback(null, true);
-      // Allow all Vercel preview/production deployments
-      if (origin.endsWith('.vercel.app')) return callback(null, true);
-      callback(new Error(`CORS: origin ${origin} not allowed`));
-    },
+    origin: true,
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Requested-With'],
   });
 
   // Cookie parser

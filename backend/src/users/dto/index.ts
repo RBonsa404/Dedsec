@@ -1,4 +1,5 @@
-import { IsEmail, IsNotEmpty, IsString, IsEnum, IsOptional, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsEnum, IsOptional, MinLength, ValidateIf } from 'class-validator';
+import { Transform } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Role } from '../../common/enums';
 
@@ -27,6 +28,7 @@ export class CreateUserDto {
   phone?: string;
 
   @ApiPropertyOptional({ description: 'Initial password (min 8 chars). If omitted, a temporary one is generated.' })
+  @Transform(({ value }) => (typeof value === 'string' && value.trim() === '' ? undefined : value))
   @IsOptional()
   @IsString()
   @MinLength(8)

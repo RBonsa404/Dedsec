@@ -30,22 +30,11 @@ const app_module_1 = require("./app.module");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.setGlobalPrefix('api');
-    const allowedOrigins = [
-        process.env.FRONTEND_URL,
-        'http://localhost:3000',
-        'http://localhost:3001',
-    ].filter(Boolean);
     app.enableCors({
-        origin: (origin, callback) => {
-            if (!origin)
-                return callback(null, true);
-            if (allowedOrigins.some((o) => origin === o))
-                return callback(null, true);
-            if (origin.endsWith('.vercel.app'))
-                return callback(null, true);
-            callback(new Error(`CORS: origin ${origin} not allowed`));
-        },
+        origin: true,
         credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Requested-With'],
     });
     app.use(cookieParser());
     app.useGlobalPipes(new common_1.ValidationPipe({

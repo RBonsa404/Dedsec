@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsString, IsOptional, IsInt, Min } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateProjectDto {
@@ -14,6 +15,7 @@ export class CreateProjectDto {
 
   @ApiPropertyOptional({ example: 500 })
   @IsOptional()
+  @Type(() => Number)
   @IsInt()
   @Min(50)
   storageQuotaMb?: number;
