@@ -33,8 +33,9 @@ async function bootstrap() {
     app.enableCors({
         origin: true,
         credentials: true,
-        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Requested-With'],
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+        preflightContinue: false,
+        optionsSuccessStatus: 204,
     });
     app.use(cookieParser());
     app.useGlobalPipes(new common_1.ValidationPipe({
