@@ -32,7 +32,10 @@ export class EmailService {
     this.logger.log(`SMTP_SECURE: "${process.env.SMTP_SECURE || 'false'}"`);
     this.logger.log(`═══════════════════════════════════════`);
 
-    if (smtpHost && smtpUser && smtpPass && smtpHost !== "your-mailtrap-user" && smtpUser !== "your-mailtrap-user") {
+    if (smtpHost && smtpUser && smtpPass && 
+        smtpHost !== "your-mailtrap-user" && 
+        smtpUser !== "your-mailtrap-user" &&
+        smtpPass !== "your-mailtrap-pass") {
       try {
         this.transporter = nodemailer.createTransport({
           host: smtpHost,
@@ -47,15 +50,20 @@ export class EmailService {
         // Verify the connection
         await this.transporter.verify();
         this.logger.log('✅ Email transporter configured and verified with SMTP');
+        this.logger.log('✅ Real emails will be sent');
       } catch (error) {
         this.logger.error('❌ Failed to configure SMTP transporter, falling back to log mode', error);
+        this.logger.error('❌ Common Gmail issues: wrong app password, 2FA not enabled, or less secure apps blocked');
         this.transporter = null;
       }
     } else {
       this.logger.warn('⚠️ SMTP not properly configured or using placeholder values.');
       this.logger.warn('⚠️ Emails will be LOGGED ONLY (not actually sent).');
-      this.logger.warn('⚠️ To enable real email sending, configure SMTP_HOST, SMTP_USER, and SMTP_PASS with real values.');
-      this.logger.warn('⚠️ See EMAIL_CONFIG.md for configuration options.');
+      this.logger.warn('⚠️ To enable real email sending with Gmail:');
+      this.logger.warn('⚠️ 1. Enable 2FA on your Google Account');
+      this.logger.warn('⚠️ 2. Generate an App Password (not your regular password)');
+      this.logger.warn('⚠️ 3. Set SMTP_PASS in Render with the App Password');
+      this.logger.warn('⚠️ See EMAIL_CONFIG.md for detailed instructions');
       this.transporter = null;
     }
   }

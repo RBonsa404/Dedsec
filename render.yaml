@@ -19,17 +19,17 @@ services:
       - key: JWT_EXPIRES_IN
         value: 15m
       - key: SMTP_HOST
-        value: "smtp.mailtrap.io"
+        value: "smtp.gmail.com"
       - key: SMTP_PORT
-        value: "2525"
+        value: "587"
       - key: SMTP_SECURE
         value: "false"
       - key: SMTP_USER
-        value: "your-mailtrap-user"
+        value: "rachidbonsa.ai@gmail.com"
       - key: SMTP_PASS
-        value: "your-mailtrap-pass"
+        sync: false
       - key: EMAIL_FROM
-        value: "noreply@dedsec.io"
+        value: "rachidbonsa.ai@gmail.com"
       - key: FRONTEND_URL
         sync: false
       - key: ALLOWED_IPS

@@ -1,18 +1,62 @@
-# Configuration des Emails en Production
+# Configuration des Emails en Production - Gmail
 
-## ⚠️ ÉTAT ACTUEL : EMAILS EN MODE LOG SEULEMENT
+## Configuration actuelle
+Le système est configuré pour utiliser Gmail avec le compte `rachidbonsa.ai@gmail.com`.
 
-Les emails ne sont **PAS ENVOYÉS RÉELLEMENT** pour le moment. Ils sont seulement **LOGGÉS** dans les logs du serveur.
+## ÉTAPES OBLIGATOIRES POUR GMAIL
 
-Pour voir les emails qui "seraient envoyés", regardez les logs Render :
-- Allez dans votre dashboard Render
-- Sélectionnez le service "dedsec-api"  
-- Cliquez sur "Logs"
-- Cherchez les lignes "EMAIL CONTENT (LOGGED ONLY)"
+### 1. Activer la vérification en 2 étapes sur Google
+1. Allez sur https://myaccount.google.com/security
+2. Connectez-vous avec `rachidbonsa.ai@gmail.com`
+3. Activez "Vérification en 2 étapes"
 
-## Pour activer les vrais emails
+### 2. Générer un mot de passe d'application
+1. Sur la même page de sécurité Google
+2. Allez dans "Mots de passe d'application"
+3. Cliquez sur "Créer"
+4. Sélectionnez "Mail" comme application
+5. Sélectionnez "Autre" comme appareil
+6. Nommez-le "DEDSEC Platform"
+7. Cliquez sur "Générer"
+8. **COPIEZ LE MOT DE PASSE GÉNÉRÉ** (il s'affiche une seule fois)
 
-Vous devez configurer un vrai service SMTP. Voici les options :
+### 3. Configurer Render
+1. Allez dans votre dashboard Render
+2. Sélectionnez le service "dedsec-api"
+3. Cliquez sur "Environment"
+4. Trouvez la variable `SMTP_PASS`
+5. Collez le mot de passe d'application généré (pas votre mot de passe Gmail normal)
+6. Cliquez sur "Save Changes"
+7. Cliquez sur "Manual Deploy" → "Deploy latest commit"
+
+## Configuration SMTP (déjà configurée dans render.yaml)
+```
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=rachidbonsa.ai@gmail.com
+SMTP_PASS=[VOTRE MOT DE PASSE D'APPLICATION]
+EMAIL_FROM=rachidbonsa.ai@gmail.com
+```
+
+## Vérification
+Après déploiement, vérifiez les logs Render :
+```
+✅ Email transporter configured and verified with SMTP
+✅ Real emails will be sent
+```
+
+Si vous voyez :
+```
+❌ Failed to configure SMTP transporter
+```
+Vérifiez que :
+- La vérification en 2 étapes est activée
+- Vous utilisez un mot de passe d'application (pas le mot de passe normal)
+- Le mot de passe est correctement copié
+
+## Test
+Utilisez l'endpoint de test : `GET /auth/test-email` pour vérifier que les emails partent.
 
 ## Solution rapide : Utiliser un service SMTP gratuit
 
