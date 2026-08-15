@@ -113,12 +113,8 @@ export class AuthService {
     const user = await this.prisma.user.findUnique({ where: { id: targetUserId } });
     if (!user) throw new UnauthorizedException('User not found');
 
-    // Use relaxed validation for admin users
-    if (user.role === 'ADMIN') {
-      PasswordValidator.validateOrThrowForAdmin(newPassword);
-    } else {
-      PasswordValidator.validateOrThrow(newPassword);
-    }
+    // Simplified password validation for all users
+    PasswordValidator.validateOrThrow(newPassword);
 
     // If oldPassword provided, verify it (unless authenticated via tempToken with mustChangePassword)
     if (oldPassword) {
@@ -187,12 +183,8 @@ export class AuthService {
       throw new BadRequestException('Invalid or expired reset token');
     }
 
-    // Use relaxed validation for admin users
-    if (user.role === 'ADMIN') {
-      PasswordValidator.validateOrThrowForAdmin(newPassword);
-    } else {
-      PasswordValidator.validateOrThrow(newPassword);
-    }
+    // Simplified password validation for all users
+    PasswordValidator.validateOrThrow(newPassword);
 
     const passwordHash = await bcrypt.hash(newPassword, 12);
     await this.prisma.user.update({

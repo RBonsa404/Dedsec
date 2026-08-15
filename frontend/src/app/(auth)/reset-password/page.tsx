@@ -74,14 +74,14 @@ function ResetPasswordForm() {
             <Input
               id="newPassword"
               type="password"
-              placeholder="Min 8 chars (12 recommended for standard users)"
+              placeholder="Min 8 characters"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
               className="bg-bg-primary"
             />
             <div className="text-[10px] text-text-secondary mt-1">
-              Password requirements depend on your account role. Admin accounts have relaxed requirements.
+              Minimum 8 characters. Avoid very common passwords.
             </div>
           </div>
 

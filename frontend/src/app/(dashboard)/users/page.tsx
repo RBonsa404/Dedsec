@@ -583,18 +583,14 @@ export default function UsersManagementPage() {
                 <Input
                   id="password"
                   type="password"
-                  placeholder={role === 'ADMIN' ? (lang === "fr" ? "Min 8 caractères" : "Min 8 characters") : (lang === "fr" ? "Min 12 caractères, majuscule, minuscule, chiffre, spécial" : "Min 12 chars, uppercase, lowercase, number, special")}
+                  placeholder={lang === "fr" ? "Min 8 caractères" : "Min 8 characters"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   className="bg-[#162032] border-[#2b3a55] text-slate-100 rounded-xl"
                 />
                 <div className="text-[10px] text-slate-400 mt-1">
-                  {role === 'ADMIN' ? (
-                    lang === "fr" ? "Admin : minimum 8 caractères (exigences relaxées)" : "Admin: minimum 8 characters (relaxed requirements)"
-                  ) : (
-                    lang === "fr" ? "Standard : minimum 12 caractères, majuscule, minuscule, chiffre, caractère spécial" : "Standard: minimum 12 characters, uppercase, lowercase, number, special character"
-                  )}
+                  {lang === "fr" ? "Minimum 8 caractères. Évitez les mots de passe trop courants." : "Minimum 8 characters. Avoid very common passwords."}
                 </div>
               </div>
 

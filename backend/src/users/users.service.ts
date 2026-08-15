@@ -147,13 +147,8 @@ export class UsersService {
     let status: string;
 
     if (dto.password) {
-      // Validate password strength if provided
-      // Use relaxed validation for admin accounts
-      if (dto.role === 'ADMIN') {
-        PasswordValidator.validateOrThrowForAdmin(dto.password);
-      } else {
-        PasswordValidator.validateOrThrow(dto.password);
-      }
+      // Validate password strength if provided (simplified for all users)
+      PasswordValidator.validateOrThrow(dto.password);
       passwordToUse = dto.password;
       status = 'ACTIVE';
     } else {
