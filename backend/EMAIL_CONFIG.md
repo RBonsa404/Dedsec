@@ -7,52 +7,103 @@ Gmail bloque les connexions depuis Render (timeout de connexion). C'est une mesu
 
 SendGrid est plus fiable pour les services cloud et offre 100 emails/jour gratuits.
 
-### Étapes de configuration SendGrid
+### Étape 1 : Créer un compte SendGrid
 
-1. **Créer un compte SendGrid**
-   - Allez sur https://sendgrid.com/
-   - Créez un compte gratuit
-   - Vérifiez votre email
+1. **Allez sur https://sendgrid.com/**
+2. **Cliquez sur "Sign Up"** (inscription gratuite)
+3. **Remplissez le formulaire** :
+   - Email : `rachidbonsa.ai@gmail.com`
+   - Mot de passe : choisissez un mot de passe sécurisé
+   - Nom complet : Rachid Bonsa
+   - Société : DEDSEC (ou votre nom)
+4. **Vérifiez votre email** :
+   - SendGrid envoie un email de confirmation
+   - Cliquez sur le lien de vérification
+5. **Choisissez le plan gratuit** (Free plan - 100 emails/jour)
 
-2. **Créer un Sender**
-   - Allez dans Settings → Sender Authentication
-   - Cliquez on "Create New Sender"
-   - Entrez vos informations (nom, email `rachidbonsa.ai@gmail.com`)
-   - Vérifiez votre email via le lien reçu
+### Étape 2 : Créer un Sender (IMPORTANT)
 
-3. **Générer une API Key**
-   - Allez dans Settings → API Keys
-   - Cliquez sur "Create API Key"
-   - Nommez-la "DEDSEC Platform"
-   - Sélectionnez les permissions "Mail Send"
-   - Copiez la clé (elle s'affiche une seule fois)
+1. **Connectez-vous** à votre compte SendGrid
+2. **Allez dans** Settings → Sender Authentication (dans le menu de gauche)
+3. **Cliquez sur "Create New Sender"**
+4. **Remplissez les informations du sender** :
+   - **From Email** : `rachidbonsa.ai@gmail.com`
+   - **From Name** : DEDSEC Platform (ou votre nom)
+   - **Reply To** : `rachidbonsa.ai@gmail.com`
+   - **Address** : votre adresse (optionnelle)
+5. **Cliquez sur "Next"**
+6. **Vérification par email** :
+   - SendGrid envoie un email à `rachidbonsa.ai@gmail.com`
+   - **Ouvrez l'email** Gmail
+   - **Cliquez sur le lien de vérification** "Verify Sender"
+7. **Retournez sur SendGrid** et cliquez sur "Done"
 
-4. **Configurer Render**
-   - Allez dans votre dashboard Render
-   - Service "dedsec-api" → "Environment"
-   - Configurez les variables :
+### Étape 3 : Générer une API Key
+
+1. **Allez dans** Settings → API Keys (dans le menu de gauche)
+2. **Cliquez sur "Create API Key"**
+3. **Nommez la clé** : `DEDSEC Platform`
+4. **Sélectionnez les permissions** :
+   - Cochez "Mail Send"
+   - Vous pouvez laisser les autres décochées
+5. **Cliquez sur "Create & View"**
+6. **COPIEZ LA CLÉ IMMÉDIATEMENT** :
+   - La clé s'affiche une seule fois : `SG.xxxxxxxxxxxxxxx`
+   - **Sauvegardez-la** dans un endroit sûr
+   - C'est cette clé que vous utiliserez comme mot de passe SMTP
+
+### Étape 4 : Configurer Render
+
+1. **Allez dans votre dashboard Render**
+   - https://dashboard.render.com
+2. **Sélectionnez le service** "dedsec-api"
+3. **Cliquez sur "Environment"** (menu de gauche)
+4. **Trouvez la variable** `SMTP_PASS`
+5. **Collez votre API Key SendGrid** :
+   - Exemple : `SG.abcd1234efgh5678ijkl9012mnop3456`
+6. **Cliquez sur "Save Changes"**
+7. **Redéployez le service** :
+   - Cliquez sur "Manual Deploy" → "Deploy latest commit"
+
+### Étape 5 : Vérification
+
+Après le déploiement, regardez les logs Render. Vous devriez voir :
+
+```
+✅ Email transporter configured and verified with SMTP
+✅ Real emails will be sent
+```
+
+### Étape 6 : Test
+
+1. **Créez un nouvel utilisateur** dans l'interface admin
+2. **Utilisez votre email** `rachidbonsa.ai@gmail.com` comme email du nouveau compte
+3. **Regardez votre boîte Gmail** - vous devriez recevoir l'email de bienvenue
+
+## Configuration SMTP finale
+
+Les variables dans Render devraient ressembler à ceci :
 
 ```
 SMTP_HOST=smtp.sendgrid.net
 SMTP_PORT=587
 SMTP_SECURE=false
 SMTP_USER=apikey
-SMTP_PASS=votre_clé_api_sendgrid
+SMTP_PASS=SG.votre_clé_api_ici
 EMAIL_FROM=rachidbonsa.ai@gmail.com
 ```
 
-5. **Redéployer**
-   - Cliquez sur "Manual Deploy" → "Deploy latest commit"
+## Dépannage
 
-## Vérification
-Après déploiement, vous devriez voir dans les logs :
-```
-✅ Email transporter configured and verified with SMTP
-✅ Real emails will be sent
-```
+### Si l'email de vérification n'arrive pas
+- Vérifiez le dossier spam dans Gmail
+- Attendez quelques minutes (peut prendre jusqu'à 5 minutes)
+- Réessayez d'envoyer l'email de vérification
 
-## Test
-Créez un nouvel utilisateur pour tester l'envoi d'email de bienvenue.
+### Si la connexion échoue
+- Vérifiez que l'API Key est correctement copiée (commence par "SG.")
+- Vérifiez que le sender est bien vérifié (status "Verified" dans SendGrid)
+- Regardez les logs Render pour le message d'erreur exact
 
 ## Solution rapide : Utiliser un service SMTP gratuit
 
