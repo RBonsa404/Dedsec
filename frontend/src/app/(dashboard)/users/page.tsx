@@ -113,7 +113,8 @@ export default function UsersManagementPage() {
         setModalSuccess("");
       }, 1200);
     } catch (error: any) {
-      setModalError(error.response?.data?.message || (lang === "fr" ? "Échec de création de l'opérateur" : "Failed to create operator"));
+      const msg = error.response?.data?.message;
+      setModalError(Array.isArray(msg) ? msg.join(", ") : (msg || (lang === "fr" ? "Échec de création du collaborateur" : "Failed to create operator")));
     } finally {
       setIsSubmitting(false);
     }

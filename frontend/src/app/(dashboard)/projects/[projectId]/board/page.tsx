@@ -18,29 +18,46 @@ import {
   FolderArchive,
   RefreshCw,
   SlidersHorizontal,
-  ChevronDown
+  ChevronDown,
+  Users,
+  UserPlus,
+  Trash2,
+  CheckCircle2,
+  AlertCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuthStore } from "@/stores/authStore";
 import { useLangStore } from "@/stores/langStore";
 import { translations } from "@/lib/i18n";
 
 interface Member {
   id: string;
   userId: string;
+  isManager?: boolean;
   user: {
     id: string;
     firstName: string;
     lastName: string;
     email: string;
+    role?: string;
     avatarUrl?: string;
   };
+}
+
+interface AvailableUser {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
 }
 
 export default function ProjectBoardPage() {
   const { projectId } = useParams();
   const router = useRouter();
+  const currentUser = useAuthStore((state) => state.user);
   const { lang } = useLangStore();
   const t = translations[lang] || translations.fr;
 
@@ -51,6 +68,14 @@ export default function ProjectBoardPage() {
   const [members, setMembers] = useState<Member[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
+
+  // Team Management Modal
+  const [isTeamModalOpen, setIsTeamModalOpen] = useState(false);
+  const [availableUsers, setAvailableUsers] = useState<AvailableUser[]>([]);
+  const [selectedUserIdToAdd, setSelectedUserIdToAdd] = useState("");
+  const [isAddingMember, setIsAddingMember] = useState(false);
+  const [teamModalMsg, setTeamModalMsg] = useState("");
+  const [teamModalErr, setTeamModalErr] = useState("");
 
   // Search, Filters & Sorting
   const [searchQuery, setSearchQuery] = useState("");
@@ -115,12 +140,52 @@ export default function ProjectBoardPage() {
       const res = await api.get(`/projects/${projectId}/members`);
       setMembers(res.data || []);
     } catch (error) {
-      try {
-        const usersRes = await api.get("/users");
-        setMembers(usersRes.data.map((u: any) => ({ id: u.id, userId: u.id, user: u })));
-      } catch {
-        // ignore
-      }
+      console.error("Failed to fetch project members:", error);
+    }
+  };
+
+  const openTeamModal = async () => {
+    setTeamModalMsg("");
+    setTeamModalErr("");
+    setIsTeamModalOpen(true);
+    try {
+      const usersRes = await api.get("/users");
+      setAvailableUsers(usersRes.data || []);
+      await fetchMembers();
+    } catch (error) {
+      console.error("Failed to fetch available users:", error);
+    }
+  };
+
+  const handleAddMember = async () => {
+    if (!selectedUserIdToAdd) return;
+    setTeamModalErr("");
+    setTeamModalMsg("");
+    setIsAddingMember(true);
+    try {
+      await api.post(`/projects/${projectId}/members`, { userId: selectedUserIdToAdd });
+      setTeamModalMsg(lang === "fr" ? "Collaborateur assigné avec succès !" : "Collaborator assigned successfully!");
+      setSelectedUserIdToAdd("");
+      await fetchMembers();
+    } catch (error: any) {
+      const msg = error.response?.data?.message;
+      setTeamModalErr(Array.isArray(msg) ? msg.join(", ") : (msg || (lang === "fr" ? "Impossible d'ajouter ce membre." : "Failed to add member.")));
+    } finally {
+      setIsAddingMember(false);
+    }
+  };
+
+  const handleRemoveMember = async (userIdToRemove: string) => {
+    if (!confirm(lang === "fr" ? "Retirer ce collaborateur du projet ?" : "Remove this collaborator from project?")) return;
+    setTeamModalErr("");
+    setTeamModalMsg("");
+    try {
+      await api.delete(`/projects/${projectId}/members/${userIdToRemove}`);
+      setTeamModalMsg(lang === "fr" ? "Collaborateur retiré du projet." : "Collaborator removed.");
+      await fetchMembers();
+    } catch (error: any) {
+      const msg = error.response?.data?.message;
+      setTeamModalErr(Array.isArray(msg) ? msg.join(", ") : (msg || (lang === "fr" ? "Impossible de retirer ce membre." : "Failed to remove member.")));
     }
   };
 
@@ -321,25 +386,25 @@ export default function ProjectBoardPage() {
 
         {/* Right: Team Avatars & Main Action Buttons */}
         <div className="flex flex-wrap items-center gap-3">
-          {/* Member Avatars Stack */}
-          {members.length > 0 && (
-            <div className="flex items-center -space-x-2 mr-2">
-              {members.slice(0, 4).map((m) => (
+          {/* Member Avatars Stack with Manage Team Trigger */}
+          <button
+            onClick={openTeamModal}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#141b2b] border border-[#26334a] hover:border-emerald-500/60 transition-all text-xs font-semibold text-slate-300 mr-1"
+            title={lang === "fr" ? "Gérer l'équipe du projet" : "Manage project team"}
+          >
+            <div className="flex items-center -space-x-2">
+              {members.slice(0, 3).map((m) => (
                 <div
-                  key={m.user.id}
-                  className="h-8 w-8 rounded-full bg-[#1e293b] border-2 border-[#0d131f] flex items-center justify-center text-xs font-bold text-slate-200 shadow-sm"
-                  title={`${m.user.firstName} ${m.user.lastName}`}
+                  key={m.user?.id || m.userId}
+                  className="h-7 w-7 rounded-full bg-[#1e293b] border-2 border-[#0d131f] flex items-center justify-center text-[10px] font-bold text-emerald-300"
                 >
-                  {m.user.firstName[0]}{m.user.lastName[0]}
+                  {m.user?.firstName?.[0] || "U"}{m.user?.lastName?.[0] || ""}
                 </div>
               ))}
-              {members.length > 4 && (
-                <div className="h-8 w-8 rounded-full bg-[#24334d] border-2 border-[#0d131f] flex items-center justify-center text-xs font-semibold text-slate-300">
-                  +{members.length - 4}
-                </div>
-              )}
             </div>
-          )}
+            <span>{members.length} {lang === "fr" ? "membres" : "members"}</span>
+            <UserPlus className="w-3.5 h-3.5 text-emerald-400 ml-0.5" />
+          </button>
 
           {/* Deliverables Link */}
           <Button
@@ -677,6 +742,130 @@ export default function ProjectBoardPage() {
                 </Button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Team & Member Management Modal */}
+      {isTeamModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+          <div className="w-full max-w-xl rounded-2xl border border-[#26334a] bg-[#111827] p-7 shadow-2xl relative text-xs animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-[#232e42] pb-4 mb-5">
+              <div>
+                <h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
+                  <Users className="w-4 h-4 text-emerald-400" />
+                  <span>{lang === "fr" ? "Équipe & Collaborateurs du Projet" : "Project Team & Operators"}</span>
+                </h3>
+                <p className="text-emerald-400 font-semibold text-[11px] mt-0.5">{projectName}</p>
+              </div>
+              <button onClick={() => setIsTeamModalOpen(false)} className="p-1 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-[#1e293b]">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Add Member Bar */}
+            {(currentUser?.role === 'ADMIN' || currentUser?.role === 'PROJECT_MANAGER') && (
+              <div className="p-4 rounded-xl bg-[#162032] border border-[#26334a] mb-4 space-y-3">
+                <span className="text-slate-200 font-bold flex items-center gap-1.5">
+                  <UserPlus className="w-3.5 h-3.5 text-emerald-400" />
+                  {lang === "fr" ? "Ajouter un collaborateur au projet" : "Assign Collaborator to Project"}
+                </span>
+
+                <div className="flex gap-2">
+                  <select
+                    value={selectedUserIdToAdd}
+                    onChange={(e) => setSelectedUserIdToAdd(e.target.value)}
+                    className="flex-1 rounded-xl border border-[#2b3a55] bg-[#111827] px-3 py-2 text-xs text-slate-100 focus:border-emerald-500 focus:outline-none cursor-pointer"
+                  >
+                    <option value="">-- {lang === "fr" ? "Sélectionner un collaborateur" : "Select operator"} --</option>
+                    {availableUsers
+                      .filter((u) => !members.some((m) => m.userId === u.id || m.user?.id === u.id) && u.role !== 'ADMIN')
+                      .map((u) => (
+                        <option key={u.id} value={u.id}>
+                          {u.firstName} {u.lastName} ({u.role}) - {u.email}
+                        </option>
+                      ))}
+                  </select>
+
+                  <Button
+                    onClick={handleAddMember}
+                    disabled={!selectedUserIdToAdd || isAddingMember}
+                    size="sm"
+                    className="rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold shrink-0"
+                  >
+                    {isAddingMember ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : (lang === "fr" ? "Ajouter" : "Assign")}
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {teamModalErr && (
+              <div className="rounded-xl border border-rose-800/60 bg-rose-950/40 p-3 text-rose-400 flex items-center gap-2 font-medium mb-3">
+                <AlertCircle className="w-4 h-4 shrink-0" /> {teamModalErr}
+              </div>
+            )}
+
+            {teamModalMsg && (
+              <div className="rounded-xl border border-emerald-500/60 bg-emerald-950/40 p-3 text-emerald-400 flex items-center gap-2 font-medium mb-3">
+                <CheckCircle2 className="w-4 h-4 shrink-0" /> {teamModalMsg}
+              </div>
+            )}
+
+            {/* Current Members */}
+            <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+              <span className="text-slate-400 font-semibold text-[11px] uppercase tracking-wider block mb-2">
+                {lang === "fr" ? "Membres de l'équipe :" : "Assigned Team Members :"}
+              </span>
+
+              {members.length === 0 ? (
+                <div className="p-4 rounded-xl bg-[#141b2b] text-center text-slate-500">
+                  {lang === "fr" ? "Aucun membre assigné." : "No members assigned."}
+                </div>
+              ) : (
+                members.map((m) => {
+                  const isSelf = m.userId === currentUser?.id || m.user?.id === currentUser?.id;
+                  const canRemove = (currentUser?.role === 'ADMIN' || currentUser?.role === 'PROJECT_MANAGER') && !m.isManager && !isSelf;
+
+                  return (
+                    <div key={m.id || m.userId} className="flex items-center justify-between p-3 rounded-xl bg-[#162032] border border-[#232f44]">
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 rounded-full bg-emerald-950/60 border border-emerald-800/60 text-emerald-300 font-bold flex items-center justify-center text-xs">
+                          {m.user?.firstName?.[0] || "U"}{m.user?.lastName?.[0] || ""}
+                        </div>
+                        <div>
+                          <div className="font-bold text-slate-100 flex items-center gap-2">
+                            <span>{m.user?.firstName} {m.user?.lastName}</span>
+                            {m.isManager && (
+                              <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-cyan-950 text-cyan-400 border border-cyan-800">
+                                {lang === "fr" ? "CHEF DE PROJET" : "MANAGER"}
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-slate-400 text-[11px]">{m.user?.email}</span>
+                        </div>
+                      </div>
+
+                      {canRemove && (
+                        <Button
+                          onClick={() => handleRemoveMember(m.userId || m.user?.id)}
+                          size="sm"
+                          variant="outline"
+                          className="h-7 px-2.5 rounded-lg border-rose-800/50 bg-rose-950/20 hover:bg-rose-950/60 text-rose-400 text-[11px]"
+                        >
+                          <Trash2 className="w-3 h-3 mr-1" /> {lang === "fr" ? "Retirer" : "Remove"}
+                        </Button>
+                      )}
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            <div className="flex justify-end pt-4 border-t border-[#232e42] mt-4">
+              <Button onClick={() => setIsTeamModalOpen(false)} size="sm" className="rounded-xl bg-[#162032] hover:bg-[#1e293b] text-slate-200 border border-[#2b3a55]">
+                {lang === "fr" ? "Fermer" : "Close"}
+              </Button>
+            </div>
           </div>
         </div>
       )}

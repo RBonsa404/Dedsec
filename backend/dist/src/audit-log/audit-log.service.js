@@ -38,10 +38,41 @@ let AuditLogService = class AuditLogService {
             take: 200,
         });
     }
-    async create(action, actorId, details, ipAddress) {
-        return this.prisma.auditLog.create({
-            data: { action, actorId, details, ipAddress },
-        });
+    async getStats() {
+        const [totalUsers, activeUsers, adminCount, pmCount, memberCount, totalProjects, activeProjects, totalTasks, totalAbsences, pendingAbsences, recentAuditLogs,] = await Promise.all([
+            this.prisma.user.count(),
+            this.prisma.user.count({ where: { status: 'ACTIVE' } }),
+            this.prisma.user.count({ where: { role: 'ADMIN' } }),
+            this.prisma.user.count({ where: { role: 'PROJECT_MANAGER' } }),
+            this.prisma.user.count({ where: { role: 'TEAM_MEMBER' } }),
+            this.prisma.project.count(),
+            this.prisma.project.count({ where: { status: 'ACTIVE' } }),
+            this.prisma.task.count(),
+            this.prisma.absenceRequest.count(),
+            this.prisma.absenceRequest.count({ where: { status: 'PENDING' } }),
+            this.prisma.auditLog.findMany({
+                take: 30,
+                orderBy: { createdAt: 'desc' },
+                include: {
+                    actor: { select: { id: true, firstName: true, lastName: true, email: true, role: true } },
+                },
+            }),
+        ]);
+        return {
+            totalUsers,
+            activeUsers,
+            usersByRole: {
+                ADMIN: adminCount,
+                PROJECT_MANAGER: pmCount,
+                TEAM_MEMBER: memberCount,
+            },
+            totalProjects,
+            activeProjects,
+            totalTasks,
+            totalAbsences,
+            pendingAbsences,
+            recentAuditLogs,
+        };
     }
 };
 exports.AuditLogService = AuditLogService;

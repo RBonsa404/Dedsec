@@ -24,11 +24,21 @@ let AuditLogController = class AuditLogController {
     constructor(auditLogService) {
         this.auditLogService = auditLogService;
     }
+    async getStats() {
+        return this.auditLogService.getStats();
+    }
     async findAll(action, actorId, from, to) {
         return this.auditLogService.findAll({ action, actorId, from, to });
     }
 };
 exports.AuditLogController = AuditLogController;
+__decorate([
+    (0, common_1.Get)('stats'),
+    (0, swagger_1.ApiOperation)({ summary: 'Get live admin system statistics and telemetry' }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AuditLogController.prototype, "getStats", null);
 __decorate([
     (0, common_1.Get)(),
     (0, swagger_1.ApiOperation)({ summary: 'Get audit logs (Admin only)' }),

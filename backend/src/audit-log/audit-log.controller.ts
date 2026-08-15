@@ -14,6 +14,12 @@ import { Roles } from '../common/decorators/roles.decorator';
 export class AuditLogController {
   constructor(private auditLogService: AuditLogService) {}
 
+  @Get('stats')
+  @ApiOperation({ summary: 'Get live admin system statistics and telemetry' })
+  async getStats() {
+    return this.auditLogService.getStats();
+  }
+
   @Get()
   @ApiOperation({ summary: 'Get audit logs (Admin only)' })
   async findAll(
