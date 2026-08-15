@@ -13,7 +13,8 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "ts-node prisma/seed.ts",
     "prisma:studio": "prisma studio",
-    "init-admin": "ts-node prisma/init-admin.ts"
+    "init-admin": "ts-node prisma/init-admin.ts",
+    "reset-password": "ts-node prisma/reset-password.ts"
   },
   "dependencies": {
     "@nestjs/cli": "^10.4.0",
