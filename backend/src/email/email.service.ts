@@ -22,9 +22,17 @@ export class EmailService {
     const smtpUser = process.env.SMTP_USER?.trim();
     const smtpPass = process.env.SMTP_PASS?.trim();
 
-    this.logger.log(`Email configuration check - SMTP_HOST: "${smtpHost}", SMTP_USER: "${smtpUser}"`);
+    this.logger.log(`═══════════════════════════════════════`);
+    this.logger.log(`EMAIL SERVICE INITIALIZATION`);
+    this.logger.log(`═══════════════════════════════════════`);
+    this.logger.log(`SMTP_HOST: "${smtpHost}"`);
+    this.logger.log(`SMTP_USER: "${smtpUser}"`);
+    this.logger.log(`SMTP_PASS configured: ${!!smtpPass}`);
+    this.logger.log(`SMTP_PORT: "${process.env.SMTP_PORT || '587'}"`);
+    this.logger.log(`SMTP_SECURE: "${process.env.SMTP_SECURE || 'false'}"`);
+    this.logger.log(`═══════════════════════════════════════`);
 
-    if (smtpHost && smtpUser && smtpPass) {
+    if (smtpHost && smtpUser && smtpPass && smtpHost !== "your-mailtrap-user" && smtpUser !== "your-mailtrap-user") {
       try {
         this.transporter = nodemailer.createTransport({
           host: smtpHost,
@@ -38,33 +46,17 @@ export class EmailService {
         
         // Verify the connection
         await this.transporter.verify();
-        this.logger.log('Email transporter configured and verified with SMTP');
+        this.logger.log('✅ Email transporter configured and verified with SMTP');
       } catch (error) {
-        this.logger.error('Failed to configure SMTP transporter, falling back to log mode', error);
+        this.logger.error('❌ Failed to configure SMTP transporter, falling back to log mode', error);
         this.transporter = null;
       }
     } else {
-      this.logger.warn('SMTP not properly configured (missing SMTP_HOST, SMTP_USER, or SMTP_PASS).');
-      this.logger.warn('Falling back to Ethereal test email service for development.');
-      
-      // Fallback to Ethereal for development
-      try {
-        const testAccount = await nodemailer.createTestAccount();
-        this.transporter = nodemailer.createTransport({
-          host: 'smtp.ethereal.email',
-          port: 587,
-          secure: false,
-          auth: {
-            user: testAccount.user,
-            pass: testAccount.pass,
-          },
-        });
-        this.logger.log(`Email dev mode: using Ethereal (${testAccount.user})`);
-        this.logger.log(`Ethereal credentials - User: ${testAccount.user}, Pass: ${testAccount.pass}`);
-      } catch (error) {
-        this.logger.error('Could not create Ethereal account, emails will be logged only', error);
-        this.transporter = null;
-      }
+      this.logger.warn('⚠️ SMTP not properly configured or using placeholder values.');
+      this.logger.warn('⚠️ Emails will be LOGGED ONLY (not actually sent).');
+      this.logger.warn('⚠️ To enable real email sending, configure SMTP_HOST, SMTP_USER, and SMTP_PASS with real values.');
+      this.logger.warn('⚠️ See EMAIL_CONFIG.md for configuration options.');
+      this.transporter = null;
     }
   }
 
@@ -73,7 +65,7 @@ export class EmailService {
 
     if (this.transporter) {
       try {
-        this.logger.log(`Attempting to send email to ${options.to}...`);
+        this.logger.log(`📧 Attempting to send REAL email to ${options.to}...`);
         const info = await this.transporter.sendMail({
           from: `"DEDSEC Platform" <${from}>`,
           to: options.to,
@@ -84,20 +76,24 @@ export class EmailService {
         if (previewUrl) {
           this.logger.log(`📧 Preview URL: ${previewUrl}`);
         }
-        this.logger.log(`✅ Email successfully sent to ${options.to}: ${options.subject}`);
+        this.logger.log(`✅ REAL email successfully sent to ${options.to}: ${options.subject}`);
         this.logger.log(`Message ID: ${info.messageId}`);
       } catch (error) {
-        this.logger.error(`❌ Failed to send email to ${options.to}`, error);
+        this.logger.error(`❌ Failed to send REAL email to ${options.to}`, error);
         this.logger.error(`Error details: ${JSON.stringify(error, null, 2)}`);
       }
     } else {
-      // Fallback: log the email
-      this.logger.warn(`⚠️ Email transporter not available. Email would be sent to: ${options.to}`);
-      this.logger.log(`═══ EMAIL (simulated) ═══`);
+      // Fallback: log the email only
+      this.logger.warn(`⚠️ ⚠️ ⚠️ EMAIL NOT CONFIGURED - EMAIL LOGGED ONLY ⚠️ ⚠️ ⚠️`);
+      this.logger.warn(`⚠️ Email would be sent to: ${options.to}`);
+      this.logger.warn(`⚠️ Subject: ${options.subject}`);
+      this.logger.warn(`⚠️ To enable real emails, configure SMTP with real credentials`);
+      this.logger.warn(`⚠️ See EMAIL_CONFIG.md for instructions`);
+      this.logger.log(`═══ EMAIL CONTENT (LOGGED ONLY) ═══`);
       this.logger.log(`To: ${options.to}`);
       this.logger.log(`Subject: ${options.subject}`);
-      this.logger.log(`Body: ${options.html.substring(0, 200)}...`);
-      this.logger.log(`═══════════════════════`);
+      this.logger.log(`Body: ${options.html.substring(0, 300)}...`);
+      this.logger.log(`═══════════════════════════════════════`);
     }
   }
 

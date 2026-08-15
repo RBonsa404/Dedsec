@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, Headers } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus, Headers, Get } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
@@ -8,6 +8,12 @@ import { LoginDto, ChangePasswordDto, ForgotPasswordDto, ResetPasswordDto, Refre
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  @Get('test-email')
+  @ApiOperation({ summary: 'Test email sending (DEBUG)' })
+  async testEmail() {
+    return this.authService.testEmail();
+  }
 
   @Post('login')
   @Throttle({ default: { limit: 5, ttl: 60000 } }) // 5 login attempts per minute

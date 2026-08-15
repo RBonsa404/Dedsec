@@ -1,7 +1,18 @@
 # Configuration des Emails en Production
 
-## Problème actuel
-Les emails ne partent pas en production car les variables SMTP ne sont pas configurées correctement dans Render.
+## ⚠️ ÉTAT ACTUEL : EMAILS EN MODE LOG SEULEMENT
+
+Les emails ne sont **PAS ENVOYÉS RÉELLEMENT** pour le moment. Ils sont seulement **LOGGÉS** dans les logs du serveur.
+
+Pour voir les emails qui "seraient envoyés", regardez les logs Render :
+- Allez dans votre dashboard Render
+- Sélectionnez le service "dedsec-api"  
+- Cliquez sur "Logs"
+- Cherchez les lignes "EMAIL CONTENT (LOGGED ONLY)"
+
+## Pour activer les vrais emails
+
+Vous devez configurer un vrai service SMTP. Voici les options :
 
 ## Solution rapide : Utiliser un service SMTP gratuit
 

@@ -19,15 +19,15 @@ services:
       - key: JWT_EXPIRES_IN
         value: 15m
       - key: SMTP_HOST
-        value: ""
+        value: "smtp.mailtrap.io"
       - key: SMTP_PORT
-        value: "587"
+        value: "2525"
       - key: SMTP_SECURE
         value: "false"
       - key: SMTP_USER
-        value: ""
+        value: "your-mailtrap-user"
       - key: SMTP_PASS
-        value: ""
+        value: "your-mailtrap-pass"
       - key: EMAIL_FROM
         value: "noreply@dedsec.io"
       - key: FRONTEND_URL

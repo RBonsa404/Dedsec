@@ -255,4 +255,26 @@ export class AuthService {
 
     return { accessToken, refreshToken };
   }
+
+  async testEmail() {
+    this.logger.log('Testing email service...');
+    try {
+      await this.emailService.sendWelcomeEmail(
+        'test@example.com',
+        'Test User',
+        'TestPassword123'
+      );
+      return { 
+        success: true, 
+        message: 'Email test initiated. Check logs for details.' 
+      };
+    } catch (error) {
+      this.logger.error('Email test failed', error);
+      return { 
+        success: false, 
+        message: 'Email test failed. Check logs for details.',
+        error: error.message 
+      };
+    }
+  }
 }
