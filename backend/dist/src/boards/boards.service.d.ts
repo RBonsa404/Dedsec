@@ -7,13 +7,13 @@ export declare class BoardsService {
         columns: ({
             tasks: ({
                 _count: {
-                    attachments: number;
                     comments: number;
+                    attachments: number;
                 };
                 labels: ({
                     label: {
-                        name: string;
                         id: string;
+                        name: string;
                         projectId: string;
                         color: string;
                     };
@@ -30,9 +30,9 @@ export declare class BoardsService {
                 } | null;
                 checklists: ({
                     items: {
-                        text: string;
                         id: string;
                         position: number;
+                        text: string;
                         isCompleted: boolean;
                         checklistId: string;
                     }[];
@@ -43,15 +43,15 @@ export declare class BoardsService {
                     taskId: string;
                 })[];
             } & {
-                description: string | null;
-                priority: string;
                 id: string;
                 createdAt: Date;
                 updatedAt: Date;
-                title: string;
+                description: string | null;
                 position: number;
                 isArchived: boolean;
                 dueDate: Date | null;
+                title: string;
+                priority: string;
                 startDate: Date | null;
                 estimatedHours: number | null;
                 isTemplate: boolean;
@@ -62,32 +62,32 @@ export declare class BoardsService {
                 completedAt: Date | null;
             })[];
         } & {
-            name: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
+            name: string;
             position: number;
             color: string | null;
             boardId: string;
         })[];
     } & {
-        name: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
+        name: string;
         projectId: string;
     })[]>;
     findById(id: string): Promise<{
         columns: ({
             tasks: ({
                 _count: {
-                    attachments: number;
                     comments: number;
+                    attachments: number;
                 };
                 labels: ({
                     label: {
-                        name: string;
                         id: string;
+                        name: string;
                         projectId: string;
                         color: string;
                     };
@@ -104,9 +104,9 @@ export declare class BoardsService {
                 } | null;
                 checklists: ({
                     items: {
-                        text: string;
                         id: string;
                         position: number;
+                        text: string;
                         isCompleted: boolean;
                         checklistId: string;
                     }[];
@@ -117,15 +117,15 @@ export declare class BoardsService {
                     taskId: string;
                 })[];
             } & {
-                description: string | null;
-                priority: string;
                 id: string;
                 createdAt: Date;
                 updatedAt: Date;
-                title: string;
+                description: string | null;
                 position: number;
                 isArchived: boolean;
                 dueDate: Date | null;
+                title: string;
+                priority: string;
                 startDate: Date | null;
                 estimatedHours: number | null;
                 isTemplate: boolean;
@@ -136,32 +136,32 @@ export declare class BoardsService {
                 completedAt: Date | null;
             })[];
         } & {
-            name: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
+            name: string;
             position: number;
             color: string | null;
             boardId: string;
         })[];
     } & {
-        name: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
+        name: string;
         projectId: string;
     }>;
     addColumn(boardId: string, dto: CreateColumnDto): Promise<{
         tasks: {
-            description: string | null;
-            priority: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
-            title: string;
+            description: string | null;
             position: number;
             isArchived: boolean;
             dueDate: Date | null;
+            title: string;
+            priority: string;
             startDate: Date | null;
             estimatedHours: number | null;
             isTemplate: boolean;
@@ -172,19 +172,19 @@ export declare class BoardsService {
             completedAt: Date | null;
         }[];
     } & {
-        name: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
+        name: string;
         position: number;
         color: string | null;
         boardId: string;
     }>;
     updateColumn(columnId: string, dto: UpdateColumnDto): Promise<{
-        name: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
+        name: string;
         position: number;
         color: string | null;
         boardId: string;

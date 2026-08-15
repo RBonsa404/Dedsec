@@ -19,12 +19,12 @@ export declare class ProjectsController {
             isManager: boolean;
         }[];
     } & {
-        description: string | null;
-        name: string;
         id: string;
         status: string;
         createdAt: Date;
         updatedAt: Date;
+        name: string;
+        description: string | null;
         storageQuotaMb: number;
         storageUsedMb: number;
         archivedAt: Date | null;
@@ -39,34 +39,34 @@ export declare class ProjectsController {
         }[];
         boards: ({
             columns: {
-                name: string;
                 id: string;
                 createdAt: Date;
                 updatedAt: Date;
+                name: string;
                 position: number;
                 color: string | null;
                 boardId: string;
             }[];
         } & {
-            name: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
+            name: string;
             projectId: string;
         })[];
         labels: {
-            name: string;
             id: string;
+            name: string;
             projectId: string;
             color: string;
         }[];
     } & {
-        description: string | null;
-        name: string;
         id: string;
         status: string;
         createdAt: Date;
         updatedAt: Date;
+        name: string;
+        description: string | null;
         storageQuotaMb: number;
         storageUsedMb: number;
         archivedAt: Date | null;
@@ -96,13 +96,13 @@ export declare class ProjectsController {
             columns: ({
                 tasks: ({
                     _count: {
-                        attachments: number;
                         comments: number;
+                        attachments: number;
                     };
                     labels: ({
                         label: {
-                            name: string;
                             id: string;
+                            name: string;
                             projectId: string;
                             color: string;
                         };
@@ -119,9 +119,9 @@ export declare class ProjectsController {
                     } | null;
                     checklists: ({
                         items: {
-                            text: string;
                             id: string;
                             position: number;
+                            text: string;
                             isCompleted: boolean;
                             checklistId: string;
                         }[];
@@ -132,15 +132,15 @@ export declare class ProjectsController {
                         taskId: string;
                     })[];
                 } & {
-                    description: string | null;
-                    priority: string;
                     id: string;
                     createdAt: Date;
                     updatedAt: Date;
-                    title: string;
+                    description: string | null;
                     position: number;
                     isArchived: boolean;
                     dueDate: Date | null;
+                    title: string;
+                    priority: string;
                     startDate: Date | null;
                     estimatedHours: number | null;
                     isTemplate: boolean;
@@ -151,66 +151,66 @@ export declare class ProjectsController {
                     completedAt: Date | null;
                 })[];
             } & {
-                name: string;
                 id: string;
                 createdAt: Date;
                 updatedAt: Date;
+                name: string;
                 position: number;
                 color: string | null;
                 boardId: string;
             })[];
         } & {
-            name: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
+            name: string;
             projectId: string;
         })[];
         milestones: {
-            description: string | null;
-            name: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
+            name: string;
+            description: string | null;
             projectId: string;
             dueDate: Date | null;
             isCompleted: boolean;
         }[];
         labels: {
-            name: string;
             id: string;
+            name: string;
             projectId: string;
             color: string;
         }[];
     } & {
-        description: string | null;
-        name: string;
         id: string;
         status: string;
         createdAt: Date;
         updatedAt: Date;
+        name: string;
+        description: string | null;
         storageQuotaMb: number;
         storageUsedMb: number;
         archivedAt: Date | null;
     }>;
     update(id: string, dto: UpdateProjectDto, user: any): Promise<{
-        description: string | null;
-        name: string;
         id: string;
         status: string;
         createdAt: Date;
         updatedAt: Date;
+        name: string;
+        description: string | null;
         storageQuotaMb: number;
         storageUsedMb: number;
         archivedAt: Date | null;
     }>;
     archive(id: string, user: any): Promise<{
-        description: string | null;
-        name: string;
         id: string;
         status: string;
         createdAt: Date;
         updatedAt: Date;
+        name: string;
+        description: string | null;
         storageQuotaMb: number;
         storageUsedMb: number;
         archivedAt: Date | null;
@@ -262,15 +262,15 @@ export declare class ProjectsController {
                 lastName: string;
             };
         } & {
-            version: number;
             id: string;
             createdAt: Date;
-            type: string;
             projectId: string;
             fileName: string;
             fileUrl: string;
             fileSize: number;
             mimeType: string;
+            type: string;
+            version: number;
             uploaderId: string;
         })[];
     }>;
@@ -282,15 +282,15 @@ export declare class ProjectsController {
             lastName: string;
         };
     } & {
-        version: number;
         id: string;
         createdAt: Date;
-        type: string;
         projectId: string;
         fileName: string;
         fileUrl: string;
         fileSize: number;
         mimeType: string;
+        type: string;
+        version: number;
         uploaderId: string;
     }>;
     downloadDeliverable(projectId: string, delivId: string, res: Response): Promise<void>;

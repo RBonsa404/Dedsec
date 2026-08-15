@@ -6,8 +6,8 @@ export declare class NotificationsController {
         id: string;
         createdAt: Date;
         userId: string;
-        type: string;
         title: string;
+        type: string;
         message: string;
         isRead: boolean;
         link: string | null;

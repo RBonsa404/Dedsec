@@ -6,13 +6,13 @@ export declare class TasksService {
     constructor(prisma: PrismaService);
     create(dto: CreateTaskDto, userId: string): Promise<{
         _count: {
-            attachments: number;
             comments: number;
+            attachments: number;
         };
         labels: ({
             label: {
-                name: string;
                 id: string;
+                name: string;
                 projectId: string;
                 color: string;
             };
@@ -28,15 +28,15 @@ export declare class TasksService {
             avatarUrl: string | null;
         } | null;
     } & {
-        description: string | null;
-        priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        title: string;
+        description: string | null;
         position: number;
         isArchived: boolean;
         dueDate: Date | null;
+        title: string;
+        priority: string;
         startDate: Date | null;
         estimatedHours: number | null;
         isTemplate: boolean;
@@ -52,40 +52,24 @@ export declare class TasksService {
                 projectId: string;
             };
         } & {
-            name: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
+            name: string;
             position: number;
             color: string | null;
             boardId: string;
         };
         milestone: {
-            description: string | null;
-            name: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
+            name: string;
+            description: string | null;
             projectId: string;
             dueDate: Date | null;
             isCompleted: boolean;
         } | null;
-        attachments: ({
-            uploader: {
-                id: string;
-                firstName: string;
-                lastName: string;
-            };
-        } & {
-            id: string;
-            createdAt: Date;
-            fileName: string;
-            fileUrl: string;
-            fileSize: number;
-            mimeType: string;
-            uploaderId: string;
-            taskId: string;
-        })[];
         comments: ({
             author: {
                 id: string;
@@ -103,8 +87,8 @@ export declare class TasksService {
         })[];
         labels: ({
             label: {
-                name: string;
                 id: string;
+                name: string;
                 projectId: string;
                 color: string;
             };
@@ -112,6 +96,22 @@ export declare class TasksService {
             id: string;
             taskId: string;
             labelId: string;
+        })[];
+        attachments: ({
+            uploader: {
+                id: string;
+                firstName: string;
+                lastName: string;
+            };
+        } & {
+            id: string;
+            createdAt: Date;
+            fileName: string;
+            fileUrl: string;
+            fileSize: number;
+            mimeType: string;
+            uploaderId: string;
+            taskId: string;
         })[];
         assignee: {
             id: string;
@@ -127,9 +127,9 @@ export declare class TasksService {
         };
         checklists: ({
             items: {
-                text: string;
                 id: string;
                 position: number;
+                text: string;
                 isCompleted: boolean;
                 checklistId: string;
             }[];
@@ -160,15 +160,15 @@ export declare class TasksService {
             dependsOnId: string;
         })[];
     } & {
-        description: string | null;
-        priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        title: string;
+        description: string | null;
         position: number;
         isArchived: boolean;
         dueDate: Date | null;
+        title: string;
+        priority: string;
         startDate: Date | null;
         estimatedHours: number | null;
         isTemplate: boolean;
@@ -180,13 +180,13 @@ export declare class TasksService {
     }>;
     update(id: string, dto: UpdateTaskDto, userId: string, userRole: Role): Promise<{
         _count: {
-            attachments: number;
             comments: number;
+            attachments: number;
         };
         labels: ({
             label: {
-                name: string;
                 id: string;
+                name: string;
                 projectId: string;
                 color: string;
             };
@@ -203,9 +203,9 @@ export declare class TasksService {
         } | null;
         checklists: ({
             items: {
-                text: string;
                 id: string;
                 position: number;
+                text: string;
                 isCompleted: boolean;
                 checklistId: string;
             }[];
@@ -216,15 +216,15 @@ export declare class TasksService {
             taskId: string;
         })[];
     } & {
-        description: string | null;
-        priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        title: string;
+        description: string | null;
         position: number;
         isArchived: boolean;
         dueDate: Date | null;
+        title: string;
+        priority: string;
         startDate: Date | null;
         estimatedHours: number | null;
         isTemplate: boolean;
@@ -236,13 +236,13 @@ export declare class TasksService {
     }>;
     move(id: string, dto: MoveTaskDto, userId: string): Promise<{
         _count: {
-            attachments: number;
             comments: number;
+            attachments: number;
         };
         labels: ({
             label: {
-                name: string;
                 id: string;
+                name: string;
                 projectId: string;
                 color: string;
             };
@@ -258,15 +258,15 @@ export declare class TasksService {
             avatarUrl: string | null;
         } | null;
     } & {
-        description: string | null;
-        priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        title: string;
+        description: string | null;
         position: number;
         isArchived: boolean;
         dueDate: Date | null;
+        title: string;
+        priority: string;
         startDate: Date | null;
         estimatedHours: number | null;
         isTemplate: boolean;
@@ -277,15 +277,15 @@ export declare class TasksService {
         completedAt: Date | null;
     }>;
     archive(id: string): Promise<{
-        description: string | null;
-        priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        title: string;
+        description: string | null;
         position: number;
         isArchived: boolean;
         dueDate: Date | null;
+        title: string;
+        priority: string;
         startDate: Date | null;
         estimatedHours: number | null;
         isTemplate: boolean;
@@ -306,34 +306,34 @@ export declare class TasksService {
         column: {
             board: {
                 project: {
-                    name: string;
                     id: string;
+                    name: string;
                 };
             } & {
-                name: string;
                 id: string;
                 createdAt: Date;
                 updatedAt: Date;
+                name: string;
                 projectId: string;
             };
         } & {
-            name: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
+            name: string;
             position: number;
             color: string | null;
             boardId: string;
         };
         _count: {
-            attachments: number;
             comments: number;
+            attachments: number;
             checklists: number;
         };
         labels: ({
             label: {
-                name: string;
                 id: string;
+                name: string;
                 projectId: string;
                 color: string;
             };
@@ -343,15 +343,15 @@ export declare class TasksService {
             labelId: string;
         })[];
     } & {
-        description: string | null;
-        priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        title: string;
+        description: string | null;
         position: number;
         isArchived: boolean;
         dueDate: Date | null;
+        title: string;
+        priority: string;
         startDate: Date | null;
         estimatedHours: number | null;
         isTemplate: boolean;
@@ -364,8 +364,8 @@ export declare class TasksService {
     getTemplates(projectId: string): Promise<({
         labels: ({
             label: {
-                name: string;
                 id: string;
+                name: string;
                 projectId: string;
                 color: string;
             };
@@ -376,9 +376,9 @@ export declare class TasksService {
         })[];
         checklists: ({
             items: {
-                text: string;
                 id: string;
                 position: number;
+                text: string;
                 isCompleted: boolean;
                 checklistId: string;
             }[];
@@ -389,15 +389,15 @@ export declare class TasksService {
             taskId: string;
         })[];
     } & {
-        description: string | null;
-        priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        title: string;
+        description: string | null;
         position: number;
         isArchived: boolean;
         dueDate: Date | null;
+        title: string;
+        priority: string;
         startDate: Date | null;
         estimatedHours: number | null;
         isTemplate: boolean;
@@ -413,40 +413,24 @@ export declare class TasksService {
                 projectId: string;
             };
         } & {
-            name: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
+            name: string;
             position: number;
             color: string | null;
             boardId: string;
         };
         milestone: {
-            description: string | null;
-            name: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
+            name: string;
+            description: string | null;
             projectId: string;
             dueDate: Date | null;
             isCompleted: boolean;
         } | null;
-        attachments: ({
-            uploader: {
-                id: string;
-                firstName: string;
-                lastName: string;
-            };
-        } & {
-            id: string;
-            createdAt: Date;
-            fileName: string;
-            fileUrl: string;
-            fileSize: number;
-            mimeType: string;
-            uploaderId: string;
-            taskId: string;
-        })[];
         comments: ({
             author: {
                 id: string;
@@ -464,8 +448,8 @@ export declare class TasksService {
         })[];
         labels: ({
             label: {
-                name: string;
                 id: string;
+                name: string;
                 projectId: string;
                 color: string;
             };
@@ -473,6 +457,22 @@ export declare class TasksService {
             id: string;
             taskId: string;
             labelId: string;
+        })[];
+        attachments: ({
+            uploader: {
+                id: string;
+                firstName: string;
+                lastName: string;
+            };
+        } & {
+            id: string;
+            createdAt: Date;
+            fileName: string;
+            fileUrl: string;
+            fileSize: number;
+            mimeType: string;
+            uploaderId: string;
+            taskId: string;
         })[];
         assignee: {
             id: string;
@@ -488,9 +488,9 @@ export declare class TasksService {
         };
         checklists: ({
             items: {
-                text: string;
                 id: string;
                 position: number;
+                text: string;
                 isCompleted: boolean;
                 checklistId: string;
             }[];
@@ -521,15 +521,15 @@ export declare class TasksService {
             dependsOnId: string;
         })[];
     } & {
-        description: string | null;
-        priority: string;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        title: string;
+        description: string | null;
         position: number;
         isArchived: boolean;
         dueDate: Date | null;
+        title: string;
+        priority: string;
         startDate: Date | null;
         estimatedHours: number | null;
         isTemplate: boolean;
@@ -571,9 +571,9 @@ export declare class TasksService {
     })[]>;
     addChecklist(taskId: string, title: string, userId: string, userRole: Role): Promise<{
         items: {
-            text: string;
             id: string;
             position: number;
+            text: string;
             isCompleted: boolean;
             checklistId: string;
         }[];
@@ -584,24 +584,24 @@ export declare class TasksService {
         taskId: string;
     }>;
     addChecklistItem(checklistId: string, text: string, userId: string, userRole: Role): Promise<{
-        text: string;
         id: string;
         position: number;
+        text: string;
         isCompleted: boolean;
         checklistId: string;
     }>;
     toggleChecklistItem(itemId: string, userId: string, userRole: Role): Promise<{
-        text: string;
         id: string;
         position: number;
+        text: string;
         isCompleted: boolean;
         checklistId: string;
     }>;
     private ensureChecklistPermission;
     addLabel(taskId: string, labelId: string): Promise<{
         label: {
-            name: string;
             id: string;
+            name: string;
             projectId: string;
             color: string;
         };
