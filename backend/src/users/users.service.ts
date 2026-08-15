@@ -5,6 +5,7 @@ import { PrismaService } from '../prisma-client';
 import { EmailService } from '../email/email.service';
 import { CreateUserDto, UpdateUserDto, UpdatePreferencesDto } from './dto';
 import { Role } from '../common/enums';
+import { PasswordValidator } from '../common/utils/password.validator';
 
 @Injectable()
 export class UsersService {
@@ -142,11 +143,21 @@ export class UsersService {
     }
 
     // Use provided password if given, otherwise generate a temporary one
-    const passwordToUse = dto.password || this.generateTempPassword();
-    const passwordHash = await bcrypt.hash(passwordToUse, 12);
+    let passwordToUse: string;
+    let status: string;
 
-    // If a password was explicitly set, account is ACTIVE immediately; otherwise force change
-    const status = dto.password ? 'ACTIVE' : 'PENDING_PASSWORD_CHANGE';
+    if (dto.password) {
+      // Validate password strength if provided
+      PasswordValidator.validateOrThrow(dto.password);
+      passwordToUse = dto.password;
+      status = 'ACTIVE';
+    } else {
+      // Generate strong temporary password
+      passwordToUse = this.generateTempPassword();
+      status = 'PENDING_PASSWORD_CHANGE';
+    }
+
+    const passwordHash = await bcrypt.hash(passwordToUse, 12);
 
     const user = await this.prisma.user.create({
       data: {
@@ -348,11 +359,26 @@ export class UsersService {
   }
 
   private generateTempPassword(): string {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$';
+    const uppercase = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+    const lowercase = 'abcdefghjkmnpqrstuvwxyz';
+    const numbers = '23456789';
+    const special = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
     let password = '';
-    for (let i = 0; i < 12; i++) {
-      password += chars.charAt(Math.floor(Math.random() * chars.length));
+
+    // Ensure at least one of each required character type
+    password += uppercase.charAt(Math.floor(Math.random() * uppercase.length));
+    password += lowercase.charAt(Math.floor(Math.random() * lowercase.length));
+    password += numbers.charAt(Math.floor(Math.random() * numbers.length));
+    password += special.charAt(Math.floor(Math.random() * special.length));
+
+    // Fill the rest with random characters from all sets
+    const allChars = uppercase + lowercase + numbers + special;
+    for (let i = password.length; i < 16; i++) {
+      password += allChars.charAt(Math.floor(Math.random() * allChars.length));
     }
-    return password;
+
+    // Shuffle the password
+    return password.split('').sort(() => Math.random() - 0.5).join('');
   }
 }

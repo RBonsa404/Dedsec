@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { PrismaService } from '../prisma-client';
 import { EmailService } from '../email/email.service';
 import { AccountStatus } from '../common/enums';
+import { PasswordValidator } from '../common/utils/password.validator';
 
 interface LoginPayload {
   email: string;
@@ -89,9 +90,11 @@ export class AuthService {
   }
 
   async changePassword(userId?: string, oldPassword?: string, newPassword?: string, bearerToken?: string) {
-    if (!newPassword || newPassword.length < 8) {
-      throw new BadRequestException('New password must be at least 8 characters');
+    // Validate new password strength
+    if (!newPassword) {
+      throw new BadRequestException('New password is required');
     }
+    PasswordValidator.validateOrThrow(newPassword);
 
     let targetUserId = userId;
 
