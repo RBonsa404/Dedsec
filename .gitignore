@@ -41,8 +41,9 @@ yarn-error.log*
 *.swp
 *.swo
 
-# Keep init script for production setup (without credentials)
+# Keep utility scripts for production setup (without credentials)
 !backend/prisma/init-admin.ts
+!backend/prisma/reset-password.ts
 
 # Turbopack & Next.js cache
 .turbo
