@@ -85,8 +85,8 @@ export function Topbar() {
   };
 
   return (
-    <header className="flex h-18 items-center justify-between border-b border-[#1a2336] bg-[#0b0f19]/95 backdrop-blur-md px-6 md:px-8 select-none sticky top-0 z-30">
-      <div className="flex items-center gap-4">
+    <header className="flex h-14 md:h-16 lg:h-18 items-center justify-between border-b border-[#1a2336] bg-[#0b0f19]/95 backdrop-blur-md px-3 md:px-6 lg:px-8 select-none sticky top-0 z-30">
+      <div className="flex items-center gap-2 md:gap-4">
         {/* Mobile Hamburger Menu */}
         <button
           onClick={toggle}
@@ -97,7 +97,7 @@ export function Topbar() {
         </button>
 
         {/* Global Quick Search Input */}
-        <div className="relative w-72 md:w-96 max-w-md">
+        <div className="relative w-40 sm:w-56 md:w-72 lg:w-96 max-w-md hidden sm:block">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
           <Input
             type="search"
@@ -107,26 +107,26 @@ export function Topbar() {
         </div>
       </div>
       
-      <div className="flex items-center gap-3 relative" ref={dropdownRef}>
+      <div className="flex items-center gap-2 md:gap-3 relative" ref={dropdownRef}>
         {/* Language Switcher Button */}
         <button
           onClick={toggleLang}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#141b2a] border border-[#222d42] hover:border-emerald-500/50 text-xs font-bold text-slate-300 hover:text-emerald-400 transition-all shadow-xs"
+          className="flex items-center gap-1.5 md:gap-2 px-2 md:px-3 py-1.5 rounded-xl bg-[#141b2a] border border-[#222d42] hover:border-emerald-500/50 text-[10px] md:text-xs font-bold text-slate-300 hover:text-emerald-400 transition-all shadow-xs"
           title="Changer la langue / Switch language"
         >
-          <Globe className="w-3.5 h-3.5 text-cyan-400" />
-          <span>{lang === "fr" ? "FR 🇫🇷" : "EN 🇬🇧"}</span>
+          <Globe className="w-3 md:w-3.5 h-3 md:h-3.5 text-cyan-400" />
+          <span className="hidden sm:inline">{lang === "fr" ? "FR" : "EN"}</span>
         </button>
 
         {/* Notification Bell */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="relative rounded-xl p-2.5 text-slate-400 hover:bg-[#182234] hover:text-slate-100 transition-colors border border-[#222d42] hover:border-[#324360]"
+          className="relative rounded-xl p-2 md:p-2.5 text-slate-400 hover:bg-[#182234] hover:text-slate-100 transition-colors border border-[#222d42] hover:border-[#324360]"
           title="Centre de notifications"
         >
           <Bell className="h-4 w-4" />
           {unreadCount > 0 && (
-            <span className="absolute -top-1 -right-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-emerald-500 px-1 text-[10px] font-bold text-slate-950 shadow-[0_0_10px_#00ff88]">
+            <span className="absolute -top-1 -right-1 flex h-4 md:h-5 min-w-[16px] md:min-w-[20px] items-center justify-center rounded-full bg-emerald-500 px-1 text-[9px] md:text-[10px] font-bold text-slate-950 shadow-[0_0_10px_#00ff88]">
               {unreadCount}
             </span>
           )}
@@ -134,24 +134,24 @@ export function Topbar() {
 
         {/* Notifications Dropdown Drawer */}
         {isOpen && (
-          <div className="absolute right-0 top-14 z-50 w-84 sm:w-96 rounded-2xl border border-[#26334a] bg-[#111827] shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
-            <div className="flex items-center justify-between border-b border-[#232e42] bg-[#162032] p-4">
+          <div className="absolute right-0 top-12 md:top-14 z-50 w-80 sm:w-96 rounded-2xl border border-[#26334a] bg-[#111827] shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+            <div className="flex items-center justify-between border-b border-[#232e42] bg-[#162032] p-3 md:p-4">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-slate-100">{lang === "fr" ? "NOTIFICATIONS" : "NOTIFICATIONS"}</span>
+                <span className="text-[10px] md:text-xs font-bold text-slate-100">{lang === "fr" ? "NOTIFICATIONS" : "NOTIFICATIONS"}</span>
                 {unreadCount > 0 && (
-                  <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400 border border-emerald-500/40">
+                  <span className="rounded-full bg-emerald-500/20 px-1.5 md:px-2 py-0.5 text-[9px] md:text-[10px] font-bold text-emerald-400 border border-emerald-500/40">
                     {unreadCount} {lang === "fr" ? "NOUVEAU" : "NEW"}
                   </span>
                 )}
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 md:gap-3">
                 {unreadCount > 0 && (
                   <button
                     onClick={handleMarkAllRead}
-                    className="flex items-center gap-1 text-[11px] text-cyan-400 hover:underline font-semibold"
+                    className="flex items-center gap-1 text-[10px] md:text-[11px] text-cyan-400 hover:underline font-semibold"
                   >
-                    <CheckCheck className="h-3 w-3" /> {lang === "fr" ? "Tout lire" : "Mark all read"}
+                    <CheckCheck className="h-2.5 md:h-3 w-2.5 md:w-3" /> <span className="hidden sm:inline">{lang === "fr" ? "Tout lire" : "Mark all read"}</span>
                   </button>
                 )}
                 <button
@@ -159,16 +159,16 @@ export function Topbar() {
                     setIsOpen(false);
                     router.push("/notifications");
                   }}
-                  className="text-[11px] text-emerald-400 hover:underline font-bold"
+                  className="text-[10px] md:text-[11px] text-emerald-400 hover:underline font-bold"
                 >
                   {lang === "fr" ? "Voir tout" : "View all"}
                 </button>
               </div>
             </div>
 
-            <div className="max-h-[380px] overflow-y-auto divide-y divide-[#1e2a3e] custom-scrollbar">
+            <div className="max-h-[300px] md:max-h-[380px] overflow-y-auto divide-y divide-[#1e2a3e] custom-scrollbar">
               {notifications.length === 0 ? (
-                <div className="p-8 text-center text-xs text-slate-500">
+                <div className="p-6 md:p-8 text-center text-[10px] md:text-xs text-slate-500">
                   {lang === "fr" ? "Aucune nouvelle notification." : "No notifications recorded."}
                 </div>
               ) : (
@@ -176,31 +176,31 @@ export function Topbar() {
                   <div
                     key={n.id}
                     onClick={() => handleMarkAsRead(n.id, n.link)}
-                    className={`p-4 transition-colors cursor-pointer text-xs ${
+                    className={`p-3 md:p-4 transition-colors cursor-pointer text-[10px] md:text-xs ${
                       n.isRead
                         ? "bg-[#111827] hover:bg-[#182234] opacity-70"
                         : "bg-[#172236] hover:bg-[#1e2c45] border-l-3 border-emerald-500"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2 mb-1">
-                      <span className="font-bold text-slate-100 truncate">
+                      <span className="font-bold text-slate-100 truncate text-[11px] md:text-xs">
                         {n.title}
                       </span>
-                      <span className="text-[10px] text-slate-400 shrink-0 flex items-center gap-1">
-                        <Clock className="h-2.5 w-2.5" />
+                      <span className="text-[9px] md:text-[10px] text-slate-400 shrink-0 flex items-center gap-1">
+                        <Clock className="h-2 md:h-2.5 w-2 md:w-2.5" />
                         {new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
-                    <p className="text-slate-300 line-clamp-2 mb-2 leading-relaxed">
+                    <p className="text-slate-300 line-clamp-2 mb-2 leading-relaxed text-[9px] md:text-xs">
                       {n.message}
                     </p>
-                    <div className="flex items-center justify-between text-[10px] text-slate-400">
+                    <div className="flex items-center justify-between text-[9px] md:text-[10px] text-slate-400">
                       <span className="uppercase font-bold text-cyan-400">
                         {n.type}
                       </span>
                       {n.link && (
                         <span className="flex items-center gap-1 text-emerald-400 font-semibold">
-                          {lang === "fr" ? "Ouvrir" : "Open"} <ExternalLink className="h-2.5 w-2.5" />
+                          {lang === "fr" ? "Ouvrir" : "Open"} <ExternalLink className="h-2 md:h-2.5 w-2 md:w-2.5" />
                         </span>
                       )}
                     </div>

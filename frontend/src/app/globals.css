@@ -52,8 +52,15 @@
 
 /* Custom Scrollbars */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
+}
+
+@media (min-width: 640px) {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -69,6 +76,35 @@
   background: #3e5070;
 }
 
+/* Mobile-friendly scrollbars */
+@media (max-width: 640px) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  body {
+    font-size: 14px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+}
+
+/* Responsive base font sizes */
+@media (min-width: 640px) {
+  body {
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 1024px) {
+  body {
+    font-size: 16px;
+  }
+}
+
 /* Card hover transitions */
 .trello-card {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -78,4 +114,47 @@
   transform: translateY(-2px);
   box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 255, 136, 0.1);
   border-color: rgba(0, 255, 136, 0.4);
+}
+
+/* Responsive utilities */
+@media (max-width: 640px) {
+  .hide-mobile {
+    display: none !important;
+  }
+  
+  .show-mobile {
+    display: block !important;
+  }
+}
+
+@media (min-width: 641px) {
+  .hide-desktop {
+    display: none !important;
+  }
+  
+  .show-desktop {
+    display: block !important;
+  }
+}
+
+/* Prevent text overflow on mobile */
+@media (max-width: 640px) {
+  * {
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+}
+
+/* Ensure inputs are touch-friendly on mobile */
+@media (max-width: 640px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  select,
+  textarea {
+    min-height: 44px;
+    font-size: 16px;
+  }
 }
