@@ -32,13 +32,13 @@ async function main() {
   console.log('✅ Base de données vidée.\n');
 
   // Création du compte SUPER_ADMIN
-  const superAdminPasswordHash = await bcrypt.hash('R_Bons@2500', 12);
+  const superAdminPasswordHash = await bcrypt.hash('Dedsec@2024', 12);
 
   const superAdmin = await prisma.user.create({
     data: {
-      email: 'rachidbonsa707@gmail.com',
-      firstName: 'Rachid',
-      lastName: 'Bonsa',
+      email: 'admin@dedsec.pro',
+      firstName: 'Super',
+      lastName: 'Admin',
       role: 'SUPER_ADMIN',
       passwordHash: superAdminPasswordHash,
       status: 'ACTIVE',
@@ -47,8 +47,8 @@ async function main() {
   });
 
   console.log('🎉 Compte SUPER_ADMIN créé avec succès !');
-  console.log(`   Email       : rachidbonsa707@gmail.com`);
-  console.log(`   Mot de passe: R_Bons@2500`);
+  console.log(`   Email       : admin@dedsec.pro`);
+  console.log(`   Mot de passe: Dedsec@2024`);
   console.log(`   ID          : ${superAdmin.id}`);
   console.log(`   Rôle        : SUPER_ADMIN`);
 }
