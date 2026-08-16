@@ -142,20 +142,9 @@ export class UsersService {
       throw new BadRequestException('Cette adresse email est déjà utilisée');
     }
 
-    // Use provided password if given, otherwise generate a temporary one
-    let passwordToUse: string;
-    let status: string;
-
-    if (dto.password) {
-      // Validate password strength if provided (simplified for all users)
-      PasswordValidator.validateOrThrow(dto.password);
-      passwordToUse = dto.password;
-      status = 'ACTIVE';
-    } else {
-      // Generate strong temporary password
-      passwordToUse = this.generateTempPassword();
-      status = 'PENDING_PASSWORD_CHANGE';
-    }
+    // Always generate temporary password and force password change for new users
+    const passwordToUse = this.generateTempPassword();
+    const status = 'PENDING_PASSWORD_CHANGE';
 
     const passwordHash = await bcrypt.hash(passwordToUse, 12);
 
@@ -197,7 +186,7 @@ export class UsersService {
       },
     });
 
-    return { ...user, tempPassword: dto.password ? undefined : passwordToUse };
+    return { ...user, tempPassword: passwordToUse };
   }
 
 
