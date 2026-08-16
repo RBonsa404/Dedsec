@@ -329,6 +329,10 @@ function CalendarView({ tasks, onTaskClick }: { tasks: Task[]; onTaskClick: (id:
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
   };
 
+  const goToToday = () => {
+    setCurrentDate(new Date());
+  };
+
   const monthNames = {
     fr: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
     en: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -348,25 +352,43 @@ function CalendarView({ tasks, onTaskClick }: { tasks: Task[]; onTaskClick: (id:
 
   return (
     <div className="rounded-lg border border-border-color bg-bg-secondary overflow-hidden font-mono text-[10px] sm:text-xs">
-      <div className="bg-bg-tertiary border-b border-border-color p-3 sm:p-4">
-        <div className="flex items-center justify-between">
-          <button onClick={prevMonth} className="p-1.5 sm:p-2 hover:bg-bg-primary rounded transition-colors">
-            ←
-          </button>
-          <h2 className="font-bold text-text-primary text-[11px] sm:text-sm">
+      {/* Calendar Header */}
+      <div className="bg-bg-tertiary border-b border-border-color p-2 sm:p-3 md:p-4">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
+            <button 
+              onClick={prevMonth} 
+              className="p-1.5 sm:p-2 hover:bg-bg-primary rounded transition-colors text-text-primary hover:text-accent-primary"
+              aria-label="Previous month"
+            >
+              ←
+            </button>
+            <button 
+              onClick={goToToday}
+              className="px-2 sm:px-3 py-1 sm:py-1.5 hover:bg-bg-primary rounded transition-colors text-[9px] sm:text-xs text-text-secondary hover:text-text-primary"
+            >
+              {lang === "fr" ? "Aujourd'hui" : "Today"}
+            </button>
+            <button 
+              onClick={nextMonth} 
+              className="p-1.5 sm:p-2 hover:bg-bg-primary rounded transition-colors text-text-primary hover:text-accent-primary"
+              aria-label="Next month"
+            >
+              →
+            </button>
+          </div>
+          <h2 className="font-bold text-text-primary text-[10px] sm:text-xs md:text-sm text-center flex-1">
             {monthNames[lang === "fr" ? "fr" : "en"][currentDate.getMonth()]} {currentDate.getFullYear()}
           </h2>
-          <button onClick={nextMonth} className="p-1.5 sm:p-2 hover:bg-bg-primary rounded transition-colors">
-            →
-          </button>
+          <div className="w-20 sm:w-24 hidden sm:block"></div>
         </div>
       </div>
 
-      <div className="p-2 sm:p-4">
+      <div className="p-2 sm:p-3 md:p-4">
         {/* Day Headers */}
         <div className="grid grid-cols-7 gap-0.5 sm:gap-1 mb-1 sm:mb-2">
           {dayNames[lang === "fr" ? "fr" : "en"].map((day) => (
-            <div key={day} className="text-center text-text-muted font-bold text-[8px] sm:text-[10px] py-1 sm:py-2">
+            <div key={day} className="text-center text-text-muted font-bold text-[7px] sm:text-[9px] md:text-[10px] py-1 sm:py-1.5 md:py-2">
               {day}
             </div>
           ))}
@@ -388,12 +410,12 @@ function CalendarView({ tasks, onTaskClick }: { tasks: Task[]; onTaskClick: (id:
             return (
               <div
                 key={date.toISOString()}
-                className={`aspect-square rounded border border-border-color bg-bg-tertiary p-1 sm:p-1 hover:bg-bg-primary/50 transition-colors cursor-pointer ${isToday ? 'border-accent-primary' : ''}`}
+                className={`aspect-square rounded border border-border-color bg-bg-tertiary p-0.5 sm:p-1 md:p-1.5 hover:bg-bg-primary/50 transition-colors cursor-pointer relative group ${isToday ? 'border-accent-primary ring-1 ring-accent-primary/50' : ''}`}
               >
-                <div className="text-center text-text-primary font-bold text-[8px] sm:text-[10px] mb-0.5 sm:mb-1">
+                <div className="text-center text-text-primary font-bold text-[8px] sm:text-[9px] md:text-[10px] mb-0.5 sm:mb-1">
                   {dayNumber}
                 </div>
-                <div className="space-y-0.5">
+                <div className="space-y-0.5 sm:space-y-1">
                   {dayTasks.slice(0, 2).map((task) => (
                     <div
                       key={task.id}
@@ -401,18 +423,32 @@ function CalendarView({ tasks, onTaskClick }: { tasks: Task[]; onTaskClick: (id:
                         e.stopPropagation();
                         onTaskClick(task.id);
                       }}
-                      className={`text-[7px] sm:text-[8px] px-0.5 sm:px-1 py-0.5 rounded truncate border ${priorityColorsCalendar[task.priority] || ''}`}
+                      className={`text-[6px] sm:text-[7px] md:text-[8px] px-0.5 sm:px-1 py-0.5 rounded truncate border transition-all hover:scale-105 hover:shadow-lg ${priorityColorsCalendar[task.priority] || ''}`}
                       title={task.title}
                     >
                       {task.title}
                     </div>
                   ))}
                   {dayTasks.length > 2 && (
-                    <div className="text-[7px] sm:text-[8px] text-text-muted text-center">
+                    <div className="text-[6px] sm:text-[7px] md:text-[8px] text-text-muted text-center font-bold">
                       +{dayTasks.length - 2}
                     </div>
                   )}
                 </div>
+                
+                {/* Hover tooltip */}
+                {dayTasks.length > 0 && (
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-bg-primary border border-border-color rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 w-max max-w-[200px]">
+                    <div className="text-[8px] sm:text-[9px] text-text-primary">
+                      {dayTasks.map(task => (
+                        <div key={task.id} className="flex items-center gap-1 truncate">
+                          <div className={`w-1.5 h-1.5 rounded-full ${priorityColorsCalendar[task.priority]?.split(' ')[0] || 'bg-gray-500'}`}></div>
+                          <span>{task.title}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             );
           })}
