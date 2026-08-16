@@ -9,7 +9,7 @@ import { Roles } from '../common/decorators/roles.decorator';
 @ApiTags('Audit Log')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles(Role.ADMIN)
+@Roles(Role.SUPER_ADMIN, Role.ADMIN)
 @Controller('audit-logs')
 export class AuditLogController {
   constructor(private auditLogService: AuditLogService) {}
