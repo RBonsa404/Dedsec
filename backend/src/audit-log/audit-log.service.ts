@@ -30,6 +30,7 @@ export class AuditLogService {
     const [
       totalUsers,
       activeUsers,
+      superAdminCount,
       adminCount,
       pmCount,
       memberCount,
@@ -42,6 +43,7 @@ export class AuditLogService {
     ] = await Promise.all([
       this.prisma.user.count(),
       this.prisma.user.count({ where: { status: 'ACTIVE' } }),
+      this.prisma.user.count({ where: { role: 'SUPER_ADMIN' } }),
       this.prisma.user.count({ where: { role: 'ADMIN' } }),
       this.prisma.user.count({ where: { role: 'PROJECT_MANAGER' } }),
       this.prisma.user.count({ where: { role: 'TEAM_MEMBER' } }),
@@ -63,6 +65,7 @@ export class AuditLogService {
       totalUsers,
       activeUsers,
       usersByRole: {
+        SUPER_ADMIN: superAdminCount,
         ADMIN: adminCount,
         PROJECT_MANAGER: pmCount,
         TEAM_MEMBER: memberCount,
