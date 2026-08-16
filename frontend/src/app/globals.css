@@ -13,29 +13,29 @@
 
 @layer base {
   :root {
-    /* Modern Deep Slate & Indigo Theme */
-    --bg-primary: #0b0f19;
-    --bg-secondary: #111827;
-    --bg-tertiary: #182234;
-    --bg-card: #1e293b;
-    --bg-card-hover: #243247;
+    /* Render-inspired Professional Theme */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --bg-tertiary: #f1f5f9;
+    --bg-card: #ffffff;
+    --bg-card-hover: #ffffff;
     
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
     
-    --accent-primary: #00ff88;
-    --accent-secondary: #00d4ff;
-    --accent-danger: #f43f5e;
-    --accent-warning: #fbbf24;
-    --accent-purple: #a855f7;
+    --accent-primary: #0066ff;
+    --accent-secondary: #6366f1;
+    --accent-danger: #ef4444;
+    --accent-warning: #f59e0b;
+    --accent-purple: #8b5cf6;
     
-    --border-color: #26334a;
-    --border-highlight: #3b4d6d;
+    --border-color: #e2e8f0;
+    --border-highlight: #cbd5e1;
     
-    --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
-    --shadow-elevated: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
-    --shadow-glow: 0 0 20px rgba(0, 255, 136, 0.15);
+    --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --shadow-elevated: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-glow: 0 0 20px rgba(0, 102, 255, 0.1);
   }
 
   body {
@@ -43,24 +43,15 @@
     color: var(--text-primary);
     font-family: var(--font-sans);
     letter-spacing: -0.01em;
-    background-image: 
-      radial-gradient(circle at 50% 0%, rgba(0, 212, 255, 0.04) 0%, transparent 60%),
-      radial-gradient(circle at 100% 100%, rgba(0, 255, 136, 0.03) 0%, transparent 50%);
+    background-image: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
     background-attachment: fixed;
   }
 }
 
-/* Custom Scrollbars */
+/* Custom Scrollbars - Render-inspired */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-@media (min-width: 640px) {
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
+  width: 8px;
+  height: 8px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -68,12 +59,12 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #2a374f;
-  border-radius: 9999px;
+  background: #cbd5e1;
+  border-radius: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #3e5070;
+  background: #94a3b8;
 }
 
 /* Mobile-friendly scrollbars */
@@ -105,15 +96,16 @@
   }
 }
 
-/* Card hover transitions */
+/* Card hover transitions - Render-inspired */
 .trello-card {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--border-color);
 }
 
 .trello-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 255, 136, 0.1);
-  border-color: rgba(0, 255, 136, 0.4);
+  box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.1), 0 0 15px rgba(0, 102, 255, 0.1);
+  border-color: var(--accent-primary);
 }
 
 /* Responsive utilities */
@@ -157,4 +149,134 @@
     min-height: 44px;
     font-size: 16px;
   }
+}
+
+/* Render-inspired professional animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.2s ease-out;
+}
+
+/* Professional gradient borders */
+.gradient-border {
+  position: relative;
+  background: var(--bg-card);
+  border-radius: 8px;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.gradient-border:hover::before {
+  opacity: 1;
+}
+
+/* Smooth button transitions */
+button {
+  transition: all 0.15s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* Professional focus states */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+}
+
+/* Badge styles */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 500;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.badge-primary {
+  background: rgba(0, 102, 255, 0.1);
+  color: var(--accent-primary);
+  border-color: rgba(0, 102, 255, 0.2);
+}
+
+.badge-success {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.badge-warning {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+.badge-danger {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.2);
 }

@@ -41,6 +41,7 @@ interface SystemStats {
   totalUsers: number;
   activeUsers: number;
   usersByRole: {
+    SUPER_ADMIN: number;
     ADMIN: number;
     PROJECT_MANAGER: number;
     TEAM_MEMBER: number;
@@ -93,18 +94,18 @@ export default function AdminDashboardPage() {
 
   const getActionBadge = (action: string) => {
     if (action.includes("CREATE") || action.includes("ADD")) {
-      return "bg-emerald-950/60 text-emerald-400 border-emerald-800/60";
+      return "bg-green-50 text-green-700 border-green-200";
     }
     if (action.includes("DELETE") || action.includes("SUSPEND") || action.includes("PURGE")) {
-      return "bg-rose-950/60 text-rose-400 border-rose-800/60";
+      return "bg-red-50 text-red-700 border-red-200";
     }
     if (action.includes("UPDATE") || action.includes("MOVE") || action.includes("RESET")) {
-      return "bg-cyan-950/60 text-cyan-400 border-cyan-800/60";
+      return "bg-blue-50 text-blue-700 border-blue-200";
     }
     if (action.includes("LOGIN") || action.includes("AUTH")) {
-      return "bg-purple-950/60 text-purple-400 border-purple-800/60";
+      return "bg-purple-50 text-purple-700 border-purple-200";
     }
-    return "bg-amber-950/60 text-amber-400 border-amber-800/60";
+    return "bg-amber-50 text-amber-700 border-amber-200";
   };
 
   const getActionIcon = (action: string) => {
@@ -125,18 +126,18 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="space-y-7 max-w-7xl">
+    <div className="space-y-7 max-w-7xl animate-fade-in">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-emerald-400">
+          <div className="flex items-center gap-2 text-xs font-semibold text-blue-600">
             <ShieldCheck className="w-4 h-4" />
             <span>{lang === "fr" ? "Administration Système & Sécurité" : "System Core & Security"}</span>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-100 mt-1">
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900 mt-1">
             {lang === "fr" ? "Console d'Administration & Métriques" : "Admin Console & Live Telemetry"}
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-gray-600 mt-1">
             {lang === "fr" 
               ? "Télémétrie en temps réel, gouvernance des accès et journal d'audit de sécurité." 
               : "Real-time system telemetry, access governance, and immutable security audit trail."}
@@ -148,16 +149,16 @@ export default function AdminDashboardPage() {
             onClick={fetchStats}
             variant="outline"
             size="sm"
-            className="rounded-xl border-[#2a3850] bg-[#141b2b] hover:bg-[#1e293b] text-slate-300 gap-2 text-xs"
+            className="rounded-lg border-gray-200 bg-white hover:bg-gray-50 text-gray-700 gap-2 text-xs"
           >
-            <RefreshCw className="w-3.5 h-3.5 text-emerald-400" />
+            <RefreshCw className="w-3.5 h-3.5 text-blue-600" />
             {lang === "fr" ? "Actualiser" : "Refresh"}
           </Button>
 
           <Button
             onClick={() => router.push("/users")}
             size="sm"
-            className="rounded-xl text-xs gap-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold shadow-md shadow-emerald-500/20"
+            className="rounded-lg text-xs gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium"
           >
             <UserPlus className="w-3.5 h-3.5" />
             {lang === "fr" ? "Créer un collaborateur" : "Provision Operator"}
@@ -167,7 +168,7 @@ export default function AdminDashboardPage() {
             onClick={() => router.push("/announcements")}
             variant="outline"
             size="sm"
-            className="rounded-xl border-cyan-800/60 bg-cyan-950/30 hover:bg-cyan-950/60 text-cyan-400 gap-2 text-xs font-semibold"
+            className="rounded-lg border-gray-200 bg-white hover:bg-gray-50 text-gray-700 gap-2 text-xs font-medium"
           >
             <Radio className="w-3.5 h-3.5" />
             {lang === "fr" ? "Diffuser une annonce" : "Broadcast"}
@@ -178,113 +179,114 @@ export default function AdminDashboardPage() {
       {/* Real Live Metrics Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Users */}
-        <div className="rounded-2xl border border-[#232f44] bg-[#111827] p-5 shadow-sm">
+        <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold text-slate-400">{lang === "fr" ? "COLLABORATEURS TOTAUX" : "TOTAL OPERATORS"}</span>
-            <div className="p-2 rounded-xl bg-emerald-950/50 border border-emerald-800/50 text-emerald-400">
+            <span className="text-xs font-semibold text-gray-500">{lang === "fr" ? "COLLABORATEURS TOTAUX" : "TOTAL OPERATORS"}</span>
+            <div className="p-2 rounded-lg bg-blue-50 text-blue-600">
               <Users className="w-4 h-4" />
             </div>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-slate-100">{stats?.totalUsers ?? 0}</span>
-            <span className="text-xs text-emerald-400 font-medium">({stats?.activeUsers ?? 0} {lang === "fr" ? "actifs" : "active"})</span>
+            <span className="text-3xl font-bold text-gray-900">{stats?.totalUsers ?? 0}</span>
+            <span className="text-xs text-blue-600 font-medium">({stats?.activeUsers ?? 0} {lang === "fr" ? "actifs" : "active"})</span>
           </div>
-          <div className="mt-3 pt-3 border-t border-[#1e2a3e] flex items-center justify-between text-[11px] text-slate-400">
+          <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-500">
+            <span>Super Admin: {stats?.usersByRole?.SUPER_ADMIN ?? 0}</span>
+            <span>Admins: {stats?.usersByRole?.ADMIN ?? 0}</span>
             <span>PM: {stats?.usersByRole?.PROJECT_MANAGER ?? 0}</span>
             <span>Membres: {stats?.usersByRole?.TEAM_MEMBER ?? 0}</span>
-            <span>Admins: {stats?.usersByRole?.ADMIN ?? 0}</span>
           </div>
         </div>
 
         {/* Active Projects */}
-        <div className="rounded-2xl border border-[#232f44] bg-[#111827] p-5 shadow-sm">
+        <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold text-slate-400">{lang === "fr" ? "PROJETS OPÉRATIONNELS" : "ACTIVE OPERATIONS"}</span>
-            <div className="p-2 rounded-xl bg-cyan-950/50 border border-cyan-800/50 text-cyan-400">
+            <span className="text-xs font-semibold text-gray-500">{lang === "fr" ? "PROJETS OPÉRATIONNELS" : "ACTIVE OPERATIONS"}</span>
+            <div className="p-2 rounded-lg bg-indigo-50 text-indigo-600">
               <FolderKanban className="w-4 h-4" />
             </div>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-slate-100">{stats?.activeProjects ?? 0}</span>
-            <span className="text-xs text-slate-400 font-medium">/ {stats?.totalProjects ?? 0} total</span>
+            <span className="text-3xl font-bold text-gray-900">{stats?.activeProjects ?? 0}</span>
+            <span className="text-xs text-gray-500 font-medium">/ {stats?.totalProjects ?? 0} total</span>
           </div>
-          <div className="mt-3 pt-3 border-t border-[#1e2a3e] text-[11px] text-slate-400 flex items-center justify-between">
+          <div className="mt-3 pt-3 border-t border-gray-100 text-[11px] text-gray-500 flex items-center justify-between">
             <span>{lang === "fr" ? "Total Tâches :" : "Total Tasks :"} {stats?.totalTasks ?? 0}</span>
-            <button onClick={() => router.push("/projects")} className="text-cyan-400 hover:underline font-semibold">
+            <button onClick={() => router.push("/projects")} className="text-blue-600 hover:underline font-medium">
               {lang === "fr" ? "Voir tout →" : "View all →"}
             </button>
           </div>
         </div>
 
         {/* Absences & Availability */}
-        <div className="rounded-2xl border border-[#232f44] bg-[#111827] p-5 shadow-sm">
+        <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold text-slate-400">{lang === "fr" ? "DEMANDES D'ABSENCE" : "ABSENCE REQUESTS"}</span>
-            <div className="p-2 rounded-xl bg-amber-950/50 border border-amber-800/50 text-amber-400">
+            <span className="text-xs font-semibold text-gray-500">{lang === "fr" ? "DEMANDES D'ABSENCE" : "ABSENCE REQUESTS"}</span>
+            <div className="p-2 rounded-lg bg-amber-50 text-amber-600">
               <FileCheck className="w-4 h-4" />
             </div>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-slate-100">{stats?.pendingAbsences ?? 0}</span>
-            <span className="text-xs text-amber-400 font-medium">{lang === "fr" ? "en attente" : "pending review"}</span>
+            <span className="text-3xl font-bold text-gray-900">{stats?.pendingAbsences ?? 0}</span>
+            <span className="text-xs text-amber-600 font-medium">{lang === "fr" ? "en attente" : "pending review"}</span>
           </div>
-          <div className="mt-3 pt-3 border-t border-[#1e2a3e] text-[11px] text-slate-400 flex items-center justify-between">
+          <div className="mt-3 pt-3 border-t border-gray-100 text-[11px] text-gray-500 flex items-center justify-between">
             <span>{stats?.totalAbsences ?? 0} {lang === "fr" ? "dossiers traités" : "total requests"}</span>
-            <button onClick={() => router.push("/absences")} className="text-amber-400 hover:underline font-semibold">
+            <button onClick={() => router.push("/absences")} className="text-amber-600 hover:underline font-medium">
               {lang === "fr" ? "Examiner →" : "Review →"}
             </button>
           </div>
         </div>
 
         {/* System Core Health */}
-        <div className="rounded-2xl border border-[#232f44] bg-[#111827] p-5 shadow-sm">
+        <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold text-slate-400">{lang === "fr" ? "ÉTAT DU SYSTÈME" : "SYSTEM STATUS"}</span>
-            <div className="p-2 rounded-xl bg-emerald-950/50 border border-emerald-800/50 text-emerald-400">
+            <span className="text-xs font-semibold text-gray-500">{lang === "fr" ? "ÉTAT DU SYSTÈME" : "SYSTEM STATUS"}</span>
+            <div className="p-2 rounded-lg bg-green-50 text-green-600">
               <Activity className="w-4 h-4" />
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span className="h-3 w-3 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span className="text-lg font-bold text-emerald-400">{lang === "fr" ? "100% Opérationnel" : "Nominal (Online)"}</span>
+            <span className="h-3 w-3 rounded-full bg-green-500 animate-pulse"></span>
+            <span className="text-lg font-bold text-green-600">{lang === "fr" ? "100% Opérationnel" : "Nominal (Online)"}</span>
           </div>
-          <div className="mt-3 pt-3 border-t border-[#1e2a3e] text-[11px] text-slate-400 flex items-center justify-between">
+          <div className="mt-3 pt-3 border-t border-gray-100 text-[11px] text-gray-500 flex items-center justify-between">
             <span>PostgreSQL & NestJS API</span>
-            <span className="text-emerald-400 font-bold">OK</span>
+            <span className="text-green-600 font-medium">OK</span>
           </div>
         </div>
       </div>
 
       {/* Real Live Audit Logs Table */}
-      <div className="rounded-2xl border border-[#232f44] bg-[#111827] overflow-hidden shadow-sm">
+      <div className="rounded-lg border border-gray-200 bg-white overflow-hidden shadow-sm">
         {/* Table Header & Controls */}
-        <div className="p-5 border-b border-[#1e2a3e] flex flex-wrap items-center justify-between gap-4">
+        <div className="p-5 border-b border-gray-200 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 className="text-base font-bold text-slate-100 flex items-center gap-2">
-              <Shield className="w-4 h-4 text-emerald-400" />
+            <h2 className="text-base font-semibold text-gray-900 flex items-center gap-2">
+              <Shield className="w-4 h-4 text-blue-600" />
               <span>{lang === "fr" ? "Journal d'Audit & Sécurité en Temps Réel" : "Real-Time System Audit Trail"}</span>
             </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-gray-500 mt-0.5">
               {lang === "fr" ? "Traçabilité intégrale de toutes les créations, modifications et suppressions." : "Comprehensive log of all administrative actions and security events."}
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3 text-xs">
             <div className="relative w-64">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder={lang === "fr" ? "Filtrer le journal..." : "Filter logs..."}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-[#162032] border border-[#26334a] text-slate-100 placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none text-xs"
+                className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-gray-50 border border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none text-xs"
               />
             </div>
 
             <select
               value={actionFilter}
               onChange={(e) => setActionFilter(e.target.value)}
-              className="bg-[#162032] text-slate-200 border border-[#26334a] rounded-xl px-3 py-1.5 text-xs focus:outline-none cursor-pointer"
+              className="bg-white text-gray-700 border border-gray-200 rounded-lg px-3 py-1.5 text-xs focus:outline-none cursor-pointer"
             >
               <option value="ALL">{lang === "fr" ? "Toutes les actions" : "All Actions"}</option>
               <option value="USER_CREATED">USER_CREATED</option>
@@ -299,7 +301,7 @@ export default function AdminDashboardPage() {
         {/* Table Body */}
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="text-[11px] text-slate-400 uppercase bg-[#162032] border-b border-[#232f44]">
+            <thead className="text-[11px] text-gray-500 uppercase bg-gray-50 border-b border-gray-200">
               <tr>
                 <th className="px-4 sm:px-6 py-3 sm:py-3.5">{lang === "fr" ? "Date & Heure" : "Timestamp"}</th>
                 <th className="px-4 sm:px-6 py-3 sm:py-3.5">{lang === "fr" ? "Événement" : "Action"}</th>
@@ -307,12 +309,12 @@ export default function AdminDashboardPage() {
                 <th className="px-4 sm:px-6 py-3 sm:py-3.5">{lang === "fr" ? "Détails" : "Details"}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#1e2a3e]">
+            <tbody className="divide-y divide-gray-100">
               {filteredLogs.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-4 sm:px-6 py-12 text-center text-slate-500">
+                  <td colSpan={4} className="px-4 sm:px-6 py-12 text-center text-gray-500">
                     <div className="flex flex-col items-center gap-3">
-                      <Activity className="w-8 h-8 text-slate-600 mx-auto" />
+                      <Activity className="w-8 h-8 text-gray-300 mx-auto" />
                       <span>{lang === "fr" ? "Aucune entrée d'audit enregistrée pour le moment." : "No audit entries recorded yet."}</span>
                     </div>
                   </td>
@@ -327,15 +329,15 @@ export default function AdminDashboardPage() {
                   } catch {}
 
                   return (
-                    <tr key={log.id} className="hover:bg-[#162032]/50 transition-colors border-l-2 border-l-transparent hover:border-l-emerald-500">
-                      <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-slate-400 flex items-center gap-2">
-                        <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-500" />
+                    <tr key={log.id} className="hover:bg-gray-50 transition-colors border-l-2 border-l-transparent hover:border-l-blue-600">
+                      <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-gray-500 flex items-center gap-2">
+                        <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400" />
                         <span className="text-[10px] sm:text-xs">{new Date(log.createdAt).toLocaleString()}</span>
                       </td>
 
                       <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                         <div className="flex items-center gap-2">
-                          <span className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-bold uppercase border flex items-center gap-1 ${getActionBadge(log.action)}`}>
+                          <span className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-medium uppercase border flex items-center gap-1 ${getActionBadge(log.action)}`}>
                             {getActionIcon(log.action)}
                             {log.action}
                           </span>
@@ -345,27 +347,27 @@ export default function AdminDashboardPage() {
                       <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                         {log.actor ? (
                           <div className="flex items-center gap-2">
-                            <div className="h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-emerald-950 border border-emerald-800 text-emerald-300 flex items-center justify-center font-bold text-[9px] sm:text-[10px]">
+                            <div className="h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-medium text-[9px] sm:text-[10px]">
                               {log.actor.firstName?.[0]}{log.actor.lastName?.[0]}
                             </div>
                             <div className="flex flex-col">
-                              <span className="font-semibold text-slate-200 text-[10px] sm:text-xs">
+                              <span className="font-medium text-gray-900 text-[10px] sm:text-xs">
                                 {log.actor.firstName} {log.actor.lastName}
                               </span>
-                              <span className="text-[8px] sm:text-[10px] text-slate-500">({log.actor.role})</span>
+                              <span className="text-[8px] sm:text-[10px] text-gray-500">({log.actor.role})</span>
                             </div>
                           </div>
                         ) : (
-                          <div className="flex items-center gap-2 text-slate-500 italic">
+                          <div className="flex items-center gap-2 text-gray-400 italic">
                             <Activity className="w-3 h-3" />
                             <span className="text-[10px] sm:text-xs">{lang === "fr" ? "Système" : "System"}</span>
                           </div>
                         )}
                       </td>
 
-                      <td className="px-4 sm:px-6 py-3 sm:py-4 text-slate-300 max-w-xs sm:max-w-md truncate font-mono text-[9px] sm:text-[11px]" title={log.details || ""}>
+                      <td className="px-4 sm:px-6 py-3 sm:py-4 text-gray-600 max-w-xs sm:max-w-md truncate font-mono text-[9px] sm:text-[11px]" title={log.details || ""}>
                         <div className="flex items-start gap-2">
-                          <span className="text-slate-500">&gt;</span>
+                          <span className="text-gray-400">&gt;</span>
                           <span className="truncate">{parsedDetails || "--"}</span>
                         </div>
                       </td>
