@@ -16,8 +16,7 @@ import {
   CheckCircle2, 
   AlertTriangle,
   FileCheck,
-  Shield,
-  Layers
+  Shield
 } from "lucide-react";
 import api from "@/lib/api";
 import { Button } from "@/components/ui/button";
@@ -102,7 +101,19 @@ export default function AdminDashboardPage() {
     if (action.includes("UPDATE") || action.includes("MOVE") || action.includes("RESET")) {
       return "bg-cyan-950/60 text-cyan-400 border-cyan-800/60";
     }
+    if (action.includes("LOGIN") || action.includes("AUTH")) {
+      return "bg-purple-950/60 text-purple-400 border-purple-800/60";
+    }
     return "bg-amber-950/60 text-amber-400 border-amber-800/60";
+  };
+
+  const getActionIcon = (action: string) => {
+    if (action.includes("CREATE") || action.includes("ADD")) return <CheckCircle2 className="w-3.5 h-3.5" />;
+    if (action.includes("DELETE") || action.includes("SUSPEND")) return <AlertTriangle className="w-3.5 h-3.5" />;
+    if (action.includes("UPDATE") || action.includes("MOVE")) return <RefreshCw className="w-3.5 h-3.5" />;
+    if (action.includes("LOGIN") || action.includes("AUTH")) return <Shield className="w-3.5 h-3.5" />;
+    if (action.includes("PASSWORD")) return <FileCheck className="w-3.5 h-3.5" />;
+    return <Activity className="w-3.5 h-3.5" />;
   };
 
   if (isLoading && !stats) {
@@ -290,17 +301,20 @@ export default function AdminDashboardPage() {
           <table className="w-full text-left text-xs">
             <thead className="text-[11px] text-slate-400 uppercase bg-[#162032] border-b border-[#232f44]">
               <tr>
-                <th className="px-6 py-3.5">{lang === "fr" ? "Date & Heure" : "Timestamp"}</th>
-                <th className="px-6 py-3.5">{lang === "fr" ? "Événement" : "Action"}</th>
-                <th className="px-6 py-3.5">{lang === "fr" ? "Auteur de l'action" : "Actor"}</th>
-                <th className="px-6 py-3.5">{lang === "fr" ? "Détails & Périmètre" : "Details"}</th>
+                <th className="px-4 sm:px-6 py-3 sm:py-3.5">{lang === "fr" ? "Date & Heure" : "Timestamp"}</th>
+                <th className="px-4 sm:px-6 py-3 sm:py-3.5">{lang === "fr" ? "Événement" : "Action"}</th>
+                <th className="px-4 sm:px-6 py-3 sm:py-3.5">{lang === "fr" ? "Auteur" : "Actor"}</th>
+                <th className="px-4 sm:px-6 py-3 sm:py-3.5">{lang === "fr" ? "Détails" : "Details"}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#1e2a3e]">
               {filteredLogs.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-slate-500">
-                    {lang === "fr" ? "Aucune entrée d'audit enregistrée pour le moment." : "No audit entries recorded yet."}
+                  <td colSpan={4} className="px-4 sm:px-6 py-12 text-center text-slate-500">
+                    <div className="flex flex-col items-center gap-3">
+                      <Activity className="w-8 h-8 text-slate-600 mx-auto" />
+                      <span>{lang === "fr" ? "Aucune entrée d'audit enregistrée pour le moment." : "No audit entries recorded yet."}</span>
+                    </div>
                   </td>
                 </tr>
               ) : (
@@ -313,36 +327,47 @@ export default function AdminDashboardPage() {
                   } catch {}
 
                   return (
-                    <tr key={log.id} className="hover:bg-[#162032]/50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-slate-400 flex items-center gap-2">
-                        <Clock className="w-3.5 h-3.5 text-slate-500" />
-                        <span>{new Date(log.createdAt).toLocaleString()}</span>
+                    <tr key={log.id} className="hover:bg-[#162032]/50 transition-colors border-l-2 border-l-transparent hover:border-l-emerald-500">
+                      <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-slate-400 flex items-center gap-2">
+                        <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-500" />
+                        <span className="text-[10px] sm:text-xs">{new Date(log.createdAt).toLocaleString()}</span>
                       </td>
 
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase border ${getActionBadge(log.action)}`}>
-                          {log.action}
-                        </span>
+                      <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                        <div className="flex items-center gap-2">
+                          <span className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-bold uppercase border flex items-center gap-1 ${getActionBadge(log.action)}`}>
+                            {getActionIcon(log.action)}
+                            {log.action}
+                          </span>
+                        </div>
                       </td>
 
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                         {log.actor ? (
                           <div className="flex items-center gap-2">
-                            <div className="h-6 w-6 rounded-full bg-emerald-950 border border-emerald-800 text-emerald-300 flex items-center justify-center font-bold text-[10px]">
+                            <div className="h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-emerald-950 border border-emerald-800 text-emerald-300 flex items-center justify-center font-bold text-[9px] sm:text-[10px]">
                               {log.actor.firstName?.[0]}{log.actor.lastName?.[0]}
                             </div>
-                            <span className="font-semibold text-slate-200">
-                              {log.actor.firstName} {log.actor.lastName}
-                            </span>
-                            <span className="text-[10px] text-slate-500">({log.actor.role})</span>
+                            <div className="flex flex-col">
+                              <span className="font-semibold text-slate-200 text-[10px] sm:text-xs">
+                                {log.actor.firstName} {log.actor.lastName}
+                              </span>
+                              <span className="text-[8px] sm:text-[10px] text-slate-500">({log.actor.role})</span>
+                            </div>
                           </div>
                         ) : (
-                          <span className="text-slate-500 italic">{lang === "fr" ? "Système automatique" : "System core"}</span>
+                          <div className="flex items-center gap-2 text-slate-500 italic">
+                            <Activity className="w-3 h-3" />
+                            <span className="text-[10px] sm:text-xs">{lang === "fr" ? "Système" : "System"}</span>
+                          </div>
                         )}
                       </td>
 
-                      <td className="px-6 py-4 text-slate-300 max-w-md truncate font-mono text-[11px]" title={log.details || ""}>
-                        {parsedDetails || "—"}
+                      <td className="px-4 sm:px-6 py-3 sm:py-4 text-slate-300 max-w-xs sm:max-w-md truncate font-mono text-[9px] sm:text-[11px]" title={log.details || ""}>
+                        <div className="flex items-start gap-2">
+                          <span className="text-slate-500">&gt;</span>
+                          <span className="truncate">{parsedDetails || "--"}</span>
+                        </div>
                       </td>
                     </tr>
                   );
