@@ -363,6 +363,63 @@ export class UsersService {
     return { message: 'User deleted' };
   }
 
+  async restrictAccount(id: string, restriction: string, reason: string, actorId: string, actorRole: Role) {
+    const targetUser = await this.ensureExists(id);
+
+    // Only SUPER_ADMIN can restrict accounts
+    if (actorRole !== 'SUPER_ADMIN') {
+      throw new ForbiddenException('Seul un SUPER_ADMIN peut restreindre un compte');
+    }
+
+    // Cannot restrict SUPER_ADMIN accounts
+    if (targetUser.role === 'SUPER_ADMIN') {
+      throw new ForbiddenException('Impossible de restreindre un compte SUPER_ADMIN');
+    }
+
+    const updatedUser = await this.prisma.user.update({
+      where: { id },
+      data: {
+        status: 'SUSPENDED',
+      },
+    });
+
+    await this.prisma.auditLog.create({
+      data: {
+        action: 'USER_SUSPENDED',
+        actorId,
+        details: JSON.stringify({ userId: id, email: targetUser.email, restriction, reason }),
+      },
+    });
+
+    return { message: 'Compte restreint avec succès', user: updatedUser };
+  }
+
+  async unrestrictAccount(id: string, actorId: string, actorRole: Role) {
+    const targetUser = await this.ensureExists(id);
+
+    // Only SUPER_ADMIN can unrestrict accounts
+    if (actorRole !== 'SUPER_ADMIN') {
+      throw new ForbiddenException('Seul un SUPER_ADMIN peut réactiver un compte restreint');
+    }
+
+    const updatedUser = await this.prisma.user.update({
+      where: { id },
+      data: {
+        status: 'ACTIVE',
+      },
+    });
+
+    await this.prisma.auditLog.create({
+      data: {
+        action: 'USER_REACTIVATED',
+        actorId,
+        details: JSON.stringify({ userId: id, email: targetUser.email }),
+      },
+    });
+
+    return { message: 'Compte réactivé avec succès', user: updatedUser };
+  }
+
   async forceResetPassword(id: string, actorId: string, actorRole: Role) {
     const targetUser = await this.ensureExists(id);
 

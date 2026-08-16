@@ -102,6 +102,27 @@ export class UsersController {
     return this.usersService.delete(id, user.id, user.role);
   }
 
+  @Patch(':id/restrict')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.SUPER_ADMIN)
+  @ApiOperation({ summary: 'Restrict user account (SUPER_ADMIN only)' })
+  async restrictAccount(
+    @Param('id') id: string,
+    @Body('restriction') restriction: string,
+    @Body('reason') reason: string,
+    @CurrentUser() user: any
+  ) {
+    return this.usersService.restrictAccount(id, restriction, reason, user.id, user.role);
+  }
+
+  @Patch(':id/unrestrict')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.SUPER_ADMIN)
+  @ApiOperation({ summary: 'Unrestrict user account (SUPER_ADMIN only)' })
+  async unrestrictAccount(@Param('id') id: string, @CurrentUser() user: any) {
+    return this.usersService.unrestrictAccount(id, user.id, user.role);
+  }
+
   @Patch(':id/reset-password')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.SUPER_ADMIN, Role.ADMIN, Role.PROJECT_MANAGER)

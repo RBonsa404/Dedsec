@@ -13,6 +13,7 @@ import { AbsencesModule } from './absences/absences.module';
 import { AnnouncementsModule } from './announcements/announcements.module';
 import { WebsocketsModule } from './websockets/websockets.module';
 import { SchedulerModule } from './common/scheduler.module';
+import { PasswordResetRequestsModule } from './password-reset-requests/password-reset-requests.module';
 import { PasswordChangeGuard } from './common/guards/password-change.guard';
 import { SecurityLoggingInterceptor } from './common/interceptors/security-logging.interceptor';
 import { GlobalExceptionFilter } from './common/filters';
@@ -34,6 +35,7 @@ import { AppController } from './app.controller';
     AnnouncementsModule,
     WebsocketsModule,
     SchedulerModule,
+    PasswordResetRequestsModule,
   ],
   controllers: [AppController],
   providers: [
