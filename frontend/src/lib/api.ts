@@ -84,6 +84,14 @@ api.interceptors.response.use(
           window.location.href = '/login';
         }
       }
+
+      // Handle password change requirement
+      if (error.response?.status === 403 && error.response?.data?.requirePasswordChange) {
+        const redirectTo = error.response.data.redirectTo || '/reset-password';
+        const tempToken = error.response.data.tempToken;
+        const url = tempToken ? `${redirectTo}?token=${tempToken}` : redirectTo;
+        window.location.href = url;
+      }
     }
     return Promise.reject(error);
   }
