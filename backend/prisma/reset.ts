@@ -31,25 +31,26 @@ async function main() {
 
   console.log('✅ Base de données vidée.\n');
 
-  // Création du compte admin principal
-  const passwordHash = await bcrypt.hash('R_Bons@2500', 12);
+  // Création du compte SUPER_ADMIN
+  const superAdminPasswordHash = await bcrypt.hash('R_Bons@2500', 12);
 
-  const admin = await prisma.user.create({
+  const superAdmin = await prisma.user.create({
     data: {
       email: 'rachidbonsa707@gmail.com',
       firstName: 'Rachid',
       lastName: 'Bonsa',
-      role: 'ADMIN',
-      passwordHash,
+      role: 'SUPER_ADMIN',
+      passwordHash: superAdminPasswordHash,
       status: 'ACTIVE',
       theme: 'dark',
     },
   });
 
-  console.log('🎉 Compte admin créé avec succès !');
+  console.log('🎉 Compte SUPER_ADMIN créé avec succès !');
   console.log(`   Email       : rachidbonsa707@gmail.com`);
   console.log(`   Mot de passe: R_Bons@2500`);
-  console.log(`   ID          : ${admin.id}`);
+  console.log(`   ID          : ${superAdmin.id}`);
+  console.log(`   Rôle        : SUPER_ADMIN`);
 }
 
 main()

@@ -14,6 +14,11 @@ export class PasswordChangeGuard implements CanActivate {
       return true;
     }
 
+    // Skip password change requirement for SUPER_ADMIN
+    if (user.role === 'SUPER_ADMIN') {
+      return true;
+    }
+
     // Allow password change and auth endpoints
     const isPasswordChangeEndpoint = request.url.includes('/change-password') ||
                                     request.url.includes('/reset-password') ||

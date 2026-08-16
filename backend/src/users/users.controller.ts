@@ -28,8 +28,8 @@ export class UsersController {
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.PROJECT_MANAGER)
-  @ApiOperation({ summary: 'Create an operator (Admin or PM for team members)' })
+  @Roles(Role.SUPER_ADMIN, Role.ADMIN, Role.PROJECT_MANAGER)
+  @ApiOperation({ summary: 'Create an operator (Super Admin, Admin or PM for team members)' })
   async create(@Body() dto: CreateUserDto, @CurrentUser() user: any) {
     return this.usersService.create(dto, user.id, user.role);
   }
@@ -64,15 +64,23 @@ export class UsersController {
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.PROJECT_MANAGER)
+  @Roles(Role.SUPER_ADMIN, Role.ADMIN, Role.PROJECT_MANAGER)
   @ApiOperation({ summary: 'Update user' })
   async update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
     return this.usersService.update(id, dto);
   }
 
+  @Patch(':id/role')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.SUPER_ADMIN)
+  @ApiOperation({ summary: 'Change user role (SUPER_ADMIN only)' })
+  async changeRole(@Param('id') id: string, @Body('role') newRole: Role, @CurrentUser() user: any) {
+    return this.usersService.changeRole(id, newRole, user.id, user.role);
+  }
+
   @Patch(':id/suspend')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.PROJECT_MANAGER)
+  @Roles(Role.SUPER_ADMIN, Role.ADMIN, Role.PROJECT_MANAGER)
   @ApiOperation({ summary: 'Suspend user account' })
   async suspend(@Param('id') id: string, @CurrentUser() user: any) {
     return this.usersService.suspend(id, user.id, user.role);
@@ -80,7 +88,7 @@ export class UsersController {
 
   @Patch(':id/reactivate')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.PROJECT_MANAGER)
+  @Roles(Role.SUPER_ADMIN, Role.ADMIN, Role.PROJECT_MANAGER)
   @ApiOperation({ summary: 'Reactivate user account' })
   async reactivate(@Param('id') id: string, @CurrentUser() user: any) {
     return this.usersService.reactivate(id, user.id, user.role);
@@ -88,7 +96,7 @@ export class UsersController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.PROJECT_MANAGER)
+  @Roles(Role.SUPER_ADMIN, Role.ADMIN, Role.PROJECT_MANAGER)
   @ApiOperation({ summary: 'Delete user' })
   async delete(@Param('id') id: string, @CurrentUser() user: any) {
     return this.usersService.delete(id, user.id, user.role);
@@ -96,7 +104,7 @@ export class UsersController {
 
   @Patch(':id/reset-password')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.PROJECT_MANAGER)
+  @Roles(Role.SUPER_ADMIN, Role.ADMIN, Role.PROJECT_MANAGER)
   @ApiOperation({ summary: 'Force password reset' })
   async forceResetPassword(@Param('id') id: string, @CurrentUser() user: any) {
     return this.usersService.forceResetPassword(id, user.id, user.role);

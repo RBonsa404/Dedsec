@@ -53,7 +53,8 @@ export class AuthService {
     });
 
     // Check if first login (must change password)
-    if (user.status === 'PENDING_PASSWORD_CHANGE') {
+    // SUPER_ADMIN is exempt from forced password change
+    if (user.status === 'PENDING_PASSWORD_CHANGE' && user.role !== 'SUPER_ADMIN') {
       const tempToken = this.jwtService.sign(
         { sub: user.id, email: user.email, role: user.role, mustChangePassword: true },
         { expiresIn: '30m' },

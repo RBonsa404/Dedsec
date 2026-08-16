@@ -36,7 +36,7 @@ function ResetPasswordForm() {
 
       setAuth(data.user, data.accessToken);
 
-      if (data.user.role === "ADMIN") {
+      if (data.user.role === "SUPER_ADMIN" || data.user.role === "ADMIN") {
         router.push("/admin");
       } else {
         router.push("/projects");

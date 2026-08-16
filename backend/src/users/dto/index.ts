@@ -18,7 +18,7 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'Last name is required' })
   lastName: string;
 
-  @ApiProperty({ enum: ['PROJECT_MANAGER', 'TEAM_MEMBER', 'ADMIN'] })
+  @ApiProperty({ enum: ['SUPER_ADMIN', 'ADMIN', 'PROJECT_MANAGER', 'TEAM_MEMBER'] })
   @IsEnum(Role, { message: 'Invalid role' })
   role: Role;
 

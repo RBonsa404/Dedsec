@@ -131,9 +131,14 @@ export class UsersService {
       throw new ForbiddenException('Les chefs de projet ne peuvent provisionner que des membres opérateurs');
     }
 
-    // Only ADMINs can create ADMIN accounts
-    if (dto.role === 'ADMIN' && creatorRole !== 'ADMIN') {
-      throw new ForbiddenException('Seul un administrateur peut créer un autre compte administrateur');
+    // Only SUPER_ADMINs can create SUPER_ADMIN accounts
+    if (dto.role === 'SUPER_ADMIN' && creatorRole !== 'SUPER_ADMIN') {
+      throw new ForbiddenException('Seul un SUPER_ADMIN peut créer un autre compte SUPER_ADMIN');
+    }
+
+    // Only ADMINs and SUPER_ADMINs can create ADMIN accounts
+    if (dto.role === 'ADMIN' && creatorRole !== 'ADMIN' && creatorRole !== 'SUPER_ADMIN') {
+      throw new ForbiddenException('Seul un administrateur ou SUPER_ADMIN peut créer un autre compte administrateur');
     }
 
     // Check if email exists
@@ -207,6 +212,40 @@ export class UsersService {
     });
   }
 
+  async changeRole(id: string, newRole: Role, actorId: string, actorRole: Role) {
+    const targetUser = await this.ensureExists(id);
+
+    // Only SUPER_ADMIN can change roles
+    if (actorRole !== 'SUPER_ADMIN') {
+      throw new ForbiddenException('Seul un SUPER_ADMIN peut changer les rôles des utilisateurs');
+    }
+
+    // Cannot change SUPER_ADMIN role (protect the super admin account)
+    if (targetUser.role === 'SUPER_ADMIN') {
+      throw new ForbiddenException('Impossible de modifier le rôle d\'un SUPER_ADMIN');
+    }
+
+    // Cannot promote to SUPER_ADMIN through this method (security)
+    if (newRole === 'SUPER_ADMIN') {
+      throw new ForbiddenException('Impossible de promouvoir à SUPER_ADMIN via cette méthode');
+    }
+
+    await this.prisma.user.update({
+      where: { id },
+      data: { role: newRole },
+    });
+
+    await this.prisma.auditLog.create({
+      data: {
+        action: 'USER_ROLE_CHANGED',
+        actorId,
+        details: JSON.stringify({ userId: id, oldRole: targetUser.role, newRole }),
+      },
+    });
+
+    return { message: 'User role updated successfully' };
+  }
+
   async updatePreferences(id: string, dto: UpdatePreferencesDto) {
     await this.ensureExists(id);
     return this.prisma.user.update({
@@ -226,9 +265,14 @@ export class UsersService {
   async suspend(id: string, actorId: string, actorRole: Role) {
     const targetUser = await this.ensureExists(id);
 
-    // SECURITY RULE: Nobody can suspend an Admin
-    if (targetUser.role === 'ADMIN') {
-      throw new ForbiddenException('Personne ne peut suspendre un compte administrateur');
+    // SECURITY RULE: Only SUPER_ADMIN can suspend an Admin
+    if (targetUser.role === 'ADMIN' && actorRole !== 'SUPER_ADMIN') {
+      throw new ForbiddenException('Seul un SUPER_ADMIN peut suspendre un compte administrateur');
+    }
+
+    // SECURITY RULE: Nobody can suspend a SUPER_ADMIN
+    if (targetUser.role === 'SUPER_ADMIN') {
+      throw new ForbiddenException('Personne ne peut suspendre un compte SUPER_ADMIN');
     }
 
     // Operators cannot suspend anyone
@@ -275,19 +319,24 @@ export class UsersService {
   async delete(id: string, actorId: string, actorRole: Role) {
     const targetUser = await this.ensureExists(id);
 
-    // SECURITY RULE 1: Personne ne doit pouvoir supprimer un admin
-    if (targetUser.role === 'ADMIN') {
-      throw new ForbiddenException('Action interdite : Personne ne peut supprimer un compte administrateur.');
+    // SECURITY RULE 1: Nobody can delete a SUPER_ADMIN
+    if (targetUser.role === 'SUPER_ADMIN') {
+      throw new ForbiddenException('Action interdite : Personne ne peut supprimer un compte SUPER_ADMIN.');
     }
 
-    // SECURITY RULE 2: Un opérateur ne peut pas supprimer un chef ni un admin (aucun utilisateur)
+    // SECURITY RULE 2: Only SUPER_ADMIN can delete an Admin
+    if (targetUser.role === 'ADMIN' && actorRole !== 'SUPER_ADMIN') {
+      throw new ForbiddenException('Action interdite : Seul un SUPER_ADMIN peut supprimer un compte administrateur.');
+    }
+
+    // SECURITY RULE 3: Un opérateur ne peut pas supprimer un chef ni un admin (aucun utilisateur)
     if (actorRole === 'TEAM_MEMBER') {
       throw new ForbiddenException('Action interdite : Un opérateur ne possède pas les privilèges pour supprimer des utilisateurs.');
     }
 
-    // SECURITY RULE 3: Un chef de projet ne peut pas supprimer un autre chef de projet ni un admin
+    // SECURITY RULE 4: Un chef de projet ne peut pas supprimer un autre chef de projet ni un admin
     if (actorRole === 'PROJECT_MANAGER') {
-      if (targetUser.role === 'PROJECT_MANAGER' || targetUser.role === 'ADMIN') {
+      if (targetUser.role === 'PROJECT_MANAGER' || targetUser.role === 'ADMIN' || targetUser.role === 'SUPER_ADMIN') {
         throw new ForbiddenException('Action interdite : Un chef de projet ne peut pas supprimer un autre chef de projet ni un administrateur.');
       }
 
