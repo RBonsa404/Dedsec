@@ -26,34 +26,39 @@ export class TasksService {
 
     const position = (maxPos._max.position ?? -1) + 1;
 
-    const task = await this.prisma.task.create({
-      data: {
-        title: dto.title,
-        description: dto.description,
-        columnId: dto.columnId,
-        priority: dto.priority || 'MEDIUM',
-        assigneeId: dto.assigneeId,
-        dueDate: dto.dueDate ? new Date(dto.dueDate) : undefined,
-        startDate: dto.startDate ? new Date(dto.startDate) : undefined,
-        estimatedHours: dto.estimatedHours,
-        milestoneId: dto.milestoneId,
-        isTemplate: dto.isTemplate || false,
-        position,
-        creatorId: userId,
-      },
-      include: {
-        assignee: { select: { id: true, firstName: true, lastName: true, avatarUrl: true } },
-        labels: { include: { label: true } },
-        _count: { select: { comments: true, attachments: true } },
-      },
-    });
+    try {
+      const task = await this.prisma.task.create({
+        data: {
+          title: dto.title,
+          description: dto.description,
+          columnId: dto.columnId,
+          priority: dto.priority || 'MEDIUM',
+          assigneeId: dto.assigneeId,
+          dueDate: dto.dueDate ? new Date(dto.dueDate) : undefined,
+          startDate: dto.startDate ? new Date(dto.startDate) : undefined,
+          estimatedHours: dto.estimatedHours,
+          milestoneId: dto.milestoneId,
+          isTemplate: dto.isTemplate || false,
+          position,
+          creatorId: userId,
+        },
+        include: {
+          assignee: { select: { id: true, firstName: true, lastName: true, avatarUrl: true } },
+          labels: { include: { label: true } },
+          _count: { select: { comments: true, attachments: true } },
+        },
+      });
 
-    // Notify assignee if assigned
-    if (dto.assigneeId && dto.assigneeId !== userId) {
-      await this.notificationAutomation.handleTaskAssigned(task.id, dto.assigneeId, userId);
+      // Notify assignee if assigned
+      if (dto.assigneeId && dto.assigneeId !== userId) {
+        await this.notificationAutomation.handleTaskAssigned(task.id, dto.assigneeId, userId);
+      }
+
+      return task;
+    } catch (error) {
+      console.error('Error creating task:', error);
+      throw error;
     }
-
-    return task;
   }
 
   async findById(id: string) {

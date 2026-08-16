@@ -17,8 +17,8 @@ export class TasksController {
 
   @Post()
   @UseGuards(RolesGuard)
-  @Roles(Role.PROJECT_MANAGER)
-  @ApiOperation({ summary: 'Create a task (PM only)' })
+  @Roles(Role.SUPER_ADMIN, Role.ADMIN, Role.PROJECT_MANAGER)
+  @ApiOperation({ summary: 'Create a task (Super Admin, Admin or PM)' })
   async create(@Body() dto: CreateTaskDto, @CurrentUser() user: any) {
     return this.tasksService.create(dto, user.id);
   }

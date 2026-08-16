@@ -232,7 +232,7 @@ export default function ProjectBoardPage() {
 
     setIsSubmittingTask(true);
     try {
-      await api.post("/tasks", {
+      const res = await api.post("/tasks", {
         title: newTaskTitle.trim(),
         description: newTaskDesc.trim() || undefined,
         columnId: targetColumnId,
@@ -240,15 +240,23 @@ export default function ProjectBoardPage() {
         assigneeId: newTaskAssigneeId || undefined,
         dueDate: newTaskDueDate ? new Date(newTaskDueDate).toISOString() : undefined,
       });
-      setIsTaskModalOpen(false);
-      setNewTaskTitle("");
-      setNewTaskDesc("");
-      setNewTaskPriority("MEDIUM");
-      setNewTaskAssigneeId("");
-      setNewTaskDueDate("");
-      await fetchBoard();
-    } catch (error) {
+      
+      if (res.status === 201 || res.status === 200) {
+        setIsTaskModalOpen(false);
+        setNewTaskTitle("");
+        setNewTaskDesc("");
+        setNewTaskPriority("MEDIUM");
+        setNewTaskAssigneeId("");
+        setNewTaskDueDate("");
+        await fetchBoard();
+      } else {
+        console.error("Unexpected response status:", res.status);
+        alert(lang === "fr" ? "Erreur lors de la création de la tâche" : "Error creating task");
+      }
+    } catch (error: any) {
       console.error("Failed to create task:", error);
+      const errorMessage = error.response?.data?.message || error.message || (lang === "fr" ? "Erreur lors de la création de la tâche" : "Error creating task");
+      alert(errorMessage);
     } finally {
       setIsSubmittingTask(false);
     }
