@@ -84,6 +84,9 @@ export class EmailService {
           to: options.to,
           subject: options.subject,
           html: options.html,
+          text: this.stripHtml(options.html), // Plain text version for better deliverability
+          replyTo: from,
+          priority: 'normal',
         });
         const previewUrl = nodemailer.getTestMessageUrl(info);
         if (previewUrl) {
@@ -110,27 +113,76 @@ export class EmailService {
     }
   }
 
+  private stripHtml(html: string): string {
+    return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').trim();
+  }
+
   async sendWelcomeEmail(email: string, firstName: string, tempPassword: string): Promise<void> {
     const loginUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/login`;
     await this.sendMail({
       to: email,
-      subject: '🔒 Bienvenue sur DEDSEC — Vos identifiants de connexion',
+      subject: 'Bienvenue sur DEDSEC - Vos identifiants de connexion',
       html: `
-        <div style="font-family: 'Segoe UI', sans-serif; background: #0a0a0f; color: #e0e0e0; padding: 40px; border: 1px solid #2a2a3e; border-radius: 8px;">
-          <h1 style="color: #00ff88; font-family: monospace;">[ DEDSEC ]</h1>
-          <p>Bonjour <strong>${firstName}</strong>,</p>
-          <p>Votre compte a été créé sur la plateforme <strong>DEDSEC</strong>.</p>
-          <div style="background: #12121a; padding: 20px; border-radius: 6px; border-left: 3px solid #00ff88; margin: 20px 0;">
-            <p style="margin: 5px 0;"><strong>Email :</strong> <code style="color: #00d4ff;">${email}</code></p>
-            <p style="margin: 5px 0;"><strong>Mot de passe temporaire :</strong> <code style="color: #ff3366;">${tempPassword}</code></p>
-          </div>
-          <p>⚠️ Vous devrez changer votre mot de passe lors de votre première connexion.</p>
-          <a href="${loginUrl}" style="display: inline-block; background: #00ff88; color: #0a0a0f; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 16px;">
-            Se connecter à DEDSEC
-          </a>
-          <hr style="border-color: #2a2a3e; margin: 30px 0;" />
-          <p style="color: #555566; font-size: 12px;">DEDSEC — Plateforme de gestion de projet collaborative</p>
-        </div>
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Bienvenue sur DEDSEC</title>
+        </head>
+        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
+          <table role="presentation" style="width: 100%; max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+            <tr>
+              <td style="padding: 40px 30px; background-color: #1a1a2e; text-align: center;">
+                <h1 style="color: #00ff88; margin: 0; font-size: 24px; font-weight: bold;">DEDSEC</h1>
+                <p style="color: #e0e0e0; margin: 10px 0 0 0; font-size: 14px;">Plateforme de gestion de projet collaborative</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 40px 30px;">
+                <p style="color: #333333; font-size: 16px; line-height: 1.6;">Bonjour <strong>${firstName}</strong>,</p>
+                <p style="color: #333333; font-size: 16px; line-height: 1.6;">Votre compte a été créé avec succès sur la plateforme DEDSEC. Voici vos identifiants de connexion :</p>
+                
+                <table role="presentation" style="width: 100%; background-color: #f8f9fa; border-radius: 8px; margin: 20px 0;">
+                  <tr>
+                    <td style="padding: 20px;">
+                      <p style="color: #333333; margin: 0 0 10px 0; font-size: 14px;"><strong>Email :</strong></p>
+                      <p style="color: #0066cc; margin: 0 0 20px 0; font-size: 16px; font-family: monospace;">${email}</p>
+                      
+                      <p style="color: #333333; margin: 0 0 10px 0; font-size: 14px;"><strong>Mot de passe temporaire :</strong></p>
+                      <p style="color: #cc0000; margin: 0; font-size: 16px; font-family: monospace; letter-spacing: 2px;">${tempPassword}</p>
+                    </td>
+                  </tr>
+                </table>
+                
+                <p style="color: #666666; font-size: 14px; line-height: 1.6; margin: 20px 0;">
+                  ⚠️ <strong>Important :</strong> Vous devrez changer votre mot de passe lors de votre première connexion pour des raisons de sécurité.
+                </p>
+                
+                <table role="presentation" style="width: 100%; margin: 30px 0;">
+                  <tr>
+                    <td style="text-align: center;">
+                      <a href="${loginUrl}" style="display: inline-block; background-color: #00ff88; color: #000000; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 16px;">
+                        Se connecter à DEDSEC
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 20px 30px; background-color: #1a1a2e; text-align: center;">
+                <p style="color: #888888; margin: 0; font-size: 12px;">
+                  Ce message a été envoyé automatiquement par DEDSEC. Si vous n'avez pas demandé la création de ce compte, veuillez nous contacter.
+                </p>
+                <p style="color: #888888; margin: 10px 0 0 0; font-size: 12px;">
+                  &copy; 2024 DEDSEC. Tous droits réservés.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </body>
+        </html>
       `,
     });
   }
@@ -139,19 +191,64 @@ export class EmailService {
     const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`;
     await this.sendMail({
       to: email,
-      subject: '🔐 DEDSEC — Réinitialisation de mot de passe',
+      subject: 'Réinitialisation de mot de passe - DEDSEC',
       html: `
-        <div style="font-family: 'Segoe UI', sans-serif; background: #0a0a0f; color: #e0e0e0; padding: 40px; border: 1px solid #2a2a3e; border-radius: 8px;">
-          <h1 style="color: #00ff88; font-family: monospace;">[ DEDSEC ]</h1>
-          <p>Bonjour <strong>${firstName}</strong>,</p>
-          <p>Une demande de réinitialisation de mot de passe a été effectuée pour votre compte.</p>
-          <a href="${resetUrl}" style="display: inline-block; background: #00d4ff; color: #0a0a0f; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 16px;">
-            Réinitialiser mon mot de passe
-          </a>
-          <p style="margin-top: 20px; color: #8888a0;">Ce lien expire dans 1 heure. Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
-          <hr style="border-color: #2a2a3e; margin: 30px 0;" />
-          <p style="color: #555566; font-size: 12px;">DEDSEC — Plateforme de gestion de projet collaborative</p>
-        </div>
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Réinitialisation de mot de passe</title>
+        </head>
+        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
+          <table role="presentation" style="width: 100%; max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+            <tr>
+              <td style="padding: 40px 30px; background-color: #1a1a2e; text-align: center;">
+                <h1 style="color: #00ff88; margin: 0; font-size: 24px; font-weight: bold;">DEDSEC</h1>
+                <p style="color: #e0e0e0; margin: 10px 0 0 0; font-size: 14px;">Plateforme de gestion de projet collaborative</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 40px 30px;">
+                <p style="color: #333333; font-size: 16px; line-height: 1.6;">Bonjour <strong>${firstName}</strong>,</p>
+                <p style="color: #333333; font-size: 16px; line-height: 1.6;">Une demande de réinitialisation de mot de passe a été effectuée pour votre compte DEDSEC.</p>
+                
+                <p style="color: #666666; font-size: 14px; line-height: 1.6; margin: 20px 0;">
+                  Cliquez sur le bouton ci-dessous pour réinitialiser votre mot de passe :
+                </p>
+                
+                <table role="presentation" style="width: 100%; margin: 30px 0;">
+                  <tr>
+                    <td style="text-align: center;">
+                      <a href="${resetUrl}" style="display: inline-block; background-color: #0066cc; color: #ffffff; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 16px;">
+                        Réinitialiser mon mot de passe
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+                
+                <p style="color: #666666; font-size: 14px; line-height: 1.6; margin: 20px 0;">
+                  ⚠️ <strong>Important :</strong> Ce lien expire dans 1 heure pour des raisons de sécurité.
+                </p>
+                
+                <p style="color: #666666; font-size: 14px; line-height: 1.6; margin: 20px 0;">
+                  Si vous n'avez pas demandé cette réinitialisation, vous pouvez ignorer cet email en toute sécurité.
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 20px 30px; background-color: #1a1a2e; text-align: center;">
+                <p style="color: #888888; margin: 0; font-size: 12px;">
+                  Ce message a été envoyé automatiquement par DEDSEC. Si vous n'avez pas demandé cette réinitialisation, veuillez nous contacter.
+                </p>
+                <p style="color: #888888; margin: 10px 0 0 0; font-size: 12px;">
+                  &copy; 2024 DEDSEC. Tous droits réservés.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </body>
+        </html>
       `,
     });
   }
