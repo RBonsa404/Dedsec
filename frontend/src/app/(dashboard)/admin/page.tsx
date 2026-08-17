@@ -310,7 +310,7 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {/* Total Users */}
         <div className="rounded-2xl border border-[#232f44] bg-[#111827] p-6 shadow-sm interactive-hover holographic relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs font-semibold text-slate-400">{lang === "fr" ? "COLLABORATEURS TOTAUX" : "TOTAL OPERATORS"}</span>
@@ -333,7 +333,7 @@ export default function AdminDashboardPage() {
 
         {/* Active Projects */}
         <div className="rounded-2xl border border-[#232f44] bg-[#111827] p-6 shadow-sm interactive-hover holographic relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs font-semibold text-slate-400">{lang === "fr" ? "PROJETS OPÉRATIONNELS" : "ACTIVE OPERATIONS"}</span>
@@ -356,7 +356,7 @@ export default function AdminDashboardPage() {
 
         {/* Absences & Availability */}
         <div className="rounded-2xl border border-[#232f44] bg-[#111827] p-6 shadow-sm interactive-hover holographic relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs font-semibold text-slate-400">{lang === "fr" ? "DEMANDES D'ABSENCE" : "ABSENCE REQUESTS"}</span>
@@ -379,7 +379,7 @@ export default function AdminDashboardPage() {
 
         {/* System Core Health */}
         <div className="rounded-2xl border border-[#232f44] bg-[#111827] p-6 shadow-sm interactive-hover holographic relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs font-semibold text-slate-400">{lang === "fr" ? "ÉTAT DU SYSTÈME" : "SYSTEM STATUS"}</span>

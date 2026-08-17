@@ -64,7 +64,7 @@ export function Sidebar() {
       >
         {/* Brand Header */}
         <div className="flex h-16 md:h-18 items-center justify-between border-b border-[#1a2336] px-4 md:px-6 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 opacity-50"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 opacity-50 pointer-events-none"></div>
           <Link href="/projects" onClick={close} className="flex items-center gap-2 md:gap-3 relative z-10">
             <div className="h-8 w-8 md:h-9 md:w-9 rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/40 flex items-center justify-center shadow-[0_0_15px_rgba(0,255,136,0.15)] interactive-hover">
               <ShieldAlert className="w-4 h-4 md:w-5 md:h-5 text-emerald-400" />
@@ -107,7 +107,7 @@ export function Sidebar() {
                       <item.icon className={cn("h-3.5 w-3.5 md:h-4 md:w-4 shrink-0", isActive ? "text-emerald-400" : "text-slate-400")} />
                       <span className="truncate">{item.label}</span>
                     </span>
-                    {isActive && <div className="absolute inset-0 bg-emerald-500/10 slide-left"></div>}
+                    {isActive && <div className="absolute inset-0 bg-emerald-500/10 slide-left pointer-events-none"></div>}
                   </Link>
                 );
               })}
