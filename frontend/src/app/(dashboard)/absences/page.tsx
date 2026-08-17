@@ -147,73 +147,97 @@ export default function AbsencesPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-6xl">
-      {/* Header */}
+    <div className="space-y-8 max-w-7xl page-transition">
+      {/* Header with enhanced animations */}
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-100 flex items-center gap-2.5">
-            <CalendarOff className="w-6 h-6 text-emerald-400" />
-            <span>{t.absences_title}</span>
-          </h1>
-          <p className="text-sm text-slate-400 mt-1">
-            {t.absences_subtitle}
-          </p>
+        <div className="relative">
+          <div className="absolute -inset-2 bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 rounded-2xl blur-xl opacity-50 animate-pulse"></div>
+          <div className="relative">
+            <h1 className="text-3xl font-bold tracking-tight text-slate-100 flex items-center gap-3 neon-text">
+              <div className="relative">
+                <CalendarOff className="w-8 h-8 text-emerald-400 float-animation" />
+                <div className="absolute inset-0 bg-emerald-400 blur-xl opacity-50"></div>
+              </div>
+              <span>{t.absences_title}</span>
+            </h1>
+            <p className="text-sm text-slate-400 mt-2 ml-11">
+              {t.absences_subtitle}
+            </p>
+          </div>
         </div>
 
         <Button 
           onClick={() => setIsModalOpen(true)} 
-          className="rounded-xl text-xs gap-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold shadow-md shadow-emerald-500/20"
+          className="rounded-xl text-sm gap-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold shadow-lg shadow-emerald-500/30 button-cyber magnetic-button"
         >
-          <Plus className="w-4 h-4" /> {t.request_leave}
+          <Plus className="w-5 h-5 bounce-animation" /> {t.request_leave}
         </Button>
       </div>
 
       {feedback && (
-        <div className="rounded-2xl border border-emerald-500/60 bg-emerald-950/40 p-3.5 text-xs text-emerald-400 font-semibold flex items-center gap-2.5">
-          <CheckCircle2 className="w-4 h-4 shrink-0" /> {feedback}
+        <div className="rounded-2xl border border-emerald-500/60 bg-emerald-950/40 p-4 text-sm text-emerald-400 font-semibold flex items-center gap-3 slide-up interactive-hover holographic">
+          <CheckCircle2 className="w-5 h-5 shrink-0 heartbeat" /> {feedback}
         </div>
       )}
 
-      {/* Tabs */}
+      {/* Enhanced Tabs with animations */}
       {isManagerOrAdmin && (
-        <div className="flex gap-2 border-b border-[#232f44] pb-2 text-xs">
+        <div className="flex gap-3 border-b border-[#232f44] pb-3 text-sm">
           <button
             onClick={() => setActiveTab("my")}
-            className={`px-4 py-2 rounded-xl font-bold transition-all ${
+            className={`px-6 py-3 rounded-xl font-bold transition-all duration-300 relative overflow-hidden ${
               activeTab === "my"
-                ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
-                : "text-slate-400 hover:text-slate-200 hover:bg-[#162032]"
+                ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 shadow-lg shadow-emerald-500/20 glow-border"
+                : "text-slate-400 hover:text-slate-200 hover:bg-[#162032] border border-transparent"
             }`}
           >
-            {t.my_requests} ({myRequests.length})
+            <span className="relative z-10 flex items-center gap-2">
+              <Calendar className="w-4 h-4" />
+              {t.my_requests} 
+              <span className="bg-emerald-500/30 px-2 py-0.5 rounded-full text-xs">{myRequests.length}</span>
+            </span>
+            {activeTab === "my" && <div className="absolute inset-0 bg-emerald-500/10 slide-left"></div>}
           </button>
           <button
             onClick={() => setActiveTab("pending")}
-            className={`px-4 py-2 rounded-xl font-bold transition-all flex items-center gap-2 ${
+            className={`px-6 py-3 rounded-xl font-bold transition-all duration-300 relative overflow-hidden ${
               activeTab === "pending"
-                ? "bg-amber-500/15 text-amber-400 border border-amber-500/30"
-                : "text-slate-400 hover:text-slate-200 hover:bg-[#162032]"
+                ? "bg-amber-500/20 text-amber-400 border border-amber-500/40 shadow-lg shadow-amber-500/20 glow-border"
+                : "text-slate-400 hover:text-slate-200 hover:bg-[#162032] border border-transparent"
             }`}
           >
-            <span>{t.pending_approvals}</span>
-            {pendingRequests.length > 0 && (
-              <span className="px-2 py-0.5 rounded-full bg-amber-500 text-slate-950 text-[10px] font-bold">
-                {pendingRequests.length}
-              </span>
-            )}
+            <span className="relative z-10 flex items-center gap-2">
+              <Clock className="w-4 h-4" />
+              {t.pending_approvals}
+              {pendingRequests.length > 0 && (
+                <span className="bg-amber-500 text-slate-950 px-2 py-0.5 rounded-full text-xs font-bold pulse-glow">
+                  {pendingRequests.length}
+                </span>
+              )}
+            </span>
+            {activeTab === "pending" && <div className="absolute inset-0 bg-amber-500/10 slide-left"></div>}
           </button>
         </div>
       )}
 
       {isLoading ? (
         <div className="flex h-64 items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-emerald-400" />
+          <div className="relative">
+            <Loader2 className="h-12 w-12 animate-spin text-emerald-400" />
+            <div className="absolute inset-0 bg-emerald-400 blur-xl opacity-50"></div>
+          </div>
         </div>
       ) : activeTab === "my" ? (
-        /* My Requests Table */
-        <div className="rounded-2xl border border-[#232f44] bg-[#111827] overflow-hidden shadow-sm">
-          <table className="w-full text-left text-xs">
-            <thead className="text-[11px] text-slate-400 uppercase bg-[#162032] border-b border-[#232f44]">
+        /* Enhanced My Requests Table */
+        <div className="rounded-2xl border border-[#232f44] bg-[#111827] overflow-hidden shadow-lg interactive-hover card-3d reveal-animation matrix-bg">
+          <div className="p-6 border-b border-[#1e2a3e] bg-[#162032]/50">
+            <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-cyan-400" />
+              <span>{lang === "fr" ? "Mes Demandes d'Absence" : "My Absence Requests"}</span>
+            </h2>
+          </div>
+          <table className="w-full text-left text-sm">
+            <thead className="text-[12px] text-slate-400 uppercase bg-[#162032] border-b border-[#232f44]">
               <tr>
                 <th className="px-6 py-4">{t.reason}</th>
                 <th className="px-6 py-4">{t.timeframe}</th>
@@ -225,12 +249,18 @@ export default function AbsencesPage() {
             <tbody className="divide-y divide-[#1e2a3e]">
               {myRequests.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-slate-500">
-                    {lang === "fr" ? "Aucune demande de congé enregistrée." : "No absence records logged."}
+                  <td colSpan={5} className="px-6 py-16 text-center text-slate-500">
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="relative">
+                        <CalendarOff className="w-12 h-12 text-slate-600 mx-auto float-animation" />
+                        <div className="absolute inset-0 bg-slate-600 blur-xl opacity-30"></div>
+                      </div>
+                      <span className="text-sm">{lang === "fr" ? "Aucune demande de congé enregistrée." : "No absence records logged."}</span>
+                    </div>
                   </td>
                 </tr>
               ) : (
-                myRequests.map((req) => {
+                myRequests.map((req, index) => {
                   const days = Math.ceil(
                     (new Date(req.endDate).getTime() - new Date(req.startDate).getTime()) /
                       (1000 * 60 * 60 * 24)
@@ -238,21 +268,26 @@ export default function AbsencesPage() {
                   const sStyle = statusStyles[req.status] || statusStyles.PENDING;
 
                   return (
-                    <tr key={req.id} className="hover:bg-[#162032]/60 transition-colors">
+                    <tr key={req.id} className={`hover:bg-[#162032]/60 transition-all duration-300 border-l-2 border-l-transparent hover:border-l-emerald-500 interactive-hover slide-up`} style={{ animationDelay: `${index * 0.1}s` }}>
                       <td className="px-6 py-4 font-bold text-slate-100">
-                        {req.reason}
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-emerald-400 pulse-glow"></div>
+                          {req.reason}
+                        </div>
                       </td>
                       <td className="px-6 py-4 text-slate-300">
-                        <div className="flex items-center gap-1.5">
-                          <Calendar className="w-3.5 h-3.5 text-cyan-400" />
-                          <span>{new Date(req.startDate).toLocaleDateString()} &rarr; {new Date(req.endDate).toLocaleDateString()}</span>
+                        <div className="flex items-center gap-2">
+                          <Calendar className="w-4 h-4 text-cyan-400" />
+                          <span className="font-medium">{new Date(req.startDate).toLocaleDateString()}</span>
+                          <span className="text-slate-500">→</span>
+                          <span className="font-medium">{new Date(req.endDate).toLocaleDateString()}</span>
                         </div>
                       </td>
                       <td className="px-6 py-4 text-slate-400">
-                        {days} {days === 1 ? (lang === "fr" ? "jour" : "day") : (lang === "fr" ? "jours" : "days")}
+                        <span className="font-semibold">{days}</span> {days === 1 ? (lang === "fr" ? "jour" : "day") : (lang === "fr" ? "jours" : "days")}
                       </td>
                       <td className="px-6 py-4">
-                        <span className={`px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase border ${sStyle.bg} ${sStyle.text} ${sStyle.border}`}>
+                        <span className={`px-3 py-1 rounded-lg text-[11px] font-bold uppercase border ${sStyle.bg} ${sStyle.text} ${sStyle.border} interactive-hover`}>
                           {req.status}
                         </span>
                       </td>
@@ -267,10 +302,21 @@ export default function AbsencesPage() {
           </table>
         </div>
       ) : (
-        /* Pending Approvals Table (For PM & Admin) */
-        <div className="rounded-2xl border border-[#232f44] bg-[#111827] overflow-hidden shadow-sm">
-          <table className="w-full text-left text-xs">
-            <thead className="text-[11px] text-slate-400 uppercase bg-[#162032] border-b border-[#232f44]">
+        /* Enhanced Pending Approvals Table */
+        <div className="rounded-2xl border border-[#232f44] bg-[#111827] overflow-hidden shadow-lg interactive-hover card-3d reveal-animation matrix-bg">
+          <div className="p-6 border-b border-[#1e2a3e] bg-[#162032]/50">
+            <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
+              <Clock className="w-5 h-5 text-amber-400" />
+              <span>{lang === "fr" ? "Demandes en Attente d'Validation" : "Pending Approval Requests"}</span>
+              {pendingRequests.length > 0 && (
+                <span className="ml-3 bg-amber-500/20 text-amber-400 px-3 py-1 rounded-full text-xs font-bold border border-amber-500/40 pulse-glow">
+                  {pendingRequests.length} {lang === "fr" ? "en attente" : "pending"}
+                </span>
+              )}
+            </h2>
+          </div>
+          <table className="w-full text-left text-sm">
+            <thead className="text-[12px] text-slate-400 uppercase bg-[#162032] border-b border-[#232f44]">
               <tr>
                 <th className="px-6 py-4">{lang === "fr" ? "Opérateur" : "Operator"}</th>
                 <th className="px-6 py-4">{t.reason}</th>
@@ -282,43 +328,61 @@ export default function AbsencesPage() {
             <tbody className="divide-y divide-[#1e2a3e]">
               {pendingRequests.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-slate-500">
-                    {lang === "fr" ? "Toutes les demandes de congés ont été traitées !" : "All absence requests cleared."}
+                  <td colSpan={5} className="px-6 py-16 text-center text-slate-500">
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="relative">
+                        <CheckCircle2 className="w-12 h-12 text-emerald-600 mx-auto bounce-animation" />
+                        <div className="absolute inset-0 bg-emerald-600 blur-xl opacity-30"></div>
+                      </div>
+                      <span className="text-sm">{lang === "fr" ? "Toutes les demandes de congés ont été traitées !" : "All absence requests cleared."}</span>
+                    </div>
                   </td>
                 </tr>
               ) : (
-                pendingRequests.map((req) => (
-                  <tr key={req.id} className="hover:bg-[#162032]/60 transition-colors">
-                    <td className="px-6 py-4 font-bold text-slate-100">
-                      <div>{req.requester?.firstName} {req.requester?.lastName}</div>
-                      <div className="text-slate-400 text-[11px] font-normal">{req.requester?.email}</div>
+                pendingRequests.map((req, index) => (
+                  <tr key={req.id} className={`hover:bg-[#162032]/60 transition-all duration-300 border-l-2 border-l-transparent hover:border-l-amber-500 interactive-hover slide-up`} style={{ animationDelay: `${index * 0.1}s` }}>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-cyan-500/30 to-emerald-500/30 flex items-center justify-center border border-cyan-500/40 text-emerald-300 font-bold text-sm">
+                          {req.requester?.firstName?.[0]}{req.requester?.lastName?.[0]}
+                        </div>
+                        <div>
+                          <div className="font-bold text-slate-100">{req.requester?.firstName} {req.requester?.lastName}</div>
+                          <div className="text-slate-400 text-xs">{req.requester?.email}</div>
+                        </div>
+                      </div>
                     </td>
-                    <td className="px-6 py-4 text-slate-200">
+                    <td className="px-6 py-4 text-slate-200 font-medium">
                       {req.reason}
                     </td>
                     <td className="px-6 py-4 text-slate-300">
-                      {new Date(req.startDate).toLocaleDateString()} &rarr; {new Date(req.endDate).toLocaleDateString()}
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-cyan-400" />
+                        <span>{new Date(req.startDate).toLocaleDateString()}</span>
+                        <span className="text-slate-500">→</span>
+                        <span>{new Date(req.endDate).toLocaleDateString()}</span>
+                      </div>
                     </td>
                     <td className="px-6 py-4 text-slate-400">
                       {new Date(req.createdAt).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
+                      <div className="flex items-center justify-end gap-3">
                         <Button
                           size="sm"
                           onClick={() => handleReview(req.id, "APPROVED")}
-                          className="h-8 text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30 font-bold rounded-lg gap-1.5"
+                          className="h-10 text-sm bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30 font-bold rounded-xl gap-2 button-cyber magnetic-button"
                         >
-                          <Check className="w-3.5 h-3.5" />
+                          <Check className="w-4 h-4" />
                           <span>{t.approve}</span>
                         </Button>
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => handleReview(req.id, "REJECTED")}
-                          className="h-8 text-xs text-rose-400 border-rose-800/60 hover:bg-rose-950/40 font-bold rounded-lg gap-1.5"
+                          className="h-10 text-sm text-rose-400 border-rose-800/60 hover:bg-rose-950/40 font-bold rounded-xl gap-2 button-cyber magnetic-button"
                         >
-                          <Ban className="w-3.5 h-3.5" />
+                          <Ban className="w-4 h-4" />
                           <span>{t.reject}</span>
                         </Button>
                       </div>
@@ -331,71 +395,111 @@ export default function AbsencesPage() {
         </div>
       )}
 
-      {/* Leave Request Modal */}
+      {/* Enhanced Leave Request Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 select-none">
-          <div className="w-full max-w-md rounded-2xl border border-[#26334a] bg-[#111827] p-7 shadow-2xl relative text-xs animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between border-b border-[#232e42] pb-4 mb-5">
-              <h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
-                <CalendarOff className="w-4 h-4 text-emerald-400" />
-                <span>{lang === "fr" ? "SOUMETTRE UNE DEMANDE D'ABSENCE" : "SUBMIT ABSENCE REQUEST"}</span>
-              </h3>
-              <button onClick={() => setIsModalOpen(false)} className="p-1 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-[#1e293b]">
-                <X className="w-5 h-5" />
-              </button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl p-4 select-none">
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 pointer-events-none"></div>
+          <div className="w-full max-w-lg rounded-2xl border border-[#26334a] bg-[#111827] p-8 shadow-2xl relative text-sm zoom-in interactive-hover holographic">
+            <div className="relative">
+              <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500/30 to-cyan-500/30 rounded-2xl blur-xl opacity-50"></div>
+              <div className="relative flex items-center justify-between border-b border-[#232e42] pb-5 mb-6">
+                <h3 className="text-lg font-bold text-slate-100 flex items-center gap-3 neon-text">
+                  <div className="relative">
+                    <CalendarOff className="w-5 h-5 text-emerald-400" />
+                    <div className="absolute inset-0 bg-emerald-400 blur-xl opacity-50"></div>
+                  </div>
+                  <span>{lang === "fr" ? "SOUMETTRE UNE DEMANDE D'ABSENCE" : "SUBMIT ABSENCE REQUEST"}</span>
+                </h3>
+                <button 
+                  onClick={() => setIsModalOpen(false)} 
+                  className="p-2 rounded-xl text-slate-400 hover:text-slate-100 hover:bg-[#1e293b] transition-all duration-300 interactive-hover"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
-            <form onSubmit={handleCreateRequest} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <Label htmlFor="startDate" className="text-slate-300 font-semibold">{lang === "fr" ? "DATE DE DÉBUT" : "START DATE"}</Label>
+            <form onSubmit={handleCreateRequest} className="space-y-5 relative">
+              <div className="grid grid-cols-2 gap-5">
+                <div className="space-y-2">
+                  <Label htmlFor="startDate" className="text-slate-300 font-semibold flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-cyan-400" />
+                    {lang === "fr" ? "DATE DE DÉBUT" : "START DATE"}
+                  </Label>
                   <Input
                     id="startDate"
                     type="date"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
                     required
-                    className="bg-[#162032] border-[#2b3a55] text-slate-100 rounded-xl"
+                    className="bg-[#162032] border-[#2b3a55] text-slate-100 rounded-xl focus:border-emerald-500 focus:ring-0 focus:ring-offset-0 transition-all duration-300"
                   />
                 </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="endDate" className="text-slate-300 font-semibold">{lang === "fr" ? "DATE DE FIN" : "END DATE"}</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="endDate" className="text-slate-300 font-semibold flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-cyan-400" />
+                    {lang === "fr" ? "DATE DE FIN" : "END DATE"}
+                  </Label>
                   <Input
                     id="endDate"
                     type="date"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
                     required
-                    className="bg-[#162032] border-[#2b3a55] text-slate-100 rounded-xl"
+                    className="bg-[#162032] border-[#2b3a55] text-slate-100 rounded-xl focus:border-emerald-500 focus:ring-0 focus:ring-offset-0 transition-all duration-300"
                   />
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <Label htmlFor="reason" className="text-slate-300 font-semibold">{t.reason}</Label>
+              <div className="space-y-2">
+                <Label htmlFor="reason" className="text-slate-300 font-semibold flex items-center gap-2">
+                  <CalendarOff className="w-4 h-4 text-emerald-400" />
+                  {t.reason}
+                </Label>
                 <textarea
                   id="reason"
-                  rows={3}
+                  rows={4}
                   placeholder={lang === "fr" ? "Congés annuels, raison médicale, absence personnelle..." : "Vacation, medical leave, personal absence..."}
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   required
-                  className="w-full rounded-xl border border-[#2b3a55] bg-[#162032] p-3 text-xs text-slate-100 placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none"
+                  className="w-full rounded-xl border border-[#2b3a55] bg-[#162032] p-4 text-sm text-slate-100 placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-0 transition-all duration-300 resize-none"
                 />
               </div>
 
               {modalErr && (
-                <div className="rounded-xl border border-rose-800/60 bg-rose-950/40 p-3 text-rose-400 flex items-center gap-2 font-medium">
-                  <AlertCircle className="w-4 h-4 shrink-0" /> {modalErr}
+                <div className="rounded-xl border border-rose-800/60 bg-rose-950/40 p-4 text-rose-400 flex items-center gap-3 font-medium slide-up interactive-hover">
+                  <AlertCircle className="w-5 h-5 shrink-0 shake-animation" /> {modalErr}
                 </div>
               )}
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-[#232e42]">
-                <Button type="button" variant="outline" size="sm" onClick={() => setIsModalOpen(false)} className="rounded-xl border-[#2b3a55] bg-[#162032] hover:bg-[#1e293b] text-slate-300">
+              <div className="flex justify-end gap-4 pt-6 border-t border-[#232e42]">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setIsModalOpen(false)} 
+                  className="rounded-xl border-[#2b3a55] bg-[#162032] hover:bg-[#1e293b] text-slate-300 font-medium transition-all duration-300 interactive-hover"
+                >
                   {t.cancel}
                 </Button>
-                <Button type="submit" size="sm" disabled={isSubmitting} className="rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold shadow-md shadow-emerald-500/20">
-                  {isSubmitting ? (lang === "fr" ? "Soumission en cours..." : "Submitting...") : (lang === "fr" ? "Soumettre la demande" : "Submit Request")}
+                <Button 
+                  type="submit" 
+                  size="sm" 
+                  disabled={isSubmitting} 
+                  className="rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold shadow-lg shadow-emerald-500/30 button-cyber magnetic-button px-6"
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      {lang === "fr" ? "Soumission en cours..." : "Submitting..."}
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-2">
+                      <Plus className="w-4 h-4" />
+                      {lang === "fr" ? "Soumettre la demande" : "Submit Request"}
+                    </span>
+                  )}
                 </Button>
               </div>
             </form>

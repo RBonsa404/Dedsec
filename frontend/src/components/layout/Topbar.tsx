@@ -121,12 +121,12 @@ export function Topbar() {
         {/* Notification Bell */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="relative rounded-xl p-2 md:p-2.5 text-slate-400 hover:bg-[#182234] hover:text-slate-100 transition-colors border border-[#222d42] hover:border-[#324360]"
+          className="relative rounded-xl p-2 md:p-2.5 text-slate-400 hover:bg-[#182234] hover:text-slate-100 transition-all duration-300 border border-[#222d42] hover:border-[#324360] interactive-hover"
           title="Centre de notifications"
         >
           <Bell className="h-4 w-4" />
           {unreadCount > 0 && (
-            <span className="absolute -top-1 -right-1 flex h-4 md:h-5 min-w-[16px] md:min-w-[20px] items-center justify-center rounded-full bg-emerald-500 px-1 text-[9px] md:text-[10px] font-bold text-slate-950 shadow-[0_0_10px_#00ff88]">
+            <span className="absolute -top-1 -right-1 flex h-4 md:h-5 min-w-[16px] md:min-w-[20px] items-center justify-center rounded-full bg-emerald-500 px-1 text-[9px] md:text-[10px] font-bold text-slate-950 shadow-[0_0_10px_#00ff88] pulse-glow">
               {unreadCount}
             </span>
           )}

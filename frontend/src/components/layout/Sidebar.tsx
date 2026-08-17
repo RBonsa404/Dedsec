@@ -63,19 +63,20 @@ export function Sidebar() {
         )}
       >
         {/* Brand Header */}
-        <div className="flex h-16 md:h-18 items-center justify-between border-b border-[#1a2336] px-4 md:px-6">
-          <Link href="/projects" onClick={close} className="flex items-center gap-2 md:gap-3">
-            <div className="h-8 w-8 md:h-9 md:w-9 rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/40 flex items-center justify-center shadow-[0_0_15px_rgba(0,255,136,0.15)]">
+        <div className="flex h-16 md:h-18 items-center justify-between border-b border-[#1a2336] px-4 md:px-6 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 opacity-50"></div>
+          <Link href="/projects" onClick={close} className="flex items-center gap-2 md:gap-3 relative z-10">
+            <div className="h-8 w-8 md:h-9 md:w-9 rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/40 flex items-center justify-center shadow-[0_0_15px_rgba(0,255,136,0.15)] interactive-hover">
               <ShieldAlert className="w-4 h-4 md:w-5 md:h-5 text-emerald-400" />
             </div>
             <div>
-              <span className="text-sm md:text-base font-bold tracking-tight text-slate-100 font-mono">DEDSEC</span>
+              <span className="text-sm md:text-base font-bold tracking-tight text-slate-100 font-mono neon-text">DEDSEC</span>
               <span className="block text-[9px] md:text-[10px] font-semibold text-emerald-400 font-mono tracking-wider">PROJECT CORE</span>
             </div>
           </Link>
           <button
             onClick={close}
-            className="p-1 rounded-lg text-slate-400 hover:text-slate-100 md:hidden"
+            className="p-1 rounded-lg text-slate-400 hover:text-slate-100 md:hidden transition-all duration-300 hover:bg-[#1e293b] interactive-hover z-10"
           >
             <X className="w-5 h-5" />
           </button>
@@ -96,14 +97,17 @@ export function Sidebar() {
                     href={item.href}
                     onClick={close}
                     className={cn(
-                      "flex items-center gap-2 md:gap-3 rounded-xl px-2.5 md:px-3.5 py-2 md:py-2.5 text-[11px] md:text-xs font-semibold transition-all duration-150",
+                      "flex items-center gap-2 md:gap-3 rounded-xl px-2.5 md:px-3.5 py-2 md:py-2.5 text-[11px] md:text-xs font-semibold transition-all duration-300 relative overflow-hidden",
                       isActive
-                        ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shadow-[0_0_15px_rgba(0,255,136,0.1)]"
-                        : "text-slate-400 hover:bg-[#131b2b] hover:text-slate-100"
+                        ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shadow-[0_0_15px_rgba(0,255,136,0.1)] glow-border"
+                        : "text-slate-400 hover:bg-[#131b2b] hover:text-slate-100 border border-transparent hover:border-[#232f44]"
                     )}
                   >
-                    <item.icon className={cn("h-3.5 w-3.5 md:h-4 md:w-4 shrink-0", isActive ? "text-emerald-400" : "text-slate-400")} />
-                    <span className="truncate">{item.label}</span>
+                    <span className="relative z-10 flex items-center gap-2">
+                      <item.icon className={cn("h-3.5 w-3.5 md:h-4 md:w-4 shrink-0", isActive ? "text-emerald-400" : "text-slate-400")} />
+                      <span className="truncate">{item.label}</span>
+                    </span>
+                    {isActive && <div className="absolute inset-0 bg-emerald-500/10 slide-left"></div>}
                   </Link>
                 );
               })}

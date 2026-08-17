@@ -307,91 +307,104 @@ export default function AdminDashboardPage() {
       )}
 
       {/* Real Live Metrics Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {/* Total Users */}
-        <div className="rounded-2xl border border-[#232f44] bg-[#111827] p-5 shadow-sm interactive-hover holographic">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold text-slate-400">{lang === "fr" ? "COLLABORATEURS TOTAUX" : "TOTAL OPERATORS"}</span>
-            <div className="p-2 rounded-xl bg-emerald-950/50 border border-emerald-800/50 text-emerald-400">
-              <Users className="w-4 h-4" />
+        <div className="rounded-2xl border border-[#232f44] bg-[#111827] p-6 shadow-sm interactive-hover holographic relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-xs font-semibold text-slate-400">{lang === "fr" ? "COLLABORATEURS TOTAUX" : "TOTAL OPERATORS"}</span>
+              <div className="p-2 rounded-xl bg-emerald-950/50 border border-emerald-800/50 text-emerald-400 float-animation">
+                <Users className="w-4 h-4" />
+              </div>
             </div>
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-slate-100 counter-animate">{stats?.totalUsers ?? 0}</span>
-            <span className="text-xs text-emerald-400 font-medium">({stats?.activeUsers ?? 0} {lang === "fr" ? "actifs" : "active"})</span>
-          </div>
-          <div className="mt-3 pt-3 border-t border-[#1e2a3e] flex items-center justify-between text-[11px] text-slate-400">
-            <span>Super Admin: {stats?.usersByRole?.SUPER_ADMIN ?? 0}</span>
-            <span>Admins: {stats?.usersByRole?.ADMIN ?? 0}</span>
-            <span>PM: {stats?.usersByRole?.PROJECT_MANAGER ?? 0}</span>
-            <span>Membres: {stats?.usersByRole?.TEAM_MEMBER ?? 0}</span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-extrabold text-slate-100 counter-animate">{stats?.totalUsers ?? 0}</span>
+              <span className="text-xs text-emerald-400 font-medium">({stats?.activeUsers ?? 0} {lang === "fr" ? "actifs" : "active"})</span>
+            </div>
+            <div className="mt-4 pt-4 border-t border-[#1e2a3e] flex items-center justify-between text-[11px] text-slate-400">
+              <span>Super Admin: {stats?.usersByRole?.SUPER_ADMIN ?? 0}</span>
+              <span>Admins: {stats?.usersByRole?.ADMIN ?? 0}</span>
+              <span>PM: {stats?.usersByRole?.PROJECT_MANAGER ?? 0}</span>
+              <span>Membres: {stats?.usersByRole?.TEAM_MEMBER ?? 0}</span>
+            </div>
           </div>
         </div>
 
         {/* Active Projects */}
-        <div className="rounded-2xl border border-[#232f44] bg-[#111827] p-5 shadow-sm interactive-hover holographic">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold text-slate-400">{lang === "fr" ? "PROJETS OPÉRATIONNELS" : "ACTIVE OPERATIONS"}</span>
-            <div className="p-2 rounded-xl bg-cyan-950/50 border border-cyan-800/50 text-cyan-400">
-              <FolderKanban className="w-4 h-4" />
+        <div className="rounded-2xl border border-[#232f44] bg-[#111827] p-6 shadow-sm interactive-hover holographic relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-xs font-semibold text-slate-400">{lang === "fr" ? "PROJETS OPÉRATIONNELS" : "ACTIVE OPERATIONS"}</span>
+              <div className="p-2 rounded-xl bg-cyan-950/50 border border-cyan-800/50 text-cyan-400 float-animation">
+                <FolderKanban className="w-4 h-4" />
+              </div>
             </div>
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-slate-100 counter-animate">{stats?.activeProjects ?? 0}</span>
-            <span className="text-xs text-slate-400 font-medium">/ {stats?.totalProjects ?? 0} total</span>
-          </div>
-          <div className="mt-3 pt-3 border-t border-[#1e2a3e] text-[11px] text-slate-400 flex items-center justify-between">
-            <span>{lang === "fr" ? "Total Tâches :" : "Total Tasks :"} {stats?.totalTasks ?? 0}</span>
-            <button onClick={() => router.push("/projects")} className="text-cyan-400 hover:underline font-semibold">
-              {lang === "fr" ? "Voir tout →" : "View all →"}
-            </button>
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-extrabold text-slate-100 counter-animate">{stats?.activeProjects ?? 0}</span>
+              <span className="text-xs text-slate-400 font-medium">/ {stats?.totalProjects ?? 0} total</span>
+            </div>
+            <div className="mt-4 pt-4 border-t border-[#1e2a3e] text-[11px] text-slate-400 flex items-center justify-between">
+              <span>{lang === "fr" ? "Total Tâches :" : "Total Tasks :"} {stats?.totalTasks ?? 0}</span>
+              <button onClick={() => router.push("/projects")} className="text-cyan-400 hover:underline font-semibold interactive-hover">
+                {lang === "fr" ? "Voir tout →" : "View all →"}
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Absences & Availability */}
-        <div className="rounded-2xl border border-[#232f44] bg-[#111827] p-5 shadow-sm interactive-hover holographic">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold text-slate-400">{lang === "fr" ? "DEMANDES D'ABSENCE" : "ABSENCE REQUESTS"}</span>
-            <div className="p-2 rounded-xl bg-amber-950/50 border border-amber-800/50 text-amber-400">
-              <FileCheck className="w-4 h-4" />
+        <div className="rounded-2xl border border-[#232f44] bg-[#111827] p-6 shadow-sm interactive-hover holographic relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-xs font-semibold text-slate-400">{lang === "fr" ? "DEMANDES D'ABSENCE" : "ABSENCE REQUESTS"}</span>
+              <div className="p-2 rounded-xl bg-amber-950/50 border border-amber-800/50 text-amber-400 float-animation">
+                <FileCheck className="w-4 h-4" />
+              </div>
             </div>
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-slate-100 counter-animate">{stats?.pendingAbsences ?? 0}</span>
-            <span className="text-xs text-amber-400 font-medium">{lang === "fr" ? "en attente" : "pending review"}</span>
-          </div>
-          <div className="mt-3 pt-3 border-t border-[#1e2a3e] text-[11px] text-slate-400 flex items-center justify-between">
-            <span>{stats?.totalAbsences ?? 0} {lang === "fr" ? "dossiers traités" : "total requests"}</span>
-            <button onClick={() => router.push("/absences")} className="text-amber-400 hover:underline font-semibold">
-              {lang === "fr" ? "Examiner →" : "Review →"}
-            </button>
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-extrabold text-slate-100 counter-animate">{stats?.pendingAbsences ?? 0}</span>
+              <span className="text-xs text-amber-400 font-medium">{lang === "fr" ? "en attente" : "pending review"}</span>
+            </div>
+            <div className="mt-4 pt-4 border-t border-[#1e2a3e] text-[11px] text-slate-400 flex items-center justify-between">
+              <span>{stats?.totalAbsences ?? 0} {lang === "fr" ? "dossiers traités" : "total requests"}</span>
+              <button onClick={() => router.push("/absences")} className="text-amber-400 hover:underline font-semibold interactive-hover">
+                {lang === "fr" ? "Examiner →" : "Review →"}
+              </button>
+            </div>
           </div>
         </div>
 
         {/* System Core Health */}
-        <div className="rounded-2xl border border-[#232f44] bg-[#111827] p-5 shadow-sm interactive-hover holographic">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold text-slate-400">{lang === "fr" ? "ÉTAT DU SYSTÈME" : "SYSTEM STATUS"}</span>
-            <div className="p-2 rounded-xl bg-emerald-950/50 border border-emerald-800/50 text-emerald-400">
-              <Activity className="w-4 h-4" />
+        <div className="rounded-2xl border border-[#232f44] bg-[#111827] p-6 shadow-sm interactive-hover holographic relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-xs font-semibold text-slate-400">{lang === "fr" ? "ÉTAT DU SYSTÈME" : "SYSTEM STATUS"}</span>
+              <div className="p-2 rounded-xl bg-emerald-950/50 border border-emerald-800/50 text-emerald-400 float-animation">
+                <Activity className="w-4 h-4" />
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="h-3 w-3 rounded-full bg-emerald-400 animate-pulse status-online"></span>
-            <span className="text-lg font-bold text-emerald-400">{lang === "fr" ? "100% Opérationnel" : "Nominal (Online)"}</span>
-          </div>
-          <div className="mt-3 pt-3 border-t border-[#1e2a3e] text-[11px] text-slate-400 flex items-center justify-between">
-            <span>PostgreSQL & NestJS API</span>
-            <span className="text-emerald-400 font-bold">OK</span>
+            <div className="flex items-center gap-2">
+              <span className="h-3 w-3 rounded-full bg-emerald-400 animate-pulse status-online"></span>
+              <span className="text-lg font-bold text-emerald-400">{lang === "fr" ? "100% Opérationnel" : "Nominal (Online)"}</span>
+            </div>
+            <div className="mt-4 pt-4 border-t border-[#1e2a3e] text-[11px] text-slate-400 flex items-center justify-between">
+              <span>PostgreSQL & NestJS API</span>
+              <span className="text-emerald-400 font-bold">OK</span>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Real Live Audit Logs Table */}
-      <div className="rounded-2xl border border-[#232f44] bg-[#111827] overflow-hidden shadow-sm reveal-animation">
+      <div className="rounded-2xl border border-[#232f44] bg-[#111827] overflow-hidden shadow-sm reveal-animation matrix-bg">
         {/* Table Header & Controls */}
-        <div className="p-5 border-b border-[#1e2a3e] flex flex-wrap items-center justify-between gap-4">
-          <div>
+        <div className="p-6 border-b border-[#1e2a3e] flex flex-wrap items-center justify-between gap-4 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-transparent opacity-50"></div>
+          <div className="relative z-10">
             <h2 className="text-base font-bold text-slate-100 flex items-center gap-2">
               <Shield className="w-4 h-4 text-emerald-400" />
               <span>{lang === "fr" ? "Journal d'Audit & Sécurité en Temps Réel" : "Real-Time System Audit Trail"}</span>
@@ -401,7 +414,7 @@ export default function AdminDashboardPage() {
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 text-xs">
+          <div className="flex flex-wrap items-center gap-3 text-xs relative z-10">
             <div className="relative w-64">
               <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
@@ -409,14 +422,14 @@ export default function AdminDashboardPage() {
                 placeholder={lang === "fr" ? "Filtrer le journal..." : "Filter logs..."}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-[#141b2a] border-[#222d42] text-xs text-slate-100 placeholder:text-slate-500 focus:border-emerald-500 focus:bg-[#182032] focus:ring-0 transition-all"
+                className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#141b2a] border-[#222d42] text-xs text-slate-100 placeholder:text-slate-500 focus:border-emerald-500 focus:bg-[#182032] focus:ring-0 transition-all duration-300"
               />
             </div>
 
             <select
               value={actionFilter}
               onChange={(e) => setActionFilter(e.target.value)}
-              className="bg-[#141b2a] text-slate-200 border border-[#222d42] rounded-xl px-3 py-1.5 text-xs focus:outline-none cursor-pointer"
+              className="bg-[#141b2a] text-slate-200 border border-[#222d42] rounded-xl px-3 py-2 text-xs focus:outline-none cursor-pointer transition-all duration-300 hover:border-emerald-500/50"
             >
               <option value="ALL">{lang === "fr" ? "Toutes les actions" : "All Actions"}</option>
               <option value="USER_CREATED">USER_CREATED</option>
@@ -444,13 +457,13 @@ export default function AdminDashboardPage() {
                 <tr>
                   <td colSpan={4} className="px-4 sm:px-6 py-12 text-center text-slate-500">
                     <div className="flex flex-col items-center gap-3">
-                      <Activity className="w-8 h-8 text-slate-600 mx-auto" />
+                      <Activity className="w-8 h-8 text-slate-600 mx-auto float-animation" />
                       <span>{lang === "fr" ? "Aucune entrée d'audit enregistrée pour le moment." : "No audit entries recorded yet."}</span>
                     </div>
                   </td>
                 </tr>
               ) : (
-                filteredLogs.map((log) => {
+                filteredLogs.map((log, index) => {
                   let parsedDetails = log.details;
                   try {
                     if (log.details && (log.details.startsWith("{") || log.details.startsWith("["))) {
@@ -459,7 +472,7 @@ export default function AdminDashboardPage() {
                   } catch {}
 
                   return (
-                    <tr key={log.id} className="hover:bg-[#162032]/50 transition-colors border-l-2 border-l-transparent hover:border-l-emerald-500 interactive-hover">
+                    <tr key={log.id} className={`hover:bg-[#162032]/50 transition-all duration-300 border-l-2 border-l-transparent hover:border-l-emerald-500 interactive-hover slide-up`} style={{ animationDelay: `${index * 0.05}s` }}>
                       <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-slate-400 flex items-center gap-2">
                         <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-500" />
                         <span className="text-[10px] sm:text-xs">{new Date(log.createdAt).toLocaleString()}</span>
