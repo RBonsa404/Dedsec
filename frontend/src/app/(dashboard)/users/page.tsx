@@ -355,7 +355,7 @@ export default function UsersManagementPage() {
 
                       <td className="px-4 sm:px-6 py-3 sm:py-4 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          {(currentUser?.role === 'ADMIN' || (currentUser?.role === 'PROJECT_MANAGER' && u.role === 'TEAM_MEMBER')) && (
+                          {(currentUser?.role === 'SUPER_ADMIN' || currentUser?.role === 'ADMIN' || (currentUser?.role === 'PROJECT_MANAGER' && u.role === 'TEAM_MEMBER')) && (
                             <Button
                               size="sm"
                               variant="outline"
@@ -367,7 +367,7 @@ export default function UsersManagementPage() {
                             </Button>
                           )}
 
-                          {u.role !== 'ADMIN' && (currentUser?.role === 'ADMIN' || (currentUser?.role === 'PROJECT_MANAGER' && u.role === 'TEAM_MEMBER')) && (
+                          {u.role !== 'ADMIN' && u.role !== 'SUPER_ADMIN' && (currentUser?.role === 'SUPER_ADMIN' || currentUser?.role === 'ADMIN' || (currentUser?.role === 'PROJECT_MANAGER' && u.role === 'TEAM_MEMBER')) && (
                             u.status === "SUSPENDED" ? (
                               <Button
                                 size="sm"
@@ -392,7 +392,7 @@ export default function UsersManagementPage() {
                             )
                           )}
 
-                          {u.role !== 'ADMIN' && (currentUser?.role === 'ADMIN' || (currentUser?.role === 'PROJECT_MANAGER' && u.role === 'TEAM_MEMBER')) && (
+                          {u.role !== 'ADMIN' && u.role !== 'SUPER_ADMIN' && (currentUser?.role === 'SUPER_ADMIN' || currentUser?.role === 'ADMIN' || (currentUser?.role === 'PROJECT_MANAGER' && u.role === 'TEAM_MEMBER')) && (
                             <Button
                               size="sm"
                               variant="outline"
@@ -454,7 +454,7 @@ export default function UsersManagementPage() {
                   </div>
 
                   <div className="flex items-center justify-end gap-2">
-                    {(currentUser?.role === 'ADMIN' || (currentUser?.role === 'PROJECT_MANAGER' && u.role === 'TEAM_MEMBER')) && (
+                    {(currentUser?.role === 'SUPER_ADMIN' || currentUser?.role === 'ADMIN' || (currentUser?.role === 'PROJECT_MANAGER' && u.role === 'TEAM_MEMBER')) && (
                       <Button
                         size="sm"
                         variant="outline"
@@ -466,7 +466,7 @@ export default function UsersManagementPage() {
                       </Button>
                     )}
 
-                    {u.role !== 'ADMIN' && (currentUser?.role === 'ADMIN' || (currentUser?.role === 'PROJECT_MANAGER' && u.role === 'TEAM_MEMBER')) && (
+                    {u.role !== 'ADMIN' && u.role !== 'SUPER_ADMIN' && (currentUser?.role === 'SUPER_ADMIN' || currentUser?.role === 'ADMIN' || (currentUser?.role === 'PROJECT_MANAGER' && u.role === 'TEAM_MEMBER')) && (
                       u.status === "SUSPENDED" ? (
                         <Button
                           size="sm"
@@ -491,7 +491,7 @@ export default function UsersManagementPage() {
                       )
                     )}
 
-                    {u.role !== 'ADMIN' && (currentUser?.role === 'ADMIN' || (currentUser?.role === 'PROJECT_MANAGER' && u.role === 'TEAM_MEMBER')) && (
+                    {u.role !== 'ADMIN' && u.role !== 'SUPER_ADMIN' && (currentUser?.role === 'SUPER_ADMIN' || currentUser?.role === 'ADMIN' || (currentUser?.role === 'PROJECT_MANAGER' && u.role === 'TEAM_MEMBER')) && (
                       <Button
                         size="sm"
                         variant="outline"

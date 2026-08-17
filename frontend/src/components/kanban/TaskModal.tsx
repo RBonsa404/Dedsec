@@ -136,7 +136,7 @@ export function TaskModal({ taskId, projectId, onClose, onTaskUpdated }: TaskMod
     }
   };
 
-  const isManagerOrAdmin = currentUser?.role === 'ADMIN' || currentUser?.role === 'PROJECT_MANAGER';
+  const isManagerOrAdmin = currentUser?.role === 'SUPER_ADMIN' || currentUser?.role === 'ADMIN' || currentUser?.role === 'PROJECT_MANAGER';
   const isAllocatedAssignee = task?.assigneeId === currentUser?.id || task?.assignee?.id === currentUser?.id;
   const canManageChecklists = isManagerOrAdmin || isAllocatedAssignee;
   const canReassign = isManagerOrAdmin;

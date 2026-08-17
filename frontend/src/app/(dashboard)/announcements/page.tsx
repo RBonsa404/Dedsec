@@ -45,7 +45,7 @@ export default function AnnouncementsPage() {
   const [modalErr, setModalErr] = useState("");
   const [feedback, setFeedback] = useState("");
 
-  const isAdmin = user?.role === "ADMIN";
+  const isAdmin = user?.role === "SUPER_ADMIN" || user?.role === "ADMIN";
 
   useEffect(() => {
     fetchAnnouncements();

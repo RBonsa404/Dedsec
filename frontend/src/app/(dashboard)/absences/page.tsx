@@ -57,7 +57,7 @@ export default function AbsencesPage() {
   const [modalErr, setModalErr] = useState("");
   const [feedback, setFeedback] = useState("");
 
-  const isManagerOrAdmin = user?.role === "ADMIN" || user?.role === "PROJECT_MANAGER";
+  const isManagerOrAdmin = user?.role === "SUPER_ADMIN" || user?.role === "ADMIN" || user?.role === "PROJECT_MANAGER";
 
   useEffect(() => {
     fetchData();

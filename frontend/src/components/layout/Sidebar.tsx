@@ -34,13 +34,13 @@ export function Sidebar() {
   };
 
   const navItems = [
-    { href: "/projects", label: t.nav_projects, icon: FolderKanban, roles: ["ADMIN", "PROJECT_MANAGER", "TEAM_MEMBER"] },
-    { href: "/my-tasks", label: t.nav_my_tasks, icon: CheckSquare, roles: ["ADMIN", "PROJECT_MANAGER", "TEAM_MEMBER"] },
-    { href: "/users", label: t.nav_users, icon: Users, roles: ["ADMIN", "PROJECT_MANAGER"] },
-    { href: "/absences", label: t.nav_absences, icon: CalendarOff, roles: ["ADMIN", "PROJECT_MANAGER", "TEAM_MEMBER"] },
-    { href: "/announcements", label: t.nav_announcements, icon: Radio, roles: ["ADMIN", "PROJECT_MANAGER", "TEAM_MEMBER"] },
-    { href: "/notifications", label: t.nav_notifications, icon: Bell, roles: ["ADMIN", "PROJECT_MANAGER", "TEAM_MEMBER"] },
-    { href: "/admin", label: t.nav_admin, icon: Terminal, roles: ["ADMIN"] },
+    { href: "/projects", label: t.nav_projects, icon: FolderKanban, roles: ["SUPER_ADMIN", "ADMIN", "PROJECT_MANAGER", "TEAM_MEMBER"] },
+    { href: "/my-tasks", label: t.nav_my_tasks, icon: CheckSquare, roles: ["SUPER_ADMIN", "ADMIN", "PROJECT_MANAGER", "TEAM_MEMBER"] },
+    { href: "/users", label: t.nav_users, icon: Users, roles: ["SUPER_ADMIN", "ADMIN", "PROJECT_MANAGER"] },
+    { href: "/absences", label: t.nav_absences, icon: CalendarOff, roles: ["SUPER_ADMIN", "ADMIN", "PROJECT_MANAGER", "TEAM_MEMBER"] },
+    { href: "/announcements", label: t.nav_announcements, icon: Radio, roles: ["SUPER_ADMIN", "ADMIN", "PROJECT_MANAGER", "TEAM_MEMBER"] },
+    { href: "/notifications", label: t.nav_notifications, icon: Bell, roles: ["SUPER_ADMIN", "ADMIN", "PROJECT_MANAGER", "TEAM_MEMBER"] },
+    { href: "/admin", label: t.nav_admin, icon: Terminal, roles: ["SUPER_ADMIN", "ADMIN"] },
   ];
 
   const filteredNav = navItems.filter((item) => user?.role && item.roles.includes(user.role));

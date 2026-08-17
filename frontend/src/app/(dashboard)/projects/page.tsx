@@ -93,7 +93,7 @@ export default function ProjectsPage() {
   const [memberModalError, setMemberModalError] = useState("");
   const [memberModalSuccess, setMemberModalSuccess] = useState("");
 
-  const isManagerOrAdmin = user?.role === "ADMIN" || user?.role === "PROJECT_MANAGER";
+  const isManagerOrAdmin = user?.role === "SUPER_ADMIN" || user?.role === "ADMIN" || user?.role === "PROJECT_MANAGER";
 
   useEffect(() => {
     fetchProjects();
@@ -344,7 +344,7 @@ export default function ProjectsPage() {
                     </div>
 
                     <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
-                      {user?.role === "ADMIN" && (
+                      {(user?.role === "SUPER_ADMIN" || user?.role === "ADMIN") && (
                         <button
                           onClick={(e) => handleDeleteProject(project.id, e)}
                           className="p-1 sm:p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-950/30 transition-all"
