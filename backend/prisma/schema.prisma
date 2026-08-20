@@ -57,6 +57,7 @@ model User {
   projectMembers      ProjectMember[]
   assignedTasks       Task[]            @relation("TaskAssignee")
   createdTasks        Task[]            @relation("TaskCreator")
+  taskAssignees       TaskAssignee[]    @relation("TaskAssignees")
   comments            Comment[]
   absenceRequests     AbsenceRequest[]  @relation("AbsenceRequester")
   absenceReviews      AbsenceRequest[]  @relation("AbsenceReviewer")
@@ -206,6 +207,7 @@ model Task {
   checklists      Checklist[]
   attachments     Attachment[]
   labels          TaskLabel[]
+  taskAssignees   TaskAssignee[]
 
   dependsOn       TaskDependency[] @relation("DependentTask")
   dependedBy      TaskDependency[] @relation("DependencyTask")
@@ -219,6 +221,22 @@ model Task {
   @@index([priority])
   @@index([dueDate])
   @@index([isTemplate])
+}
+
+model TaskAssignee {
+  id        String   @id @default(uuid())
+  taskId    String
+  userId    String
+  isPrimary Boolean  @default(false)
+
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user      User     @relation("TaskAssignees", fields: [userId], references: [id], onDelete: Cascade)
+
+  assignedAt DateTime @default(now())
+
+  @@unique([taskId, userId])
+  @@index([taskId])
+  @@index([userId])
 }
 
 model TaskDependency {

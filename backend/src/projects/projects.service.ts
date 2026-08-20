@@ -162,9 +162,20 @@ export class ProjectsService {
     });
   }
 
-  async delete(id: string, actorId: string) {
+  async delete(id: string, actorId: string, actorRole: string) {
     const project = await this.prisma.project.findUnique({ where: { id } });
     if (!project) throw new NotFoundException('Project not found');
+
+    // Check permissions
+    if (actorRole === 'PROJECT_MANAGER') {
+      const member = await this.prisma.projectMember.findFirst({
+        where: { projectId: id, userId: actorId, isManager: true },
+      });
+      if (!member) {
+        throw new ForbiddenException('Only project managers can delete their projects');
+      }
+    }
+
     await this.prisma.project.delete({ where: { id } });
     await this.prisma.auditLog.create({
       data: {

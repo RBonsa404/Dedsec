@@ -54,10 +54,10 @@ export class ProjectsController {
 
   @Delete(':id')
   @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN)
-  @ApiOperation({ summary: 'Delete project (Admin only)' })
+  @Roles(Role.SUPER_ADMIN, Role.ADMIN, Role.PROJECT_MANAGER)
+  @ApiOperation({ summary: 'Delete project (Super Admin, Admin or PM)' })
   async delete(@Param('id') id: string, @CurrentUser() user: any) {
-    return this.projectsService.delete(id, user.id);
+    return this.projectsService.delete(id, user.id, user.role);
   }
 
   @Get(':id/members')

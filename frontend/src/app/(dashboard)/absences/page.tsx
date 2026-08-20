@@ -19,7 +19,10 @@ import {
   Calendar, 
   UserCheck, 
   Check, 
-  Ban 
+  Ban,
+  ChevronLeft,
+  ChevronRight,
+  Today
 } from "lucide-react";
 
 interface Absence {
@@ -44,9 +47,11 @@ export default function AbsencesPage() {
   const t = translations[lang] || translations.fr;
 
   const [activeTab, setActiveTab] = useState<"my" | "pending">("my");
+  const [viewMode, setViewMode] = useState<"list" | "calendar">("calendar");
   const [myRequests, setMyRequests] = useState<Absence[]>([]);
   const [pendingRequests, setPendingRequests] = useState<Absence[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
   // Request Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -140,6 +145,153 @@ export default function AbsencesPage() {
     setTimeout(() => setFeedback(""), 3500);
   };
 
+  // Calendar helpers
+  const getDaysInMonth = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startDayOfWeek = firstDay.getDay();
+    
+    return { daysInMonth, startDayOfWeek, year, month };
+  };
+
+  const goToPreviousMonth = () => {
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1));
+  };
+
+  const goToNextMonth = () => {
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1));
+  };
+
+  const goToToday = () => {
+    setCurrentMonth(new Date());
+  };
+
+  const getAbsencesForDay = (day: number, month: number, year: number) => {
+    const requests = activeTab === "my" ? myRequests : pendingRequests;
+    return requests.filter(req => {
+      const start = new Date(req.startDate);
+      const end = new Date(req.endDate);
+      const checkDate = new Date(year, month, day);
+      return checkDate >= start && checkDate <= end;
+    });
+  };
+
+  const renderCalendar = () => {
+    const { daysInMonth, startDayOfWeek, year, month } = getDaysInMonth(currentMonth);
+    const monthNames = lang === "fr" 
+      ? ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"]
+      : ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const dayNames = lang === "fr"
+      ? ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"]
+      : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+    const days = [];
+    
+    // Empty cells for days before the first day of the month
+    for (let i = 0; i < startDayOfWeek; i++) {
+      days.push(<div key={`empty-${i}`} className="h-24 bg-[#0a0f16] border border-[#141b2e]"></div>);
+    }
+
+    // Days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      const absences = getAbsencesForDay(day, month, year);
+      const isToday = new Date().toDateString() === new Date(year, month, day).toDateString();
+      
+      days.push(
+        <div key={day} className={`h-24 min-h-24 bg-[#0b0f19] border border-[#141b2e] p-2 relative overflow-hidden interactive-hover ${isToday ? 'border-emerald-500/50' : ''}`}>
+          <div className={`text-sm font-semibold mb-1 ${isToday ? 'text-emerald-400' : 'text-slate-400'}`}>
+            {day}
+          </div>
+          <div className="space-y-1 overflow-y-auto">
+            {absences.map(absence => (
+              <div 
+                key={absence.id}
+                className={`text-[10px] px-1.5 py-0.5 rounded truncate border cursor-pointer ${
+                  absence.status === 'APPROVED' 
+                    ? 'bg-emerald-950/50 text-emerald-400 border-emerald-800/50' 
+                    : absence.status === 'PENDING'
+                    ? 'bg-amber-950/50 text-amber-400 border-amber-800/50'
+                    : 'bg-rose-950/50 text-rose-400 border-rose-800/50'
+                }`}
+                title={absence.reason}
+              >
+                {absence.reason.substring(0, 15)}...
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="matrix-bg">
+        {/* Calendar Header */}
+        <div className="flex items-center justify-between mb-4 p-4 bg-[#111827] rounded-xl border border-[#232f44]">
+          <div className="flex items-center gap-3">
+            <Button 
+              onClick={goToPreviousMonth}
+              variant="outline"
+              size="sm"
+              className="rounded-lg border-[#2b3a55] bg-[#141b2b] hover:bg-[#1e293b] text-slate-300 button-cyber"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </Button>
+            <h2 className="text-lg font-bold text-slate-100 neon-text">
+              {monthNames[month]} {year}
+            </h2>
+            <Button 
+              onClick={goToNextMonth}
+              variant="outline"
+              size="sm"
+              className="rounded-lg border-[#2b3a55] bg-[#141b2b] hover:bg-[#1e293b] text-slate-300 button-cyber"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button 
+              onClick={goToToday}
+              variant="outline"
+              size="sm"
+              className="rounded-lg border-emerald-800/60 bg-emerald-950/30 hover:bg-emerald-950/60 text-emerald-400 font-semibold button-cyber"
+            >
+              <Today className="w-4 h-4 mr-1" />
+              {lang === "fr" ? "Aujourd'hui" : "Today"}
+            </Button>
+            <Button 
+              onClick={() => setViewMode("list")}
+              variant="outline"
+              size="sm"
+              className="rounded-lg border-[#2b3a55] bg-[#141b2b] hover:bg-[#1e293b] text-slate-300 button-cyber"
+            >
+              {lang === "fr" ? "Liste" : "List"}
+            </Button>
+          </div>
+        </div>
+
+        {/* Calendar Grid */}
+        <div className="bg-[#111827] rounded-xl border border-[#232f44] overflow-hidden">
+          {/* Day headers */}
+          <div className="grid grid-cols-7 border-b border-[#1e2a3e]">
+            {dayNames.map(day => (
+              <div key={day} className="p-3 text-center text-xs font-bold text-slate-400 uppercase tracking-wider">
+                {day}
+              </div>
+            ))}
+          </div>
+          
+          {/* Calendar days */}
+          <div className="grid grid-cols-7">
+            {days}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const statusStyles: Record<string, { bg: string; text: string; border: string }> = {
     PENDING: { bg: "bg-amber-950/50", text: "text-amber-400", border: "border-amber-800/50" },
     APPROVED: { bg: "bg-emerald-950/50", text: "text-emerald-400", border: "border-emerald-800/50" },
@@ -171,6 +323,15 @@ export default function AbsencesPage() {
           className="rounded-xl text-sm gap-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold shadow-lg shadow-emerald-500/30 button-cyber magnetic-button"
         >
           <Plus className="w-5 h-5 bounce-animation" /> {t.request_leave}
+        </Button>
+
+        <Button
+          onClick={() => setViewMode(viewMode === "list" ? "calendar" : "list")}
+          variant="outline"
+          className="rounded-xl border-cyan-800/60 bg-cyan-950/30 hover:bg-cyan-950/60 text-cyan-400 gap-2 text-sm font-semibold button-cyber"
+        >
+          {viewMode === "list" ? <Calendar className="w-5 h-5" /> : <Today className="w-5 h-5" />}
+          {viewMode === "list" ? (lang === "fr" ? "Calendrier" : "Calendar") : (lang === "fr" ? "Liste" : "List")}
         </Button>
       </div>
 
@@ -228,8 +389,12 @@ export default function AbsencesPage() {
           </div>
         </div>
       ) : activeTab === "my" ? (
-        /* Enhanced My Requests Table */
-        <div className="rounded-2xl border border-[#232f44] bg-[#111827] overflow-hidden shadow-lg interactive-hover card-3d reveal-animation matrix-bg">
+        /* My Requests - Calendar or List View */
+        viewMode === "calendar" ? (
+          renderCalendar()
+        ) : (
+          /* My Requests Table */
+          <div className="rounded-2xl border border-[#232f44] bg-[#111827] overflow-hidden shadow-lg interactive-hover card-3d reveal-animation matrix-bg">
           <div className="p-6 border-b border-[#1e2a3e] bg-[#162032]/50">
             <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
               <Calendar className="w-5 h-5 text-cyan-400" />
@@ -301,9 +466,14 @@ export default function AbsencesPage() {
             </tbody>
           </table>
         </div>
+        )
       ) : (
-        /* Enhanced Pending Approvals Table */
-        <div className="rounded-2xl border border-[#232f44] bg-[#111827] overflow-hidden shadow-lg interactive-hover card-3d reveal-animation matrix-bg">
+        /* Pending Approvals - Calendar or List View */
+        viewMode === "calendar" ? (
+          renderCalendar()
+        ) : (
+          /* Enhanced Pending Approvals Table */
+          <div className="rounded-2xl border border-[#232f44] bg-[#111827] overflow-hidden shadow-lg interactive-hover card-3d reveal-animation matrix-bg">
           <div className="p-6 border-b border-[#1e2a3e] bg-[#162032]/50">
             <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
               <Clock className="w-5 h-5 text-amber-400" />
@@ -393,6 +563,7 @@ export default function AbsencesPage() {
             </tbody>
           </table>
         </div>
+        )
       )}
 
       {/* Enhanced Leave Request Modal */}
